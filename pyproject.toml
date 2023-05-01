@@ -24,3 +24,50 @@ build-backend = "pdm.backend"
 [tool.pdm.dev-dependencies]
 lint = ["ruff", "pyright"]
 test = ["pytest"]
+
+[tool.ruff]
+line-length = 80
+select = [
+    "F",
+    "E",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "D",
+    "UP",
+    "ANN",
+    "S",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "DTZ",
+    "ICN",
+    "INP",
+    "PT",
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SIM",
+    "TID",
+    "TCH",
+    "ARG",
+    "ERA",
+    "PGH",
+    "PL",
+    "TRY",
+    "RUF",
+]
+
+[tool.ruff.isort]
+force-sort-within-sections = true
+lines-after-imports = 2
+
+[tool.ruff.pycodestyle]
+max-doc-length = 80
+
+[tool.ruff.pydocstyle]
+convention = "google"
+ignore-decorators = ["typing.overload"]
