@@ -1,0 +1,26 @@
+[project]
+name = "rico"
+version = "0.1.0"
+description = "Rich content to HTML as easy as doc.print(x)."
+authors = [
+    {name = "Evgeny Ivanov", email = "ivanov.evgeny.n@gmail.com"},
+]
+dependencies = []
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+altair = ["altair>=4.2"]
+pyplot = ["matplotlib>=3.5"]
+seaborn = ["seaborn>=0.12"]
+complete = ["rico[altair,pyplot,seaborn]"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+lint = ["ruff", "pyright"]
+test = ["pytest"]

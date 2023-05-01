@@ -1,2 +1,2 @@
 # rico
-Rich content to HTML as simple as doc.print(x).
+Rich content to HTML as easy as doc.print(x).
