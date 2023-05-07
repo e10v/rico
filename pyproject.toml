@@ -25,6 +25,12 @@ build-backend = "pdm.backend"
 lint = ["ruff", "pyright", "isort"]
 test = ["pytest"]
 
+[tool.isort]
+force_sort_within_sections = true
+include_trailing_comma = true
+lines_after_imports = 2
+multi_line_output = 3
+
 [tool.ruff]
 line-length = 80
 select = [
