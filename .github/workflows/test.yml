@@ -19,6 +19,6 @@ jobs:
           prerelease: false
           enable-pep582: false
       - name: Install dependencies
-        run: pdm sync -G complete -d test
+        run: pdm sync -G complete -dG test
       - name: Test
         run: pdm run test
