@@ -22,7 +22,7 @@ build-backend = "pdm.backend"
 
 [tool.pdm]
 [tool.pdm.dev-dependencies]
-lint = ["ruff", "pyright"]
+lint = ["ruff", "pyright", "isort"]
 test = ["pytest"]
 
 [tool.ruff]
