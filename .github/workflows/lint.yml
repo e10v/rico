@@ -9,9 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: 3.11
+          prerelease: false
+          enable-pep582: false
+      - name: Install dependencies
+        run: pdm sync -G :all
       - name: Check with ruff
-        uses: chartboost/ruff-action@v1
+        run: pdm run lint
       - name: Check with pyright
-        uses: jakebailey/pyright-action@v1
+        run: pdm run type
       - name: Check with isort
-        uses: isort/isort-action@master
+        run: pdm run sort
