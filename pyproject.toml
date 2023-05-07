@@ -77,3 +77,6 @@ max-doc-length = 80
 [tool.ruff.pydocstyle]
 convention = "google"
 ignore-decorators = ["typing.overload"]
+
+[tool.pyright]
+typeCheckingMode = "basic"
