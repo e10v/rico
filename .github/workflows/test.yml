@@ -16,7 +16,9 @@ jobs:
         uses: pdm-project/setup-pdm@v3
         with:
           python-version: ${{ matrix.python-version }}
+          prerelease: false
+          enable-pep582: false
       - name: Install dependencies
-        run: pdm sync -G complete -G test
+        run: pdm sync -G complete -d test
       - name: Test
         run: pdm run test
