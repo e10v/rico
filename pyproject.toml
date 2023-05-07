@@ -57,7 +57,6 @@ select = [
     "RSE",
     "RUF",
     "Q",
-    "S",
     "SIM",
     "SLF",
     "TCH",
@@ -66,6 +65,8 @@ select = [
     "UP",
     "W",
 ]
+
+ignore = ["ANN401", "B006"]
 
 [tool.ruff.isort]
 force-sort-within-sections = true
@@ -79,4 +80,4 @@ convention = "google"
 ignore-decorators = ["typing.overload"]
 
 [tool.pyright]
-typeCheckingMode = "basic"
+typeCheckingMode = "strict"
