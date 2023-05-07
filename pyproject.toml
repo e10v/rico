@@ -11,7 +11,7 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.optional-dependencies]
-altair = ["altair>=4.2"]
+altair = ["altair>=4.2", "vl-convert-python>=0.8"]
 pyplot = ["matplotlib>=3.5"]
 seaborn = ["seaborn>=0.12"]
 complete = ["rico[altair,pyplot,seaborn]"]
