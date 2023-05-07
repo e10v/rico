@@ -1,0 +1,14 @@
+name: Lint
+on:
+  pull_request:
+    paths:
+      - '**.py'
+  workflow_dispatch:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: chartboost/ruff-action@v1
+      - uses: jakebailey/pyright-action@v1
+      - uses: isort/isort-action@master
