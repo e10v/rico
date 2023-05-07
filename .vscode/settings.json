@@ -1,0 +1,4 @@
+{
+    "git.enableCommitSigning": true,
+    "autoDocstring.docstringFormat": "google-notypes",
+}
