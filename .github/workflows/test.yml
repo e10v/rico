@@ -12,6 +12,7 @@ jobs:
         python-version: ["3.10", "3.11"]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
+      - uses: actions/checkout@v3
       - name: Set up PDM
         uses: pdm-project/setup-pdm@v3
         with:
@@ -19,6 +20,6 @@ jobs:
           prerelease: false
           enable-pep582: false
       - name: Install dependencies
-        run: pdm sync -G complete -dG test
+        run: pdm sync -G complete -G test
       - name: Test
         run: pdm run test
