@@ -50,6 +50,8 @@ class HTMLParser(html.parser.HTMLParser):
 def parse_html(data: str, root: str = "div") -> ET.Element:
     """Parse HTML from a string.
 
+    Ignores comments, doctype declaration and processing instructions.
+
     Args:
         data: HTML data.
         root: A root tag.
