@@ -32,7 +32,6 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./.coverage
-          verbose: true
   lint:
     runs-on: ubuntu-latest
     strategy:
