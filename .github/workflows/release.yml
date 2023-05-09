@@ -19,4 +19,6 @@ jobs:
       - name: Install dependencies
         run: pdm sync -G complete
       - name: Build and publish
-        run: pdm publish -v
+        env:
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: pdm publish
