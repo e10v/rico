@@ -1,6 +1,5 @@
 [project]
 name = "rico"
-# version = "0.0.3"
 dynamic = ["version"]
 description = "Rich content to HTML as easy as doc.print(x)."
 authors = [
@@ -41,7 +40,7 @@ build-backend = "pdm.backend"
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 lint = ["ruff", "pyright", "isort"]
-test = ["pytest"]
+test = ["pytest", "coverage[toml]"]
 
 [tool.pdm.scripts]
 lint = "ruff check ."
