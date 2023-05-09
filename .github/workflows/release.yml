@@ -22,4 +22,4 @@ jobs:
         env:
           PDM_PUBLISH_USERNAME: "__token__"
           PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: pdm publish
+        run: pdm publish -v
