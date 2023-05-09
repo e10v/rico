@@ -17,8 +17,10 @@ if TYPE_CHECKING:
 
 
 simple_text = "<p>Hello world</p>"
+
 def simple_fn(element: ET.Element) -> list[tuple[Any, Any]]:
     p = list(element.iter())[1]
+
     return [
         (element.tag, "div"),
         (element, ET.Element),
@@ -28,11 +30,14 @@ def simple_fn(element: ET.Element) -> list[tuple[Any, Any]]:
         (ET.tostring(element).decode(), "<div><p>Hello world</p></div>"),
     ]
 
+
 nested_tags_text = "<div><p>Hello <strong>world</strong>!</p></div>"
+
 def nested_tags_fn(element: ET.Element) -> list[tuple[Any, Any]]:
     div = list(element.iter())[1]
     p = list(div.iter())[1]
     strong = list(p.iter())[1]
+
     return [
         (element.tag, "div"),
         (element, ET.Element),
@@ -49,9 +54,12 @@ def nested_tags_fn(element: ET.Element) -> list[tuple[Any, Any]]:
         ),
     ]
 
+
 custom_root_text = "<div>Hello world</div>"
+
 def custom_root_fn(element: ET.Element) -> list[tuple[Any, Any]]:
     div = list(element.iter())[1]
+
     return [
         (element.tag, "body"),
         (element, ET.Element),
@@ -60,11 +68,14 @@ def custom_root_fn(element: ET.Element) -> list[tuple[Any, Any]]:
         (ET.tostring(element).decode(), "<body><div>Hello world</div></body>"),
     ]
 
+
 script_src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
 attributes_text = (
     f"<script defer src='{script_src}' crossorigin='anonymous'></script>")
+
 def attributes_fn(element: ET.Element) -> list[tuple[Any, Any]]:
     script = list(element.iter())[1]
+
     return [
         (element.tag, "div"),
         (element, ET.Element),
@@ -77,38 +88,38 @@ def attributes_fn(element: ET.Element) -> list[tuple[Any, Any]]:
         }),
     ]
 
-parse_data = [
+
+parser_data = [
     (simple_text, simple_fn, "div"),
     (nested_tags_text, nested_tags_fn, "div"),
     (custom_root_text, custom_root_fn, "body"),
     (attributes_text, attributes_fn, "div"),
 ]
-parse_ids = ["simple", "nested_tags", "custom_root", "attributes"]
+
+parser_ids = ["simple", "nested_tags", "custom_root", "attributes"]
 
 
-@pytest.mark.parametrize(("text", "fn", "root"), parse_data, ids=parse_ids)
+def compare(left: Any, right: Any) -> bool:
+    if right is None:
+        return left is None
+    if inspect.isclass(right):
+        return isinstance(left, right)
+    return left == right
+
+
+@pytest.mark.parametrize(("text", "fn", "root"), parser_data, ids=parser_ids)
 def test_html_parser(text: str, fn: GetAssertsFn, root: str):
     parser = html.HTMLParser(root=root)
     parser.feed(text)
     element = parser.close()
 
     for left, right in fn(element):
-        if right is None:
-            assert left is None
-        elif inspect.isclass(right):
-            assert isinstance(left, right)
-        else:
-            assert left == right
+        assert compare(left, right)
 
 
-@pytest.mark.parametrize(("text", "fn", "root"), parse_data, ids=parse_ids)
+@pytest.mark.parametrize(("text", "fn", "root"), parser_data, ids=parser_ids)
 def test_parse_html(text: str, fn: GetAssertsFn, root: str):
     element = html.parse_html(text, root=root)
 
     for left, right in fn(element):
-        if right is None:
-            assert left is None
-        elif inspect.isclass(right):
-            assert isinstance(left, right)
-        else:
-            assert left == right
+        assert compare(left, right)
