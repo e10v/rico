@@ -1,60 +1,101 @@
+from __future__ import annotations
+
+import inspect
+from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET  # noqa: N817
+
+import pytest
 
 from rico import html
 
 
-def test_html_parser_simple_html():
-    parser = html.HTMLParser()
-    parser.feed("<p>Hello world</p>")
-    root = parser.close()
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any
 
-    assert root.tag == "div"
-    assert isinstance(root, ET.Element)
-
-    elements = list(root.iter())
-    p = elements[1]
-    assert len(elements) == 2
-    assert p.tag == "p"
-    assert p.text == "Hello world"
-
-    assert ET.tostring(root).decode() == "<div><p>Hello world</p></div>"
+    GetAssertsFn = Callable[[ET.Element], list[tuple[Any, Any]]]
 
 
-def test_html_parser_nested_tags():
-    parser = html.HTMLParser()
-    parser.feed("<div><p>Hello <strong>world</strong>!</p></div>")
-    root = parser.close()
+simple_text = "<p>Hello world</p>"
+def simple_fn(element: ET.Element) -> list[tuple[Any, Any]]:
+    p = list(element.iter())[1]
+    return [
+        (element.tag, "div"),
+        (element, ET.Element),
+        (len(list(element.iter())), 2),
+        (p.tag, "p"),
+        (p.text, "Hello world"),
+        (ET.tostring(element).decode(), "<div><p>Hello world</p></div>"),
+    ]
 
-    assert root.tag == "div"
-    assert isinstance(root, ET.Element)
-
-    div = list(root.iter())[1]
-    assert div.tag == "div"
-    assert div.text is None
-
+nested_tags_text = "<div><p>Hello <strong>world</strong>!</p></div>"
+def nested_tags_fn(element: ET.Element) -> list[tuple[Any, Any]]:
+    div = list(element.iter())[1]
     p = list(div.iter())[1]
-    assert p.tag == "p"
-    assert p.text == "Hello "
-
     strong = list(p.iter())[1]
-    assert strong.tag == "strong"
-    assert strong.text == "world"
-    assert strong.tail == "!"
+    return [
+        (element.tag, "div"),
+        (element, ET.Element),
+        (div.tag, "div"),
+        (div.text, None),
+        (p.tag, "p"),
+        (p.text, "Hello "),
+        (strong.tag, "strong"),
+        (strong.text, "world"),
+        (strong.tail, "!"),
+        (
+            ET.tostring(element).decode(),
+            "<div><div><p>Hello <strong>world</strong>!</p></div></div>",
+        ),
+    ]
 
-    assert ET.tostring(root).decode() == (
-        "<div><div><p>Hello <strong>world</strong>!</p></div></div>")
+custom_root_text = "<div>Hello world</div>"
+def custom_root_fn(element: ET.Element) -> list[tuple[Any, Any]]:
+    div = list(element.iter())[1]
+    return [
+        (element.tag, "body"),
+        (element, ET.Element),
+        (div.tag, "div"),
+        (div.text, "Hello world"),
+        (ET.tostring(element).decode(), "<body><div>Hello world</div></body>"),
+    ]
+
+script_src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+attributes_text = (
+    f"<script defer src='{script_src}' crossorigin='anonymous'></script>")
+def attributes_fn(element: ET.Element) -> list[tuple[Any, Any]]:
+    script = list(element.iter())[1]
+    return [
+        (element.tag, "div"),
+        (element, ET.Element),
+        (script.tag, "script"),
+        (script.text, None),
+        (script.attrib, {
+            "defer": None,
+            "src": script_src,
+            "crossorigin": "anonymous",
+        }),
+    ]
+
+parse_data = [
+    (simple_text, simple_fn, "div"),
+    (nested_tags_text, nested_tags_fn, "div"),
+    (custom_root_text, custom_root_fn, "body"),
+    (attributes_text, attributes_fn, "div"),
+]
+parse_ids = ["simple", "nested_tags", "custom_root", "attributes"]
 
 
-def test_html_parser_custom_root():
-    parser = html.HTMLParser(root="body")
-    parser.feed("<div>Hello world</div>")
-    root = parser.close()
+@pytest.mark.parametrize(("text", "fn", "root"), parse_data, ids=parse_ids)
+def test_html_parser(text: str, fn: GetAssertsFn, root: str):
+    parser = html.HTMLParser(root=root)
+    parser.feed(text)
+    element = parser.close()
 
-    assert root.tag == "body"
-    assert isinstance(root, ET.Element)
-
-    div = list(root.iter())[1]
-    assert div.tag == "div"
-    assert div.text == "Hello world"
-
-    assert ET.tostring(root).decode() == "<body><div>Hello world</div></body>"
+    for left, right in fn(element):
+        if right is None:
+            assert left is None
+        elif inspect.isclass(right):
+            assert isinstance(left, right)
+        else:
+            assert left == right
