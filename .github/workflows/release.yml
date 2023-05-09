@@ -18,4 +18,4 @@ jobs:
       - name: Install dependencies
         run: pdm sync -G complete
       - name: Build and publish
-        run: pdm publish
+        run: pdm publish -v
