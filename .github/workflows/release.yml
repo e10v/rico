@@ -1,0 +1,21 @@
+name: Build and publish python package
+on:
+  release:
+    types: [published]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: "3.11"
+          prerelease: false
+          enable-pep582: false
+          cache: true
+      - name: Install dependencies
+        run: pdm sync -G complete
+      - name: Build and publish
+        run: pdm publish
