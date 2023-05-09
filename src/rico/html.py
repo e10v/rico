@@ -21,7 +21,7 @@ class HTMLParser(html.parser.HTMLParser):
         """Initalizes parser.
 
         Args:
-            root: Root tag.
+            root: A root tag.
         """
         super().__init__()
         self._root = root
@@ -45,3 +45,18 @@ class HTMLParser(html.parser.HTMLParser):
         super().close()
         self._builder.end(self._root)
         return self._builder.close()
+
+
+def parse_html(data: str, root: str = "div") -> ET.Element:
+    """Parse HTML from a string.
+
+    Args:
+        data: HTML data.
+        root: A root tag.
+
+    Returns:
+        Parsed HTML data.
+    """
+    parser = HTMLParser(root=root)
+    parser.feed(data)
+    return parser.close()
