@@ -1,2 +1,2 @@
 """Package version."""
-__version__: str
+__version__ = None  # Placeholder
