@@ -6,6 +6,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -19,6 +21,4 @@ jobs:
       - name: Install dependencies
         run: pdm sync -G complete
       - name: Build and publish
-        env:
-          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: pdm publish -v
