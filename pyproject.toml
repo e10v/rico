@@ -53,8 +53,7 @@ package-dir = "src"
 
 [tool.pdm.version]
 source = "scm"
-write_to = "rico/_version.py"
-write_template = "__version__ = \"{}\""
+write_to = "rico/_version.txt"
 
 
 [tool.pytest.ini_options]
