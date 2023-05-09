@@ -99,3 +99,16 @@ def test_html_parser(text: str, fn: GetAssertsFn, root: str):
             assert isinstance(left, right)
         else:
             assert left == right
+
+
+@pytest.mark.parametrize(("text", "fn", "root"), parse_data, ids=parse_ids)
+def test_parse_html(text: str, fn: GetAssertsFn, root: str):
+    element = html.parse_html(text, root=root)
+
+    for left, right in fn(element):
+        if right is None:
+            assert left is None
+        elif inspect.isclass(right):
+            assert isinstance(left, right)
+        else:
+            assert left == right
