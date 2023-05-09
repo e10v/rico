@@ -1,6 +1,6 @@
 [project]
 name = "rico"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Rich content to HTML as easy as doc.print(x)."
 authors = [
     {name = "Evgeny Ivanov", email = "ivanov.evgeny.n@gmail.com"},
@@ -9,6 +9,21 @@ dependencies = []
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Text Processing",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
 
 [project.optional-dependencies]
 altair = ["altair>=4.2", "vl-convert-python>=0.8"]
@@ -32,6 +47,9 @@ lint = "ruff check ."
 sort = "isort --check --diff ."
 type = "pyright"
 test = "pytest"
+
+[tool.pdm.version]
+source = "scm"
 
 
 [tool.isort]
@@ -84,7 +102,6 @@ select = [
     "UP",
     "W",
 ]
-
 ignore = ["ANN401", "B006"]
 
 [tool.ruff.per-file-ignores]
