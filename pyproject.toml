@@ -48,6 +48,9 @@ sort = "isort --check --diff ."
 type = "pyright"
 test = "pytest"
 
+[tool.pdm.build]
+package-dir = "src"
+
 [tool.pdm.version]
 # source = "scm"
 # write_to = "rico/_version.py"
