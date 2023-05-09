@@ -43,10 +43,10 @@ lint = ["ruff", "pyright", "isort"]
 test = ["pytest", "coverage[toml]"]
 
 [tool.pdm.scripts]
+test = "coverage run -m pytest"
 lint = "ruff check ."
 sort = "isort --check --diff ."
 type = "pyright"
-test = "pytest"
 
 [tool.pdm.build]
 package-dir = "src"
@@ -55,6 +55,16 @@ package-dir = "src"
 source = "scm"
 write_to = "rico/_version.py"
 write_template = "__version__ = \"{}\""
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage]
+[tool.coverage.run]
+source = ["src/rico"]
+[tool.coverage.report]
+exclude_lines = ["import"]
 
 
 [tool.isort]
@@ -67,10 +77,6 @@ multi_line_output = 3
 [tool.pyright]
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false
-
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
 
 
 [tool.ruff]
