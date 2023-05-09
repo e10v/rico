@@ -58,3 +58,22 @@ def test_html_parser_custom_root():
     assert div.text == "Hello world"
 
     assert ET.tostring(root).decode() == "<body><div>Hello world</div></body>"
+
+
+def test_html_parser_attributes():
+    src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    parser = html.HTMLParser()
+    parser.feed(f"<script defer src='{src}' crossorigin='anonymous'></script>")
+    root = parser.close()
+
+    assert root.tag == "div"
+    assert isinstance(root, ET.Element)
+
+    script = list(root.iter())[1]
+    assert script.tag == "script"
+    assert script.text is None
+    assert script.attrib == {
+        "defer": None,
+        "src": src,
+        "crossorigin": "anonymous",
+    }
