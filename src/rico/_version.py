@@ -1,2 +1,2 @@
 """Package version."""
-__version__ = None  # Placeholder
+__version__ = "0.0.1"

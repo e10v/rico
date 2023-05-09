@@ -49,9 +49,11 @@ type = "pyright"
 test = "pytest"
 
 [tool.pdm.version]
-source = "scm"
-write_to = "rico/_version.py"
-write_template = "__version__ = \"{}\""
+# source = "scm"
+# write_to = "rico/_version.py"
+# write_template = "__version__ = \"{}\""
+source = "file"
+path = "rico/_version.py"
 
 
 [tool.isort]
