@@ -28,10 +28,12 @@ jobs:
         run: pdm sync -G complete -G test
       - name: Test
         run: pdm run test
+      - name: Convert coverage report
+        run: pdm run coverage xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./.coverage
+          files: ./coverage.xml
   lint:
     runs-on: ubuntu-latest
     strategy:
