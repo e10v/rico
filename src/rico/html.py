@@ -171,4 +171,4 @@ def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
     closing_tag = f"</{element.tag}>" if ltag not in HTML_EMPTY else ""
     tail = _escape_cdata(element.tail) if element.tail is not None else ""
 
-    return f"{tag}{text}{children}{closing_tag}{tail}"
+    return tag + text + children + closing_tag + tail
