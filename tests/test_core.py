@@ -51,3 +51,29 @@ def test_content_base_indent(content_base_subclass_sample: core.ContentBase):
             <p>Hello world</p>
         </div>""")
     assert content_base_subclass_sample.serialize("    ") == expectation
+
+
+def test_tag():
+    tag = core.Tag(
+        "p",
+        attrib={"class": "col"},
+        id="42",
+        text="Hello",
+        tail="world",
+        class_="row",
+    )
+
+    div = tag.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    p = list(div)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {"class": "col", "id": "42"}
+    assert p.text == "Hello"
+    assert p.tail == "world"
