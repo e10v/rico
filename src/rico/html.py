@@ -22,6 +22,7 @@ class HTMLParser(html.parser.HTMLParser):
     Assigns None values to boolean attributes.
 
     Ignores comments, doctype declaration and processing instructions.
+    Converts attribute names to lower case, even for SVG.
     """
 
     def __init__(self):  # noqa: D107
@@ -55,6 +56,7 @@ def parse_html(data: str) -> list[ET.Element]:
     Assign None values to boolean attributes.
 
     Ignore comments, doctype declaration and processing instructions.
+    Convert attribute names to lower case, even for SVG.
 
     Args:
         data: The HTML data.
