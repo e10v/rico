@@ -34,14 +34,14 @@ def get_two_elements_asserts(elements: list[ET.Element]) -> list[tuple[Any, Any]
         (len(elements), 2),
         (p0, ET.Element),
         (p0.tag, "p"),
+        (p0.attrib, {}),
         (p0.text, "Hello"),
         (p0.tail, None),
-        (p0.attrib, {}),
         (p1, ET.Element),
         (p1.tag, "p"),
+        (p1.attrib, {}),
         (p1.text, "world"),
         (p1.tail, None),
-        (p1.attrib, {}),
         (elem_to_string(elements), two_elements_text),
     ]
 
@@ -50,27 +50,27 @@ nested_tags_text = "<div><p>Hello <strong>world</strong>!</p></div>"
 
 def get_nested_tags_asserts(elements: list[ET.Element]) -> list[tuple[Any, Any]]:
     div = elements[0]
-    p = list(div.iter())[1]
-    strong = list(p.iter())[1]
+    p = list(div)[0]
+    strong = list(p)[0]
 
     return [
         (elements, list),
         (len(elements), 1),
         (div, ET.Element),
         (div.tag, "div"),
+        (div.attrib, {}),
         (div.text, None),
         (div.tail, None),
-        (div.attrib, {}),
         (p, ET.Element),
         (p.tag, "p"),
+        (p.attrib, {}),
         (p.text, "Hello "),
         (p.tail, None),
-        (p.attrib, {}),
         (strong, ET.Element),
         (strong.tag, "strong"),
+        (strong.attrib, {}),
         (strong.text, "world"),
         (strong.tail, "!"),
-        (strong.attrib, {}),
         (elem_to_string(elements), nested_tags_text),
     ]
 
@@ -87,13 +87,48 @@ def get_attributes_asserts(elements: list[ET.Element]) -> list[tuple[Any, Any]]:
         (len(elements), 1),
         (script, ET.Element),
         (script.tag, "script"),
-        (script.text, None),
-        (script.tail, None),
         (script.attrib, {
             "defer": None,
             "src": script_src,
             "crossorigin": "anonymous",
         }),
+        (script.text, None),
+        (script.tail, None),
+    ]
+
+svg_text = (
+    '<svg xmlns="http://www.w3.org/2000/svg" '
+    'xmlns:xlink="http://www.w3.org/1999/xlink" '
+    'width="16" height="16" fill="currentColor" class="bi bi-dash">'
+    '<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>'
+    "</svg>"
+)
+
+def get_svg_asserts(elements: list[ET.Element]) -> list[tuple[Any, Any]]:
+    svg = elements[0]
+    path = list(svg)[0]
+
+    return [
+        (elements, list),
+        (len(elements), 1),
+        (svg, ET.Element),
+        (svg.tag, "svg"),
+        (svg.attrib, {
+            "xmlns": "http://www.w3.org/2000/svg",
+            "xmlns:xlink": "http://www.w3.org/1999/xlink",
+            "width": "16",
+            "height": "16",
+            "fill": "currentColor",
+            "class": "bi bi-dash",
+        }),
+        (svg.text, None),
+        (svg.tail, None),
+        (path.tag, "path"),
+        (path.attrib, {
+            "d": "M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z",
+        }),
+        (path.text, None),
+        (path.tail, None),
     ]
 
 
@@ -101,9 +136,10 @@ parser_args = [
     (two_elements_text, get_two_elements_asserts),
     (nested_tags_text, get_nested_tags_asserts),
     (attributes_text, get_attributes_asserts),
+    (svg_text, get_svg_asserts),
 ]
 
-parser_ids = ["two_elements", "nested_tags", "attributes"]
+parser_ids = ["two_elements", "nested_tags", "attributes", "svg"]
 
 
 def compare(left: Any, right: Any) -> bool:
