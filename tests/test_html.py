@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+import textwrap
 from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET  # noqa: N817
 
@@ -16,8 +17,10 @@ if TYPE_CHECKING:
     ParserAssertsFn = Callable[[list[ET.Element]], list[tuple[Any, Any]]]
 
 
-def elements_to_string(elements: list[ET.Element]) -> str:
-    return "".join(ET.tostring(e, encoding="unicode", method="html") for e in elements)
+def elem_to_string(elem: ET.Element | list[ET.Element], sep: str = "") -> str:
+    if isinstance(elem, list):
+        return sep.join(elem_to_string(e) for e in elem)
+    return ET.tostring(elem, encoding="unicode", method="html")
 
 
 two_elements_text = "<p>Hello</p><p>world</p>"
@@ -39,7 +42,7 @@ def get_two_elements_asserts(elements: list[ET.Element]) -> list[tuple[Any, Any]
         (p1.text, "world"),
         (p1.tail, None),
         (p1.attrib, {}),
-        (elements_to_string(elements), two_elements_text),
+        (elem_to_string(elements), two_elements_text),
     ]
 
 
@@ -68,7 +71,7 @@ def get_nested_tags_asserts(elements: list[ET.Element]) -> list[tuple[Any, Any]]
         (strong.text, "world"),
         (strong.tail, "!"),
         (strong.attrib, {}),
-        (elements_to_string(elements), nested_tags_text),
+        (elem_to_string(elements), nested_tags_text),
     ]
 
 
@@ -127,3 +130,54 @@ def test_parse_html(text: str, fn: ParserAssertsFn):
 
     for left, right in fn(elements):
         assert compare(left, right)
+
+
+@pytest.fixture
+def sample_html_indent():
+    root = ET.Element("div")
+    p1 = ET.SubElement(root, "p")
+    p1.text = "Hello "
+    strong = ET.SubElement(p1, "strong")
+    strong.text = "world"
+    strong.tail = "!"
+    div = ET.SubElement(root, "div")
+    code1 = ET.SubElement(div, "code")
+    code1.text = "should be indented"
+    pre = ET.SubElement(root, "pre")
+    code2 = ET.SubElement(pre, "code")
+    code2.text = "should not be indented"
+    p2 = ET.SubElement(root, "p2")
+    p2.text = "Hello"
+    br = ET.SubElement(p2, "br")
+    br.tail = "world again"
+
+    return root
+
+
+def test_indent_html_default(sample_html_indent: ET.Element):
+    expected_output = textwrap.dedent("""\
+        <div>
+          <p>Hello <strong>world</strong>!</p>
+          <div>
+            <code>should be indented</code>
+          </div>
+          <pre><code>should not be indented</code></pre>
+          <p2>Hello<br>world again</p2>
+        </div>""")
+
+    assert elem_to_string(html.indent_html(sample_html_indent)) == expected_output
+
+
+def test_indent_html_custom_space(sample_html_indent: ET.Element):
+    expected_output = textwrap.dedent("""\
+        <div>
+            <p>Hello <strong>world</strong>!</p>
+            <div>
+                <code>should be indented</code>
+            </div>
+            <pre><code>should not be indented</code></pre>
+            <p2>Hello<br>world again</p2>
+        </div>""")
+
+    assert elem_to_string(
+        html.indent_html(sample_html_indent, "    ")) == expected_output
