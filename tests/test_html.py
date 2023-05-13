@@ -133,51 +133,102 @@ def test_parse_html(text: str, fn: ParserAssertsFn):
 
 
 @pytest.fixture
-def sample_html_indent():
-    root = ET.Element("div")
+def sample_elem():
+    root = ET.Element("div", {"class": "container"})
     p1 = ET.SubElement(root, "p")
     p1.text = "Hello "
     strong = ET.SubElement(p1, "strong")
     strong.text = "world"
     strong.tail = "!"
-    div = ET.SubElement(root, "div")
+    div = ET.SubElement(root, "div", {"class": '>&"'})
     code1 = ET.SubElement(div, "code")
     code1.text = "should be indented"
     pre = ET.SubElement(root, "pre")
     code2 = ET.SubElement(pre, "code")
     code2.text = "should not be indented"
     p2 = ET.SubElement(root, "p2")
-    p2.text = "Hello"
+    p2.text = "Hello >&<"
     br = ET.SubElement(p2, "br")
     br.tail = "world again"
 
     return root
 
 
-def test_indent_html_default(sample_html_indent: ET.Element):
+def test_indent_html_default(sample_elem: ET.Element):
     expected_output = textwrap.dedent("""\
-        <div>
+        <div class="container">
           <p>Hello <strong>world</strong>!</p>
-          <div>
+          <div class="&gt;&amp;&quot;">
             <code>should be indented</code>
           </div>
           <pre><code>should not be indented</code></pre>
-          <p2>Hello<br>world again</p2>
+          <p2>Hello &gt;&amp;&lt;<br>world again</p2>
         </div>""")
 
-    assert elem_to_string(html.indent_html(sample_html_indent)) == expected_output
+    assert elem_to_string(html.indent_html(sample_elem)) == expected_output
 
 
-def test_indent_html_custom_space(sample_html_indent: ET.Element):
+def test_indent_html_custom_space(sample_elem: ET.Element):
     expected_output = textwrap.dedent("""\
-        <div>
+        <div class="container">
             <p>Hello <strong>world</strong>!</p>
-            <div>
+            <div class="&gt;&amp;&quot;">
                 <code>should be indented</code>
             </div>
             <pre><code>should not be indented</code></pre>
-            <p2>Hello<br>world again</p2>
+            <p2>Hello &gt;&amp;&lt;<br>world again</p2>
         </div>""")
 
     assert elem_to_string(
-        html.indent_html(sample_html_indent, "    ")) == expected_output
+        html.indent_html(sample_elem, "    ")) == expected_output
+
+
+def test_serialize_html_default(sample_elem: ET.Element):
+    expected_output = (
+        '<div class="container">'
+        "<p>Hello <strong>world</strong>!</p>"
+        '<div class="&gt;&amp;&quot;">'
+        "<code>should be indented</code>"
+        "</div>"
+        "<pre><code>should not be indented</code></pre>"
+        "<p2>Hello &gt;&amp;&lt;<br>world again</p2>"
+        "</div>"
+    )
+
+    assert html.serialize_html(sample_elem) == expected_output
+
+
+def test_serialize_html_indent(sample_elem: ET.Element):
+    expected_output = textwrap.dedent("""\
+        <div class="container">
+            <p>Hello <strong>world</strong>!</p>
+            <div class="&gt;&amp;&quot;">
+                <code>should be indented</code>
+            </div>
+            <pre><code>should not be indented</code></pre>
+            <p2>Hello &gt;&amp;&lt;<br>world again</p2>
+        </div>""")
+
+    assert html.serialize_html(sample_elem, "    ") == expected_output
+
+
+def test_serialize_html_bool_attr(sample_elem: ET.Element):
+    sample_elem.set("autofocus", None)  # pyright: ignore [reportGeneralTypeIssues]
+    expected_output = (
+        '<div class="container" autofocus>'
+        "<p>Hello <strong>world</strong>!</p>"
+        '<div class="&gt;&amp;&quot;">'
+        "<code>should be indented</code>"
+        "</div>"
+        "<pre><code>should not be indented</code></pre>"
+        "<p2>Hello &gt;&amp;&lt;<br>world again</p2>"
+        "</div>"
+    )
+
+    assert html.serialize_html(sample_elem) == expected_output
+
+
+def test_serialize_html_style():
+    elem = ET.Element("style")
+    elem.text = ".>&< {border: none;}"
+    assert html.serialize_html(elem) == "<style>.>&< {border: none;}</style>"
