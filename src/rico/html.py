@@ -6,6 +6,9 @@ import html.parser
 import xml.etree.ElementTree as ET  # noqa: N817
 
 
+TAGS_WITHOUT_INDENT = {"pre"}
+
+
 class HTMLParser(html.parser.HTMLParser):
     """Simple HTML parser. Returns a list of instances of ET.Element on close().
 
@@ -38,16 +41,59 @@ class HTMLParser(html.parser.HTMLParser):
 
 
 def parse_html(data: str) -> list[ET.Element]:
-    """Parse HTML from a string.
+    """Parse an HTML document from a string.
 
     Ignores comments, doctype declaration and processing instructions.
 
     Args:
-        data: HTML data.
+        data: The HTML data.
 
     Returns:
-        Parsed HTML data.
+        The parsed HTML document.
     """
     parser = HTMLParser()
     parser.feed(data)
     return parser.close()
+
+
+def indent_html(
+    element: ET.Element,
+    space: str = "  ",
+    level: int = 0,
+) -> ET.Element:
+    """Indent an HTML document.
+
+    Tnsert newlines and indentation space after elements.
+    Create a new document instead of updating inplace.
+    Do not indent elements inside <pre> tag.
+
+    Args:
+        element: The element to indent.
+        space: The whitespace to insert for each indentation level.
+        level: The initial indentation level. Should always be 0.
+
+    Returns:
+        The indented HTML document.
+    """
+    if element.tag in TAGS_WITHOUT_INDENT or not len(element):
+        return element
+
+    indented_element = ET.Element(element.tag, attrib=element.attrib)
+    indented_element.text = element.text
+    indented_element.tail = element.tail
+
+    if not element.text or not element.text.strip():
+        indented_element.text = "\n" + space * (level + 1)
+
+    for child in element:
+        indented_child = indent_html(child, space=space, level=level + 1)
+
+        if not indented_child.tail or not indented_child.tail.strip():
+            indented_child.tail = "\n" + space * (level + 1)
+
+        indented_element.append(indented_child)
+
+    if not indented_child.tail or not indented_child.tail.strip():  # pyright: ignore [reportUnboundVariable]  # noqa: E501
+        indented_child.tail = "\n" + space * level  # pyright: ignore [reportUnboundVariable]  # noqa: E501
+
+    return indented_element
