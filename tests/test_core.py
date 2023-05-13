@@ -1,31 +1,53 @@
+from __future__ import annotations
+
+import textwrap
 import xml.etree.ElementTree as ET  # noqa: N817
+
+import pytest
 
 from rico import core
 
 
-def test_create_element():
-    element1 = core.create_element(
-        tag="div",
-        attrib={"class": "container"},
-        id="div1",
-    )
+def test_content_base_simple():
+    content = core.ContentBase()
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {}
+    assert div.text is None
+    assert div.tail is None
 
-    assert isinstance(element1, ET.Element)
-    assert element1.tag == "div"
-    assert element1.attrib == {"class": "container", "id": "div1"}
 
-    element2 = core.create_element(
-        tag="p",
-        parent=element1,
-        text="Some text",
-        tail="Tail",
-    )
+def test_content_base_with_class():
+    content = core.ContentBase("row")
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
 
-    assert isinstance(element2, ET.Element)
-    assert element2.tag == "p"
-    assert element2.text == "Some text"
-    assert element2.tail == "Tail"
 
-    elements = list(element1.iter())
-    assert len(elements) == 2
-    assert elements[1] == element2
+@pytest.fixture
+def content_base_subclass_sample():
+    class ContentBaseSubclass(core.ContentBase):
+        def __init__(self, class_: str | None = None):
+            super().__init__(class_)
+            p = ET.Element("p")
+            p.text = "Hello world"
+            self.container.append(p)
+
+    return ContentBaseSubclass("row")
+
+
+def test_content_base_str(content_base_subclass_sample: core.ContentBase):
+    expectation = '<div class="row"><p>Hello world</p></div>'
+    assert str(content_base_subclass_sample) == expectation
+
+
+def test_content_base_indent(content_base_subclass_sample: core.ContentBase):
+    expectation = textwrap.dedent("""\
+        <div class="row">
+            <p>Hello world</p>
+        </div>""")
+    assert content_base_subclass_sample.serialize("    ") == expectation

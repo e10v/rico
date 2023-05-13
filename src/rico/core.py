@@ -2,42 +2,45 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET  # noqa: N817
 
-
-if TYPE_CHECKING:
-    from typing import Any
+from rico import html
 
 
-def create_element(
-    tag: str,
-    parent: ET.Element | None = None,
-    text: str | None = None,
-    tail: str | None = None,
-    attrib: dict[str, Any] = {},
-    **extra: Any,
-) -> ET.Element:
-    """Creates an element of a HTML document.
+class ContentBase:
+    """Base class for an HTML content.
 
-    Convenient wrapper for ET.Element and ET.SubElement.
+    Creates the container element on init.
+    Defines serialization method.
 
-    Args:
-        tag: HTML tag, element type.
-        parent: Parent element.
-        text: Text between opening and closing tags.
-        tail: Text after closing tag.
-        attrib: A dictionary containing the element's attributes.
-        extra: Extra attributes.
-
-    Returns:
-        An element of a HTML document.
+    Attributes:
+        container (Element): The container element.
     """
-    if parent is not None:
-        element = ET.SubElement(parent, tag, attrib={**attrib, **extra})
-    else:
-        element = ET.Element(tag, attrib={**attrib, **extra})
 
-    element.text = text
-    element.tail = tail
-    return element
+    def __init__(self, class_: str | None = None):
+        """Initialize an instance of the ContentBase.
+
+        Create the container element.
+
+        Args:
+            class_: The container class attribute.
+        """
+        attrib = {"class": class_} if class_ is not None else {}
+        self.container = ET.Element("div", attrib=attrib)
+
+    def serialize(self, indent_space: str | None = None) -> str:
+        """Serialize the object to string in HTML format.
+
+        Indent the object if `indent_space` is not None.
+
+        Args:
+            indent_space: The whitespace for indentation.
+
+        Returns:
+            The serialized object.
+        """
+        return html.serialize_html(self.container, indent_space=indent_space)
+
+    def __str__(self) -> str:
+        """Serialize the object to string in HTML format."""
+        return self.serialize()
