@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import textwrap
 import xml.etree.ElementTree as ET  # noqa: N817
 
@@ -77,3 +78,56 @@ def test_tag():
     assert p.attrib == {"class": "col", "id": "42"}
     assert p.text == "Hello"
     assert p.tail == "world"
+
+
+def test_html_simple():
+    html = core.HTML('<p border="1">Hello world</p>', True, class_="row")
+
+    div = html.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    p = list(div)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {"border": "1"}
+    assert p.text == "Hello world"
+    assert p.tail is None
+
+
+@pytest.mark.parametrize(
+    ("border", "dataframe", "strip_dataframe_borders", "wrap_in_div"),
+    itertools.product([True, False], [True, False], [True, False], [True, False]),
+)
+def test_html_table_border(
+    border: bool,
+    dataframe: bool,
+    strip_dataframe_borders: bool,
+    wrap_in_div: bool,
+):
+    border_attr = ' border="1"' if border else ""
+    dataframe_attr = ' class="dataframe"' if dataframe else ""
+
+    df = (
+        f"<table{border_attr}{dataframe_attr}>"
+        "<tbody><tr><td>1<td></tr></tbody></table>"
+    )
+
+    if wrap_in_div:
+        df = f"<div>{df}</div>"
+
+    html = core.HTML(df, strip_dataframe_borders)
+    if wrap_in_div:
+        div = list(html.container)[0]
+        table = list(div)[0]
+    else:
+        table = list(html.container)[0]
+
+    if border and (not dataframe or not strip_dataframe_borders):
+        assert table.get("border") == "1"
+    else:
+        assert table.get("border", "no border") == "no border"

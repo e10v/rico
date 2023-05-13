@@ -50,9 +50,9 @@ class ContentBase:
 
 
 class Tag(ContentBase):
-    """Content definition based on tag parameters.
+    """Content definition with tag parameters.
 
-    Creates a content element based on tag parameters and appends it to the container.
+    Creates a content element from tag parameters and appends it to the container.
     """
 
     def __init__(
@@ -64,7 +64,7 @@ class Tag(ContentBase):
         class_: str | None = None,
         **extra: Any,
     ):
-        """Initialize base content based on tag parameters.
+        """Initialize content from tag parameters.
 
         Args:
             tag: The content element's tag.
@@ -79,3 +79,36 @@ class Tag(ContentBase):
         element.text = text
         element.tail = tail
         self.container.append(element)
+
+
+class HTML(ContentBase):
+    """Content definition with an HTML text.
+
+    Creates content elements from an HTML text and appends it to the container.
+    """
+    def __init__(
+        self, data: str,
+        strip_dataframe_borders: bool = False,
+        class_: str | None = None,
+    ):
+        """Initialize content from an HTML text.
+
+        Args:
+            data: The HTML text.
+            strip_dataframe_borders: Delete borders attributes from dataframes.
+            class_: The container class attribute.
+        """
+        super().__init__(class_)
+        for element in html.parse_html(data):
+            if strip_dataframe_borders:
+                if (
+                    element.tag == "table" and
+                    "dataframe" in element.get("class", "") and
+                    "border" in element.attrib
+                ):
+                    del element.attrib["border"]
+
+                for table in element.iterfind('table[@class="dataframe"][@border]'):
+                    del table.attrib["border"]
+
+            self.container.append(element)
