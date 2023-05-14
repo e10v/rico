@@ -1,22 +1,32 @@
 from __future__ import annotations
 
+import base64
 import itertools
 import textwrap
+from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET  # noqa: N817
 
+import altair as alt
+import matplotlib.pyplot as plt
 import pytest
+import seaborn.objects as so
 
 from rico import core
 
 
+if TYPE_CHECKING:
+    from typing import Any, Literal
+
+
 def test_content_base_simple():
-    element = core.ContentBase()
-    div = element.container
+    content = core.ContentBase()
+    div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {}
     assert div.text is None
     assert div.tail is None
+    assert len(div) == 0
 
 
 def test_content_base_with_class():
@@ -27,6 +37,7 @@ def test_content_base_with_class():
     assert div.attrib == {"class": "row"}
     assert div.text is None
     assert div.tail is None
+    assert len(div) == 0
 
 
 @pytest.fixture
@@ -55,7 +66,7 @@ def test_content_base_indent(content_base_subclass_sample: core.ContentBase):
 
 
 def test_tag():
-    element = core.Tag(
+    content = core.Tag(
         "p",
         attrib={"class": "col"},
         id="42",
@@ -64,7 +75,7 @@ def test_tag():
         class_="row",
     )
 
-    div = element.container
+    div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -78,12 +89,87 @@ def test_tag():
     assert p.attrib == {"class": "col", "id": "42"}
     assert p.text == "Hello"
     assert p.tail == "world"
+    assert len(p) == 0
+
+
+def test_text_simple():
+    content = core.Text("Hello world", class_="row")
+
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    p = list(div)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "Hello world"
+    assert p.tail is None
+    assert len(p) == 0
+
+
+def test_text_pre_mono():
+    content = core.Text("Hello\nworld", mono=True)
+    div = content.container
+
+    pre = list(div)[0]
+    assert isinstance(pre, ET.Element)
+    assert pre.tag == "pre"
+    assert pre.attrib == {"class": "font-monospace"}
+    assert pre.text == "Hello\nworld"
+    assert pre.tail is None
+    assert len(pre) == 0
+
+
+def test_text_int_mono_wrap():
+    content = core.Text(42, mono=True, wrap=True)
+    div = content.container
+
+    p = list(div)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {"class": "font-monospace text-wrap"}
+    assert p.text == "42"
+    assert p.tail is None
+    assert len(p) == 0
+
+
+def test_code():
+    content = core.Code("Hello world", class_="row")
+
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    pre = list(div)[0]
+    assert isinstance(pre, ET.Element)
+    assert pre.tag == "pre"
+    assert pre.attrib == {}
+    assert pre.text is None
+    assert pre.tail is None
+    assert len(pre) == 1
+
+    code = list(pre)[0]
+    assert isinstance(code, ET.Element)
+    assert code.tag == "code"
+    assert code.attrib == {}
+    assert code.text == "Hello world"
+    assert code.tail is None
+    assert len(code) == 0
 
 
 def test_html_simple():
-    element = core.HTML('<p border="1">Hello world</p>', True, class_="row")
+    content = core.HTML('<p border="1">Hello world</p>', True, class_="row")
 
-    div = element.container
+    div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -97,6 +183,7 @@ def test_html_simple():
     assert p.attrib == {"border": "1"}
     assert p.text == "Hello world"
     assert p.tail is None
+    assert len(p) == 0
 
 
 @pytest.mark.parametrize(
@@ -133,78 +220,8 @@ def test_html_table_border(
         assert table.get("border", "no border") == "no border"
 
 
-def test_text_simple():
-    element = core.Text("Hello world", class_="row")
-
-    div = element.container
-    assert isinstance(div, ET.Element)
-    assert div.tag == "div"
-    assert div.attrib == {"class": "row"}
-    assert div.text is None
-    assert div.tail is None
-    assert len(div) == 1
-
-    p = list(div)[0]
-    assert isinstance(p, ET.Element)
-    assert p.tag == "p"
-    assert p.attrib == {}
-    assert p.text == "Hello world"
-    assert p.tail is None
-
-
-def test_text_pre_mono():
-    element = core.Text("Hello\nworld", mono=True)
-    div = element.container
-
-    pre = list(div)[0]
-    assert isinstance(pre, ET.Element)
-    assert pre.tag == "pre"
-    assert pre.attrib == {"class": "font-monospace"}
-    assert pre.text == "Hello\nworld"
-    assert pre.tail is None
-
-
-def test_text_int_mono_wrap():
-    element = core.Text(42, mono=True, wrap=True)
-    div = element.container
-
-    p = list(div)[0]
-    assert isinstance(p, ET.Element)
-    assert p.tag == "p"
-    assert p.attrib == {"class": "font-monospace text-wrap"}
-    assert p.text == "42"
-    assert p.tail is None
-
-
-def test_code():
-    element = core.Code("Hello world", class_="row")
-
-    div = element.container
-    assert isinstance(div, ET.Element)
-    assert div.tag == "div"
-    assert div.attrib == {"class": "row"}
-    assert div.text is None
-    assert div.tail is None
-    assert len(div) == 1
-
-    pre = list(div)[0]
-    assert isinstance(pre, ET.Element)
-    assert pre.tag == "pre"
-    assert pre.attrib == {}
-    assert pre.text is None
-    assert pre.tail is None
-    assert len(pre) == 1
-
-    code = list(pre)[0]
-    assert isinstance(code, ET.Element)
-    assert code.tag == "code"
-    assert code.attrib == {}
-    assert code.text == "Hello world"
-    assert code.tail is None
-
-
 def test_markdown():
-    element = core.Markdown(
+    content = core.Markdown(
         textwrap.dedent("""\
             # Header 1
             ## Header 2
@@ -212,7 +229,7 @@ def test_markdown():
         class_="row",
     )
 
-    div = element.container
+    div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -226,6 +243,7 @@ def test_markdown():
     assert h1.attrib == {}
     assert h1.text == "Header 1"
     assert h1.tail == "\n"
+    assert len(h1) == 0
 
     h2 = list(div)[1]
     assert isinstance(h2, ET.Element)
@@ -233,6 +251,7 @@ def test_markdown():
     assert h2.attrib == {}
     assert h2.text == "Header 2"
     assert h2.tail == "\n"
+    assert len(h2) == 0
 
     p = list(div)[2]
     assert isinstance(p, ET.Element)
@@ -240,3 +259,117 @@ def test_markdown():
     assert p.attrib == {}
     assert p.text == "Hello world"
     assert p.tail is None
+    assert len(p) == 0
+
+
+svg_data = (
+    '<svg xmlns="http://www.w3.org/2000/svg" '
+    'xmlns:xlink="http://www.w3.org/1999/xlink" '
+    'width="16" height="16" fill="currentColor" class="bi bi-dash">'
+    '<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>'
+    "</svg>"
+)
+
+@pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
+def test_image_svg(data: str | bytes):
+    content = core.Image(data, format="svg", class_="row")
+
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    svg = list(div)[0]
+    assert isinstance(svg, ET.Element)
+    assert svg.tag == "svg"
+    assert svg.attrib == {
+        "xmlns": "http://www.w3.org/2000/svg",
+        "xmlns:xlink": "http://www.w3.org/1999/xlink",
+        "width": "16",
+        "height": "16",
+        "fill": "currentColor",
+        "class": "bi bi-dash",
+    }
+    assert svg.text is None
+    assert svg.tail is None
+    assert len(svg) == 1
+
+    path = list(svg)[0]
+    assert isinstance(path, ET.Element)
+    assert path.tag == "path"
+    assert path.attrib == {
+        "d": "M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z",
+    }
+    assert path.text is None
+    assert path.tail is None
+    assert len(path) == 0
+
+
+@pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
+def test_image_png(data: str | bytes):
+    content = core.Image(data, format="png")
+
+    if isinstance(data, str):
+        data = data.encode()
+    encoded_image = base64.b64encode(data).decode()
+
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    img = list(div)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert img.attrib == {"src": f"data:image/png;base64,{encoded_image}"}
+    assert img.text is None
+    assert img.tail is None
+    assert len(img) == 0
+
+
+altair_chart = alt.Chart(  # type: ignore
+    alt.Data(values=[
+        {"x": "A", "y": 5},
+        {"x": "B", "y": 3},
+        {"x": "C", "y": 6},
+        {"x": "D", "y": 7},
+        {"x": "E", "y": 2},
+    ]),
+).mark_bar().encode(x="x:N", y="y:Q")
+
+pyplot_figure, pyplot_axes = plt.subplots()  # type: ignore
+pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])  # type: ignore
+
+seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
+
+@pytest.mark.parametrize(
+    "chart",
+    [altair_chart, pyplot_axes, pyplot_figure, seaborn_plot],  # type: ignore
+    ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
+)
+@pytest.mark.parametrize("format", ["svg", "png"], ids=["svg", "png"])
+def test_chart_altair(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
+    content = core.Chart(chart, format=format, class_="row")  # type: ignore
+
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    if format == "svg":
+        svg = list(div)[0]
+        assert isinstance(svg, ET.Element)
+        assert svg.tag == "svg"
+    else:
+        img = list(div)[0]
+        assert isinstance(img, ET.Element)
+        assert img.tag == "img"
