@@ -201,3 +201,42 @@ def test_code():
     assert code.attrib == {}
     assert code.text == "Hello world"
     assert code.tail is None
+
+
+def test_markdown():
+    element = core.Markdown(
+        textwrap.dedent("""\
+            # Header 1
+            ## Header 2
+            Hello world"""),
+        class_="row",
+    )
+
+    div = element.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 3
+
+    h1 = list(div)[0]
+    assert isinstance(h1, ET.Element)
+    assert h1.tag == "h1"
+    assert h1.attrib == {}
+    assert h1.text == "Header 1"
+    assert h1.tail == "\n"
+
+    h2 = list(div)[1]
+    assert isinstance(h2, ET.Element)
+    assert h2.tag == "h2"
+    assert h2.attrib == {}
+    assert h2.text == "Header 2"
+    assert h2.tail == "\n"
+
+    p = list(div)[2]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "Hello world"
+    assert p.tail is None

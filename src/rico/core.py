@@ -8,6 +8,12 @@ import xml.etree.ElementTree as ET  # noqa: N817
 from rico import html
 
 
+try:
+    import markdown
+except ImportError:  # pragma: no cover
+    markdown = None  # pragma: no cover
+
+
 if TYPE_CHECKING:
     from typing import Any
 
@@ -176,3 +182,32 @@ class Code(ContentBase):
         code.text = text
         pre.append(code)
         self.container.append(pre)
+
+
+class Markdown(ContentBase):
+    """A Markdown content definition.
+
+    Creates content elements from a markdown text and appends it to the container.
+    """
+    def __init__(
+        self,
+        text: str,
+        class_: str | None = None,
+        **kwargs: dict[str, Any],
+    ):
+        """Initialize content from a markdown text.
+
+        Args:
+            text: The markdown text.
+            class_: The container class attribute.
+            **kwargs: Keyword arguments passed to the `markdown.markdown` function.
+
+        Raises:
+            ImportError: The markdown package is not installed.
+        """
+        if markdown is None:
+            raise ImportError("The markdown package is not installed.")  # pragma: no cover  # noqa: E501
+
+        super().__init__(class_)
+        for element in html.parse_html(markdown.markdown(text, **kwargs)):
+            self.container.append(element)
