@@ -87,7 +87,8 @@ class HTML(ContentBase):
     Creates content elements from an HTML text and appends it to the container.
     """
     def __init__(
-        self, data: str,
+        self,
+        data: str,
         strip_dataframe_borders: bool = False,
         class_: str | None = None,
     ):
@@ -112,3 +113,46 @@ class HTML(ContentBase):
                     del table.attrib["border"]
 
             self.container.append(element)
+
+
+class Text(ContentBase):
+    """Content definition with a text.
+
+    Creates content elements from a text and appends it to the container.
+    """
+    def __init__(
+        self,
+        text: Any,
+        mono: bool = False,
+        wrap: bool = False,
+        class_: str | None = None,
+    ):
+        """Initialize content from a text.
+
+        The default tag is <p> unless the text contains a line break.
+        Then the <pre> tag is used.
+
+        The `mono` and `wrap` parameters rely on Bootstrap CSS.
+
+        Args:
+            text: The text. If it's not an instance of str, then it's converted to str.
+            mono: If True then "font-monospace" class is assigned to the text element.
+            wrap: If True then "text-wrap" class is assigned to the text element.
+            class_: The container class attribute.
+        """
+        super().__init__(class_)
+
+        if not isinstance(text, str):
+            text = str(text)
+
+        text_class = " ".join([
+            cl
+            for cond, cl in [(mono, "font-monospace"), (wrap, "text-wrap")]
+            if cond
+        ])
+
+        tag = "pre" if "\n" in text else "p"
+        attrib = {"class": text_class} if text_class else {}
+        element = ET.Element(tag, attrib=attrib)
+        element.text = text
+        self.container.append(element)

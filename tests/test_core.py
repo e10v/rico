@@ -10,8 +10,8 @@ from rico import core
 
 
 def test_content_base_simple():
-    content = core.ContentBase()
-    div = content.container
+    element = core.ContentBase()
+    div = element.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {}
@@ -20,8 +20,8 @@ def test_content_base_simple():
 
 
 def test_content_base_with_class():
-    content = core.ContentBase("row")
-    div = content.container
+    element = core.ContentBase("row")
+    div = element.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -55,7 +55,7 @@ def test_content_base_indent(content_base_subclass_sample: core.ContentBase):
 
 
 def test_tag():
-    tag = core.Tag(
+    element = core.Tag(
         "p",
         attrib={"class": "col"},
         id="42",
@@ -64,7 +64,7 @@ def test_tag():
         class_="row",
     )
 
-    div = tag.container
+    div = element.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -81,9 +81,9 @@ def test_tag():
 
 
 def test_html_simple():
-    html = core.HTML('<p border="1">Hello world</p>', True, class_="row")
+    element = core.HTML('<p border="1">Hello world</p>', True, class_="row")
 
-    div = html.container
+    div = element.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -120,14 +120,57 @@ def test_html_table_border(
     if wrap_in_div:
         df = f"<div>{df}</div>"
 
-    html = core.HTML(df, strip_dataframe_borders)
+    element = core.HTML(df, strip_dataframe_borders)
     if wrap_in_div:
-        div = list(html.container)[0]
+        div = list(element.container)[0]
         table = list(div)[0]
     else:
-        table = list(html.container)[0]
+        table = list(element.container)[0]
 
     if border and (not dataframe or not strip_dataframe_borders):
         assert table.get("border") == "1"
     else:
         assert table.get("border", "no border") == "no border"
+
+
+def test_text_simple():
+    element = core.Text("Hello world", class_="row")
+
+    div = element.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    p = list(div)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "Hello world"
+    assert p.tail is None
+
+
+def test_text_pre_mono():
+    element = core.Text("Hello\nworld", mono=True)
+    div = element.container
+
+    pre = list(div)[0]
+    assert isinstance(pre, ET.Element)
+    assert pre.tag == "pre"
+    assert pre.attrib == {"class": "font-monospace"}
+    assert pre.text == "Hello\nworld"
+    assert pre.tail is None
+
+
+def test_text_int_mono_wrap():
+    element = core.Text(42, mono=True, wrap=True)
+    div = element.container
+
+    p = list(div)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {"class": "font-monospace text-wrap"}
+    assert p.text == "42"
+    assert p.tail is None
