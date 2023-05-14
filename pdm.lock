@@ -109,6 +109,12 @@ requires_python = ">=3.7"
 summary = "A fast implementation of the Cassowary constraint solver"
 
 [[package]]
+name = "markdown"
+version = "3.4.3"
+requires_python = ">=3.7"
+summary = "Python implementation of John Gruber's Markdown."
+
+[[package]]
 name = "markupsafe"
 version = "2.1.2"
 requires_python = ">=3.7"
@@ -288,8 +294,8 @@ summary = "Convert Vega-Lite chart specifications to SVG, PNG, or Vega"
 [metadata]
 lock_version = "4.2"
 cross_platform = true
-groups = ["default", "altair", "complete", "lint", "pyplot", "seaborn", "test"]
-content_hash = "sha256:8ca62aef93d0b9acfaa926ce653afeba610d1b9e2691de6100b5df2d9d85c0cd"
+groups = ["default", "altair", "complete", "lint", "markdown", "pyplot", "seaborn", "test"]
+content_hash = "sha256:34f0053d0b52a511798a4a21702be60d5186cd4c1b965252d15cc7c01b5c0238"
 
 [metadata.files]
 "altair 5.0.0" = [
@@ -511,6 +517,10 @@ content_hash = "sha256:8ca62aef93d0b9acfaa926ce653afeba610d1b9e2691de6100b5df2d9
     {url = "https://files.pythonhosted.org/packages/f2/e2/7ed98290955aa83598d0e5672d88bbc193192cdcd23d3a9ed7e536cf8e55/kiwisolver-1.4.4-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:f0a71d85ecdd570ded8ac3d1c0f480842f49a40beb423bb8014539a9f32a5897"},
     {url = "https://files.pythonhosted.org/packages/f6/e8/194a4b4eee0990a648711bfb769a7110d10fd8d8b370a0464cb3d1060381/kiwisolver-1.4.4-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:70e7c2e7b750585569564e2e5ca9845acfaa5da56ac46df68414f29fea97be9f"},
     {url = "https://files.pythonhosted.org/packages/f8/f4/724d454e95c7e9be6a05f1da3fb85251b5dbb8c3b7d06bdc61d56b16035a/kiwisolver-1.4.4-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:36dafec3d6d6088d34e2de6b85f9d8e2324eb734162fba59d2ba9ed7a2043d5b"},
+]
+"markdown 3.4.3" = [
+    {url = "https://files.pythonhosted.org/packages/9a/a1/1352b0e5a3c71a79fa9265726e2217f69df9fd4de0bcb5725cc61f62a5df/Markdown-3.4.3-py3-none-any.whl", hash = "sha256:065fd4df22da73a625f14890dd77eb8040edcbd68794bcd35943be14490608b2"},
+    {url = "https://files.pythonhosted.org/packages/9d/80/cc67bfb7deb973d5ae662ee6454d2dafaa8f7c106feafd0d1572666ebde5/Markdown-3.4.3.tar.gz", hash = "sha256:8bf101198e004dc93e84a12a7395e31aac6a9c9942848ae1d99b9d72cf9b3520"},
 ]
 "markupsafe 2.1.2" = [
     {url = "https://files.pythonhosted.org/packages/02/2c/18d55e5df6a9ea33709d6c33e08cb2e07d39e20ad05d8c6fbf9c9bcafd54/MarkupSafe-2.1.2-cp310-cp310-win_amd64.whl", hash = "sha256:835fb5e38fd89328e9c81067fd642b3593c33e1e17e2fdbf77f5676abb14a156"},

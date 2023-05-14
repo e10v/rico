@@ -27,9 +27,10 @@ classifiers = [
 
 [project.optional-dependencies]
 altair = ["altair>=4.2", "vl-convert-python>=0.8"]
+markdown = ["markdown>=3.3"]
 pyplot = ["matplotlib>=3.5"]
 seaborn = ["seaborn>=0.12"]
-complete = ["rico[altair,pyplot,seaborn]"]
+complete = ["rico[altair,markdown,pyplot,seaborn]"]
 
 
 [build-system]
