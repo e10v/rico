@@ -174,3 +174,30 @@ def test_text_int_mono_wrap():
     assert p.attrib == {"class": "font-monospace text-wrap"}
     assert p.text == "42"
     assert p.tail is None
+
+
+def test_code():
+    element = core.Code("Hello world", class_="row")
+
+    div = element.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    pre = list(div)[0]
+    assert isinstance(pre, ET.Element)
+    assert pre.tag == "pre"
+    assert pre.attrib == {}
+    assert pre.text is None
+    assert pre.tail is None
+    assert len(pre) == 1
+
+    code = list(pre)[0]
+    assert isinstance(code, ET.Element)
+    assert code.tag == "code"
+    assert code.attrib == {}
+    assert code.text == "Hello world"
+    assert code.tail is None

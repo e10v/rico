@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class ContentBase:
-    """Base content definition.
+    """A base content definition.
 
     Creates a container element on init.
     Defines serialization method and string representation.
@@ -50,9 +50,9 @@ class ContentBase:
 
 
 class Tag(ContentBase):
-    """Content definition with tag parameters.
+    """A Tag content definition.
 
-    Creates a content element from tag parameters and appends it to the container.
+    Creates a content element using tag parameters and appends it to the container.
     """
 
     def __init__(
@@ -64,7 +64,7 @@ class Tag(ContentBase):
         class_: str | None = None,
         **extra: Any,
     ):
-        """Initialize content from tag parameters.
+        """Initialize content using tag parameters.
 
         Args:
             tag: The content element's tag.
@@ -82,7 +82,7 @@ class Tag(ContentBase):
 
 
 class HTML(ContentBase):
-    """Content definition with an HTML text.
+    """An HTML content definition.
 
     Creates content elements from an HTML text and appends it to the container.
     """
@@ -116,9 +116,9 @@ class HTML(ContentBase):
 
 
 class Text(ContentBase):
-    """Content definition with a text.
+    """A Text content definition.
 
-    Creates content elements from a text and appends it to the container.
+    Creates a content element from a text and appends it to the container.
     """
     def __init__(
         self,
@@ -156,3 +156,23 @@ class Text(ContentBase):
         element = ET.Element(tag, attrib=attrib)
         element.text = text
         self.container.append(element)
+
+
+class Code(ContentBase):
+    """A Code content definition.
+
+    Creates content elements from a code and appends it to the container.
+    """
+    def __init__(self, text: str, class_: str | None = None):
+        """Initialize content from a code.
+
+        Args:
+            text: The code.
+            class_: The container class attribute.
+        """
+        super().__init__(class_)
+        pre = ET.Element("pre")
+        code = ET.Element("code")
+        code.text = text
+        pre.append(code)
+        self.container.append(pre)
