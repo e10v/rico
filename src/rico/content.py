@@ -1,5 +1,5 @@
 # pyright: reportUnknownMemberType=false
-"""Core functions and classes."""
+"""Rich content classes."""
 
 from __future__ import annotations
 
