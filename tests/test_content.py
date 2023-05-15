@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import pytest
 import seaborn.objects as so
 
-import rico.core
+import rico.content
 
 
 if TYPE_CHECKING:
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 
 def test_content_base_simple():
-    content = rico.core.ContentBase()
+    content = rico.content.ContentBase()
     div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
@@ -31,7 +31,7 @@ def test_content_base_simple():
 
 
 def test_content_base_with_class():
-    content = rico.core.ContentBase("row")
+    content = rico.content.ContentBase("row")
     div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
@@ -43,7 +43,7 @@ def test_content_base_with_class():
 
 @pytest.fixture
 def content_base_subclass_sample():
-    class ContentBaseSubclass(rico.core.ContentBase):
+    class ContentBaseSubclass(rico.content.ContentBase):
         def __init__(self, class_: str | None = None):
             super().__init__(class_)
             p = ET.Element("p")
@@ -53,12 +53,12 @@ def content_base_subclass_sample():
     return ContentBaseSubclass("row")
 
 
-def test_content_base_str(content_base_subclass_sample: rico.core.ContentBase):
+def test_content_base_str(content_base_subclass_sample: rico.content.ContentBase):
     expectation = '<div class="row"><p>Hello world</p></div>'
     assert str(content_base_subclass_sample) == expectation
 
 
-def test_content_base_indent(content_base_subclass_sample: rico.core.ContentBase):
+def test_content_base_indent(content_base_subclass_sample: rico.content.ContentBase):
     expectation = textwrap.dedent("""\
         <div class="row">
             <p>Hello world</p>
@@ -67,7 +67,7 @@ def test_content_base_indent(content_base_subclass_sample: rico.core.ContentBase
 
 
 def test_tag():
-    content = rico.core.Tag(
+    content = rico.content.Tag(
         "p",
         attrib={"class": "col"},
         id="42",
@@ -94,7 +94,7 @@ def test_tag():
 
 
 def test_text_simple():
-    content = rico.core.Text("Hello world", class_="row")
+    content = rico.content.Text("Hello world", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -114,7 +114,7 @@ def test_text_simple():
 
 
 def test_text_pre_mono():
-    content = rico.core.Text("Hello\nworld", mono=True)
+    content = rico.content.Text("Hello\nworld", mono=True)
     div = content.container
 
     pre = list(div)[0]
@@ -127,7 +127,7 @@ def test_text_pre_mono():
 
 
 def test_text_int_mono_wrap():
-    content = rico.core.Text(42, mono=True, wrap=True)
+    content = rico.content.Text(42, mono=True, wrap=True)
     div = content.container
 
     p = list(div)[0]
@@ -140,7 +140,7 @@ def test_text_int_mono_wrap():
 
 
 def test_code():
-    content = rico.core.Code("Hello world", class_="row")
+    content = rico.content.Code("Hello world", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -168,7 +168,7 @@ def test_code():
 
 
 def test_html_simple():
-    content = rico.core.HTML('<p border="1">Hello world</p>', True, class_="row")
+    content = rico.content.HTML('<p border="1">Hello world</p>', True, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -208,7 +208,7 @@ def test_html_table_border(
     if wrap_in_div:
         df = f"<div>{df}</div>"
 
-    content = rico.core.HTML(df, strip_dataframe_borders)
+    content = rico.content.HTML(df, strip_dataframe_borders)
     if wrap_in_div:
         div = list(content.container)[0]
         table = list(div)[0]
@@ -222,7 +222,7 @@ def test_html_table_border(
 
 
 def test_markdown():
-    content = rico.core.Markdown(
+    content = rico.content.Markdown(
         textwrap.dedent("""\
             # Header 1
             ## Header 2
@@ -273,7 +273,7 @@ svg_data = (
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_svg(data: str | bytes):
-    content = rico.core.Image(data, format="svg", class_="row")
+    content = rico.content.Image(data, format="svg", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -311,7 +311,7 @@ def test_image_svg(data: str | bytes):
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_png(data: str | bytes):
-    content = rico.core.Image(data, format="png")
+    content = rico.content.Image(data, format="png")
 
     if isinstance(data, str):
         data = data.encode()
@@ -344,7 +344,7 @@ altair_chart = alt.Chart(
     ]),
 ).mark_bar().encode(x="x:N", y="y:Q")
 
-pyplot_figure, pyplot_axes = plt.subplots()
+pyplot_figure, pyplot_axes = plt.subplots()  # type: ignore
 pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])
 
 seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
@@ -356,7 +356,7 @@ seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
 )
 @pytest.mark.parametrize("format", ["svg", "png"], ids=["svg", "png"])
 def test_chart_altair(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
-    content = rico.core.Chart(chart, format=format, class_="row")
+    content = rico.content.Chart(chart, format=format, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
