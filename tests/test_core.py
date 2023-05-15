@@ -1,3 +1,4 @@
+# pyright: reportUnknownMemberType=false, reportUnknownArgumentType=false
 from __future__ import annotations
 
 import base64
@@ -11,7 +12,7 @@ import matplotlib.pyplot as plt
 import pytest
 import seaborn.objects as so
 
-from rico import core
+import rico.core
 
 
 if TYPE_CHECKING:
@@ -19,7 +20,7 @@ if TYPE_CHECKING:
 
 
 def test_content_base_simple():
-    content = core.ContentBase()
+    content = rico.core.ContentBase()
     div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
@@ -30,8 +31,8 @@ def test_content_base_simple():
 
 
 def test_content_base_with_class():
-    element = core.ContentBase("row")
-    div = element.container
+    content = rico.core.ContentBase("row")
+    div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
     assert div.attrib == {"class": "row"}
@@ -42,7 +43,7 @@ def test_content_base_with_class():
 
 @pytest.fixture
 def content_base_subclass_sample():
-    class ContentBaseSubclass(core.ContentBase):
+    class ContentBaseSubclass(rico.core.ContentBase):
         def __init__(self, class_: str | None = None):
             super().__init__(class_)
             p = ET.Element("p")
@@ -52,12 +53,12 @@ def content_base_subclass_sample():
     return ContentBaseSubclass("row")
 
 
-def test_content_base_str(content_base_subclass_sample: core.ContentBase):
+def test_content_base_str(content_base_subclass_sample: rico.core.ContentBase):
     expectation = '<div class="row"><p>Hello world</p></div>'
     assert str(content_base_subclass_sample) == expectation
 
 
-def test_content_base_indent(content_base_subclass_sample: core.ContentBase):
+def test_content_base_indent(content_base_subclass_sample: rico.core.ContentBase):
     expectation = textwrap.dedent("""\
         <div class="row">
             <p>Hello world</p>
@@ -66,7 +67,7 @@ def test_content_base_indent(content_base_subclass_sample: core.ContentBase):
 
 
 def test_tag():
-    content = core.Tag(
+    content = rico.core.Tag(
         "p",
         attrib={"class": "col"},
         id="42",
@@ -93,7 +94,7 @@ def test_tag():
 
 
 def test_text_simple():
-    content = core.Text("Hello world", class_="row")
+    content = rico.core.Text("Hello world", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -113,7 +114,7 @@ def test_text_simple():
 
 
 def test_text_pre_mono():
-    content = core.Text("Hello\nworld", mono=True)
+    content = rico.core.Text("Hello\nworld", mono=True)
     div = content.container
 
     pre = list(div)[0]
@@ -126,7 +127,7 @@ def test_text_pre_mono():
 
 
 def test_text_int_mono_wrap():
-    content = core.Text(42, mono=True, wrap=True)
+    content = rico.core.Text(42, mono=True, wrap=True)
     div = content.container
 
     p = list(div)[0]
@@ -139,7 +140,7 @@ def test_text_int_mono_wrap():
 
 
 def test_code():
-    content = core.Code("Hello world", class_="row")
+    content = rico.core.Code("Hello world", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -167,7 +168,7 @@ def test_code():
 
 
 def test_html_simple():
-    content = core.HTML('<p border="1">Hello world</p>', True, class_="row")
+    content = rico.core.HTML('<p border="1">Hello world</p>', True, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -207,12 +208,12 @@ def test_html_table_border(
     if wrap_in_div:
         df = f"<div>{df}</div>"
 
-    element = core.HTML(df, strip_dataframe_borders)
+    content = rico.core.HTML(df, strip_dataframe_borders)
     if wrap_in_div:
-        div = list(element.container)[0]
+        div = list(content.container)[0]
         table = list(div)[0]
     else:
-        table = list(element.container)[0]
+        table = list(content.container)[0]
 
     if border and (not dataframe or not strip_dataframe_borders):
         assert table.get("border") == "1"
@@ -221,7 +222,7 @@ def test_html_table_border(
 
 
 def test_markdown():
-    content = core.Markdown(
+    content = rico.core.Markdown(
         textwrap.dedent("""\
             # Header 1
             ## Header 2
@@ -272,7 +273,7 @@ svg_data = (
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_svg(data: str | bytes):
-    content = core.Image(data, format="svg", class_="row")
+    content = rico.core.Image(data, format="svg", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -310,7 +311,7 @@ def test_image_svg(data: str | bytes):
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_png(data: str | bytes):
-    content = core.Image(data, format="png")
+    content = rico.core.Image(data, format="png")
 
     if isinstance(data, str):
         data = data.encode()
@@ -333,7 +334,7 @@ def test_image_png(data: str | bytes):
     assert len(img) == 0
 
 
-altair_chart = alt.Chart(  # type: ignore
+altair_chart = alt.Chart(
     alt.Data(values=[
         {"x": "A", "y": 5},
         {"x": "B", "y": 3},
@@ -343,19 +344,19 @@ altair_chart = alt.Chart(  # type: ignore
     ]),
 ).mark_bar().encode(x="x:N", y="y:Q")
 
-pyplot_figure, pyplot_axes = plt.subplots()  # type: ignore
-pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])  # type: ignore
+pyplot_figure, pyplot_axes = plt.subplots()
+pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])
 
 seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
 
 @pytest.mark.parametrize(
     "chart",
-    [altair_chart, pyplot_axes, pyplot_figure, seaborn_plot],  # type: ignore
+    [altair_chart, pyplot_axes, pyplot_figure, seaborn_plot],
     ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
 )
 @pytest.mark.parametrize("format", ["svg", "png"], ids=["svg", "png"])
 def test_chart_altair(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
-    content = core.Chart(chart, format=format, class_="row")  # type: ignore
+    content = rico.core.Chart(chart, format=format, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)

@@ -1,14 +1,14 @@
+# pyright: reportUnknownMemberType=false
 """Core functions and classes."""
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
 import base64
 import io
 from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET  # noqa: N817
 
-from rico import html
+import rico.html
 
 
 if TYPE_CHECKING:
@@ -16,61 +16,25 @@ if TYPE_CHECKING:
 
 
 try:
+    import altair as alt
+    import vl_convert as vlc
+except ImportError:  # pragma: no cover
+    alt = None
+
+try:
     import markdown
 except ImportError:  # pragma: no cover
     markdown = None
 
 try:
-    import altair as alt
-    import vl_convert as vlc  # type: ignore
-    AltairChart = alt.TopLevelMixin  # type: ignore
-except ImportError:  # pragma: no cover
-    alt = None
-
-    class AltairChart(ABC):  # noqa: D101
-        @abstractmethod
-        def to_json(self) -> str:  # noqa: D102
-            ...
-
-    class vlc(ABC):  # noqa: D101, N801
-        @classmethod
-        @abstractmethod
-        def vegalite_to_svg(cls, *args: Any, **kwargs: Any) -> str:  # noqa: D102
-            ...
-
-        @classmethod
-        @abstractmethod
-        def vegalite_to_png(cls, *args: Any, **kwargs: Any) -> bytes:  # noqa: D102, E501
-            ...
-
-try:
     import matplotlib.pyplot as plt
-    PyplotFigure = plt.Figure  # type: ignore
-    PyplotAxes = plt.Axes  # type: ignore
 except ImportError:  # pragma: no cover
     plt = None
 
-    class PyplotFigure(ABC):  # noqa: D101
-        @abstractmethod
-        def savefig(self, *args: Any, **kwargs: Any) -> None:  # noqa: D102
-            ...
-
-    class PyplotAxes(ABC):  # noqa: D101
-        @property
-        @abstractmethod
-        def figure(self) -> PyplotFigure:  # noqa: D102
-            ...
-
 try:
     import seaborn.objects as so
-    SeabornPlot = so.Plot  # type: ignore
 except ImportError:  # pragma: no cover
     so = None
-
-    class SeabornPlot(ABC):  # noqa: D101
-        @abstractmethod
-        def save(self, *args: Any, **kwargs: Any) -> None:  # noqa: D102
-            ...
 
 
 class ContentBase:
@@ -104,7 +68,7 @@ class ContentBase:
         Returns:
             The serialized object.
         """
-        return html.serialize_html(self.container, indent_space=indent_space)
+        return rico.html.serialize_html(self.container, indent_space=indent_space)
 
     def __str__(self) -> str:
         """Serialize the object to string in HTML format."""
@@ -150,7 +114,7 @@ class Text(ContentBase):
     """
     def __init__(
         self,
-        text: Any,
+        obj: Any,
         mono: bool = False,
         wrap: bool = False,
         class_: str | None = None,
@@ -163,15 +127,15 @@ class Text(ContentBase):
         The `mono` and `wrap` parameters rely on Bootstrap CSS.
 
         Args:
-            text: The text. If it's not an instance of str, then it's converted to str.
+            obj: The text. If it's not an instance of str, then it's converted to str.
             mono: If True then "font-monospace" class is assigned to the text element.
             wrap: If True then "text-wrap" class is assigned to the text element.
             class_: The container class attribute.
         """
         super().__init__(class_)
 
-        if not isinstance(text, str):
-            text = str(text)
+        if not isinstance(obj, str):
+            obj = str(obj)
 
         text_class = " ".join([
             cl
@@ -179,10 +143,10 @@ class Text(ContentBase):
             if cond
         ])
 
-        tag = "pre" if "\n" in text else "p"
+        tag = "pre" if "\n" in obj else "p"
         attrib = {"class": text_class} if text_class else {}
         element = ET.Element(tag, attrib=attrib)
-        element.text = text
+        element.text = obj
         self.container.append(element)
 
 
@@ -213,19 +177,19 @@ class HTML(ContentBase):
     """
     def __init__(
         self,
-        data: str,
+        text: str,
         strip_dataframe_borders: bool = False,
         class_: str | None = None,
     ):
         """Initialize content from an HTML text.
 
         Args:
-            data: The HTML text.
+            text: The HTML text.
             strip_dataframe_borders: Delete borders attributes from dataframes.
             class_: The container class attribute.
         """
         super().__init__(class_)
-        for element in html.parse_html(data):
+        for element in rico.html.parse_html(text):
             if strip_dataframe_borders:
                 if (
                     element.tag == "table" and
@@ -292,7 +256,7 @@ class Image(ContentBase):
             if isinstance(data, bytes):
                 data = data.decode()
 
-            for element in html.parse_html(data):
+            for element in rico.html.parse_html(data):
                 self.container.append(element)
         else:
             if isinstance(data, str):
@@ -318,7 +282,7 @@ class Chart(ContentBase):
     """
     def __init__(
         self,
-        chart: AltairChart | PyplotAxes | PyplotFigure | SeabornPlot,
+        obj: Any,
         format: Literal["svg", "png"] = "svg",  # noqa: A002
         class_: str | None = None,
         **kwargs: Any,
@@ -326,7 +290,7 @@ class Chart(ContentBase):
         """Initialize content from a chart object.
 
         Args:
-            chart: The chart object.
+            obj: The chart object.
             format: The image format.
             class_: The container class attribute.
             **kwargs: Keyword arguments passed to a function
@@ -336,26 +300,26 @@ class Chart(ContentBase):
             TypeError: Chart type is not supported
                 or required extra package is not installed.
         """
-        if plt is not None and isinstance(chart, PyplotAxes):
-            chart = chart.figure
+        if plt is not None and isinstance(obj, plt.Axes):
+            obj = obj.figure
 
-        if plt is not None and isinstance(chart, PyplotFigure):
+        if plt is not None and isinstance(obj, plt.Figure):  # type: ignore
             stream = io.StringIO() if format == "svg" else io.BytesIO()
-            chart.savefig(stream, format=format, **kwargs)
+            obj.savefig(stream, format=format, **kwargs)
             image = stream.getvalue()
-        elif so is not None and isinstance(chart, SeabornPlot):
+        elif so is not None and isinstance(obj, so.Plot):
             stream = io.StringIO() if format == "svg" else io.BytesIO()
-            chart.save(stream, format=format, **kwargs)
+            obj.save(stream, format=format, **kwargs)
             image = stream.getvalue()
-        elif alt is not None and isinstance(chart, AltairChart):
-            convert = vlc.vegalite_to_svg if format == "svg" else vlc.vegalite_to_png
-            image = convert(chart.to_json(), **kwargs)
+        elif alt is not None and isinstance(obj, alt.Chart):
+            convert = vlc.vegalite_to_svg if format == "svg" else vlc.vegalite_to_png  # type: ignore  # noqa: E501
+            image = convert(obj.to_json(), **kwargs)  # type: ignore
         else:  # pragma: no cover
             error_msg = (
-                f"Chart type {type(chart)} is not supported "
+                f"Chart type {type(obj)} is not supported "
                 "or required extra package is not installed."
             )
             raise TypeError(error_msg)
 
-        content = Image(data=image, format=format, class_=class_)
+        content = Image(data=image, format=format, class_=class_)  # type: ignore
         self.container = content.container
