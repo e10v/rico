@@ -374,3 +374,39 @@ def test_chart_altair(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
         img = list(div)[0]
         assert isinstance(img, ET.Element)
         assert img.tag == "img"
+
+
+def test_content():
+    class ReprHTML:
+        def _repr_html_(self) -> str:
+            return "<h1>Hello</h1>"
+
+    content = rico.content.Content(ReprHTML(), "world", pyplot_axes, class_="row")
+
+    div = content.container
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {"class": "row"}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 3
+
+    h1 = list(div)[0]
+    assert isinstance(h1, ET.Element)
+    assert h1.tag == "h1"
+    assert h1.attrib == {}
+    assert h1.text == "Hello"
+    assert h1.tail is None
+    assert len(h1) == 0
+
+    p = list(div)[1]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "world"
+    assert p.tail is None
+    assert len(p) == 0
+
+    svg = list(div)[2]
+    assert isinstance(svg, ET.Element)
+    assert svg.tag == "svg"

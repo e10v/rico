@@ -153,7 +153,7 @@ class Text(ContentBase):
 class Code(ContentBase):
     """A Code content definition.
 
-    Creates content elements from a code and appends it to the container.
+    Creates content elements from a code and appends them to the container.
     """
     def __init__(self, text: str, class_: str | None = None):
         """Initialize content from a code.
@@ -173,7 +173,7 @@ class Code(ContentBase):
 class HTML(ContentBase):
     """An HTML content definition.
 
-    Creates content elements from an HTML text and appends it to the container.
+    Creates content elements from an HTML text and appends them to the container.
     """
     def __init__(
         self,
@@ -189,25 +189,21 @@ class HTML(ContentBase):
             class_: The container class attribute.
         """
         super().__init__(class_)
+
         for element in rico.html.parse_html(text):
-            if strip_dataframe_borders:
-                if (
-                    element.tag == "table" and
-                    "dataframe" in element.get("class", "") and
-                    "border" in element.attrib
-                ):
-                    del element.attrib["border"]
-
-                for table in element.iterfind('table[@class="dataframe"][@border]'):
-                    del table.attrib["border"]
-
             self.container.append(element)
+
+        if strip_dataframe_borders:
+            for table in self.container.iterfind(
+                './/table[@class="dataframe"][@border]',
+            ):
+                del table.attrib["border"]
 
 
 class Markdown(ContentBase):
     """A Markdown content definition.
 
-    Creates content elements from a markdown text and appends it to the container.
+    Creates content elements from a markdown text and appends them to the container.
     """
     def __init__(
         self,
@@ -235,7 +231,7 @@ class Markdown(ContentBase):
 class Image(ContentBase):
     """An Image content definition.
 
-    Creates content elements using an image data and appends it to the container.
+    Creates content elements using an image data and appends them to the container.
     """
     def __init__(
         self,
@@ -273,7 +269,7 @@ class Image(ContentBase):
 class Chart(ContentBase):
     """An Chart content definition.
 
-    Creates content elements from a chart object and appends it to the container.
+    Creates content elements from a chart object and appends them to the container.
 
     The supported chart types are the following:
     - Altair Chart,
@@ -323,3 +319,34 @@ class Chart(ContentBase):
 
         content = Image(data=image, format=format, class_=class_)  # type: ignore
         self.container = content.container
+
+
+class Content(ContentBase):
+    """A content definition.
+
+    Creates content elements from arbitrary objects and appends them to the container.
+
+    Automatically determines the content type.
+    """
+    def __init__(self, *objects: Any, class_: str | None = None):
+        """Initialize content from arbitrary objects.
+
+        Args:
+            *objects: The objects which are used to create a content.
+            class_: The container class attribute.
+        """
+        super().__init__(class_=class_)
+        for obj in objects:
+            if (
+                alt is not None and isinstance(obj, alt.Chart) or
+                plt is not None and isinstance(obj, plt.Axes | plt.Figure) or  # type: ignore  # noqa: E501
+                so is not None and isinstance(obj, so.Plot)
+            ):
+                content = Chart(obj)
+            elif hasattr(obj, "_repr_html_") and callable(obj._repr_html_):
+                content = HTML(obj._repr_html_(), strip_dataframe_borders=True)
+            else:
+                content = Text(obj)
+
+            for element in content.container:
+                self.container.append(element)
