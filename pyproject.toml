@@ -1,7 +1,7 @@
 [project]
 name = "rico"
 dynamic = ["version"]
-description = "Rich content to HTML as easy as doc.print(x)."
+description = "Rich content to HTML as easy as Doc([df, plot])."
 authors = [
     {name = "Evgeny Ivanov", email = "ivanov.evgeny.n@gmail.com"},
 ]
@@ -24,6 +24,9 @@ classifiers = [
     "Topic :: Text Processing :: Markup",
     "Topic :: Text Processing :: Markup :: HTML",
 ]
+
+[project.urls]
+source = "https://github.com/e10v/rico"
 
 [project.optional-dependencies]
 altair = ["altair>=4.2", "vl-convert-python>=0.8"]
