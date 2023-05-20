@@ -6,14 +6,15 @@ import html.parser
 import xml.etree.ElementTree as ET  # noqa: N817
 
 
-TAGS_WITHOUT_INDENT = {"pre"}
+UNINDENTED_TAGS = {"pre"}
 
-# Copy of xml.etree.ElementTree.HTML_EMPTY
-HTML_EMPTY = {
-    "area", "base", "basefont", "br", "col", "embed", "frame", "hr",
-    "img", "input", "isindex", "link", "meta", "param", "source",
-    "track", "wbr",
+# Copy of xml.etree.ElementTree.HTML_EMPTY.
+EMPTY_TAGS = {
+    "area", "base", "basefont", "br", "col", "embed", "frame", "hr", "img",
+    "input", "isindex", "link", "meta", "param", "path", "source", "track", "wbr",
 }
+
+UNESCAPED_TAGS = {"script", "style"}
 
 
 class HTMLParser(html.parser.HTMLParser):
@@ -88,7 +89,7 @@ def indent_html(
     Returns:
         The indented HTML document.
     """
-    if element.tag in TAGS_WITHOUT_INDENT or not len(element):
+    if element.tag in UNINDENTED_TAGS or not len(element):
         return element
 
     indented_element = ET.Element(element.tag, attrib=element.attrib)
@@ -152,23 +153,21 @@ def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
     attrib = "".join(
         f' {k}="{_escape_attrib_html(v)}"'
         if v is not None  # pyright: ignore [reportUnnecessaryComparison]
+        # Serialize attributes with None values as boolean.
         else f" {k}"
         for k, v in element.items()
     )
 
-    tag = f"<{element.tag}{attrib}>"
+    opening_tag = f"<{element.tag}{attrib}>"
     ltag = element.tag.lower()
 
     if element.text is not None:
-        if ltag == "script" or ltag == "style":
-            text = element.text
-        else:
-            text = _escape_cdata(element.text)
+        text = element.text if ltag in UNESCAPED_TAGS else _escape_cdata(element.text)
     else:
         text = ""
 
     children = "".join(serialize_html(e) for e in element)
-    closing_tag = f"</{element.tag}>" if ltag not in HTML_EMPTY else ""
+    closing_tag = f"</{element.tag}>" if ltag not in EMPTY_TAGS else ""
     tail = _escape_cdata(element.tail) if element.tail is not None else ""
 
-    return tag + text + children + closing_tag + tail
+    return opening_tag + text + children + closing_tag + tail
