@@ -120,7 +120,8 @@ def indent_html(
 def strip_html(element: ET.Element) -> ET.Element:
     """Strip an HTML element.
 
-    Remove unneeded whitespace in the element by strippping elements' text and tail.
+    Remove unnecessary whitespaces from the element by strippping elements'
+    text and tail.
     Do not strip elements inside <pre> tag or inside inline tags.
 
     Args:
@@ -178,7 +179,11 @@ def _escape_attrib_html(text: str) -> str:
         text = text.replace('"', "&quot;")
     return text
 
-def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
+def serialize_html(
+    element: ET.Element,
+    indent_space: str | None = None,
+    strip: bool = False,
+) -> str:
     """Serialize an HTML document to a string.
 
     Indent the document if `indent_space` is not None.
@@ -188,10 +193,14 @@ def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
     Args:
         element: The HTML document.
         indent_space: The whitespace for indentation.
+        strip: Strip unnecessary whitespace from the document.
 
     Returns:
         The serialized HTML document.
     """
+    if strip:
+        element = strip_html(element)
+
     if indent_space is not None:
         element = indent_html(element, space=indent_space)
 
