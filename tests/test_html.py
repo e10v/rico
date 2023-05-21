@@ -294,6 +294,22 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
         </div>""")
 
     assert rico.html.serialize_html(sample_elem) == expectation
+    sample_elem.set("autofocus", True)  # type: ignore
+    assert rico.html.serialize_html(sample_elem) == expectation
+
+    sample_elem.set("autofocus", False)  # type: ignore
+    expectation = textwrap.dedent("""\
+        <div class="container">
+        <p> Hello <strong> world </strong> ! </p>
+        <div class="&gt;&amp;&quot;">
+        <code> should be indented </code>
+        </div>
+        <pre>
+        <code> should not be indented </code>
+        </pre>
+        <p> Hello &gt;&amp;&lt; <br> world again </p>
+        </div>""")
+    assert rico.html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_style():
