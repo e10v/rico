@@ -194,7 +194,7 @@ def test_html_simple():
 @pytest.mark.parametrize("border", [True, False], ids=["border", "no border"])
 @pytest.mark.parametrize("dataframe", [True, False], ids=["dataframe", "not dataframe"])
 @pytest.mark.parametrize(
-    "strip_dataframe_borders", [True, False], ids=["strip", "not strip"])
+    "strip_dataframe_borders", [True, False], ids=["strip", "do not strip"])
 @pytest.mark.parametrize(
     "wrap_in_div", [True, False], ids=["wrap in div", "do not wrap in div"])
 def test_html_table_border(
