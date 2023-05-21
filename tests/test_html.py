@@ -237,7 +237,7 @@ def test_serialize_html_indent(sample_elem: ET.Element):
 
 
 def test_serialize_html_bool_attr(sample_elem: ET.Element):
-    sample_elem.set("autofocus", None)  # pyright: ignore [reportGeneralTypeIssues]
+    sample_elem.set("autofocus", None)  # type: ignore
     expected_output = (
         '<div class="container" autofocus>'
         "<p>Hello <strong>world</strong>!</p>"
