@@ -188,7 +188,7 @@ def sample_elem():
 
 
 def test_indent_html_default(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
           <p> Hello <strong> world </strong> ! </p>
           <div class="&gt;&amp;&quot;">
@@ -200,11 +200,11 @@ def test_indent_html_default(sample_elem: ET.Element):
           <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert elem_to_string(rico.html.indent_html(sample_elem)) == expected_output
+    assert elem_to_string(rico.html.indent_html(sample_elem)) == expectation
 
 
 def test_indent_html_custom_space(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
             <p> Hello <strong> world </strong> ! </p>
             <div class="&gt;&amp;&quot;">
@@ -217,7 +217,7 @@ def test_indent_html_custom_space(sample_elem: ET.Element):
         </div>""")
 
     assert elem_to_string(
-        rico.html.indent_html(sample_elem, "    ")) == expected_output
+        rico.html.indent_html(sample_elem, "    ")) == expectation
 
 
 def test_strip_html(sample_elem: ET.Element):
@@ -225,7 +225,7 @@ def test_strip_html(sample_elem: ET.Element):
     p.text = " Hello world again again "
     sample_elem.append(p)
 
-    expected_output = (
+    expectation = (
         '<div class="container"><p>Hello <strong> world </strong> !</p>'
         '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
         "<code> should not be indented </code>\n"
@@ -233,11 +233,11 @@ def test_strip_html(sample_elem: ET.Element):
         "<p>Hello world again again</p></div>"
     )
 
-    assert elem_to_string(rico.html.strip_html(sample_elem)) == expected_output
+    assert elem_to_string(rico.html.strip_html(sample_elem)) == expectation
 
 
 def test_serialize_html_default(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
         <p> Hello <strong> world </strong> ! </p>
         <div class="&gt;&amp;&quot;">
@@ -249,11 +249,11 @@ def test_serialize_html_default(sample_elem: ET.Element):
         <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico.html.serialize_html(sample_elem) == expected_output
+    assert rico.html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_indent(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
             <p> Hello <strong> world </strong> ! </p>
             <div class="&gt;&amp;&quot;">
@@ -265,23 +265,23 @@ def test_serialize_html_indent(sample_elem: ET.Element):
             <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico.html.serialize_html(sample_elem, "    ") == expected_output
+    assert rico.html.serialize_html(sample_elem, "    ") == expectation
 
 
 def test_serialize_html_strip(sample_elem: ET.Element):
-    expected_output = (
+    expectation = (
         '<div class="container"><p>Hello <strong> world </strong> !</p>'
         '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
         "<code> should not be indented </code>\n"
         "</pre><p>Hello &gt;&amp;&lt; <br>world again</p></div>"
     )
 
-    assert rico.html.serialize_html(sample_elem, strip=True) == expected_output
+    assert rico.html.serialize_html(sample_elem, strip=True) == expectation
 
 
 def test_serialize_html_bool_attr(sample_elem: ET.Element):
     sample_elem.set("autofocus", None)  # type: ignore
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container" autofocus>
         <p> Hello <strong> world </strong> ! </p>
         <div class="&gt;&amp;&quot;">
@@ -293,7 +293,7 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
         <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico.html.serialize_html(sample_elem) == expected_output
+    assert rico.html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_style():

@@ -193,7 +193,7 @@ def serialize_html(
     Args:
         element: The HTML document.
         indent_space: The whitespace for indentation.
-        strip: Strip unnecessary whitespace from the document.
+        strip: If True, strip unnecessary whitespace.
 
     Returns:
         The serialized HTML document.
