@@ -92,7 +92,7 @@ select = [
 ]
 ignore = [
     "ANN101", "ANN102", "ANN204", "ANN401", "B006", "N817", "PGH003", "PT001",
-    "SLF001", "TRY003",
+    "PT011", "SLF001", "TRY003",
 ]
 
 [tool.ruff.per-file-ignores]
