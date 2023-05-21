@@ -488,3 +488,65 @@ def test_script_raises():
         rico.content.Script()
     with pytest.raises(ValueError):
         rico.content.Script(src="javascript.js", text="alert('Hello World!');")
+
+
+def test_style_text():
+    text = "p {color: red;}"
+    attrib = {"title": "Style title"}
+    content = rico.content.Style(text=text, attrib=attrib)
+
+    style = content.style
+    assert isinstance(style, ET.Element)
+    assert style.tag == "style"
+    assert style.attrib == attrib
+    assert style.text == text
+    assert style.tail is None
+    assert len(style) == 0
+
+    assert content.container == style
+
+
+def test_style_src():
+    src = "style.css"
+    attrib = {"crossorigin": "anonymous"}
+    content = rico.content.Style(src=src, attrib=attrib)
+
+    attrib = {"src": src, **attrib, "rel": "stylesheet"}
+
+    link = content.style
+    assert isinstance(link, ET.Element)
+    assert link.tag == "link"
+    assert link.attrib == attrib
+    assert link.text is None
+    assert link.tail is None
+    assert len(link) == 0
+
+    assert content.container == link
+
+
+def test_style_inline():
+    text = "p {color: red;}"
+    src = "style.css"
+    attrib = {"title": "Style title"}
+
+    with unittest.mock.patch("rico.content.urllib.request.urlopen") as urlopen:
+        urlopen.return_value = io.BytesIO(text.encode())
+        content = rico.content.Style(src=src, inline=True, attrib=attrib)
+        urlopen.assert_called_once_with(src)
+
+    style = content.style
+    assert isinstance(style, ET.Element)
+    assert style.tag == "style"
+    assert style.attrib == attrib
+    assert style.text == text
+    assert style.tail is None
+    assert len(style) == 0
+
+    assert content.container == style
+
+
+def test_style_raises():
+    with pytest.raises(ValueError):
+        rico.content.Style()
+    with pytest.raises(ValueError):
+        rico.content.Style(src="style.css", text="p {color: red;}")

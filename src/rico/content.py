@@ -414,3 +414,59 @@ class Script(ContentBase):
         self.script = ET.Element("script", {**attrib, **extra})
         self.script.text = text
         self.container = self.script
+
+
+class Style(ContentBase):
+    """A stylesheet definition.
+
+    Attributes:
+        style (Element): The style element.
+    """
+    style: ET.Element
+
+    def __init__(
+        self,
+        text: str | None = None,
+        src: str | None = None,
+        inline: bool = False,
+        attrib: dict[str, Any] = {},
+        **extra: Any,
+    ):
+        """Initialize stylesheet.
+
+        Either `text` or `src` should be used.
+
+        Args:
+            text: The stylesheet text.
+            src: The stylesheet source link.
+            inline: If True, load stylesheet inline, downdload it from source link
+                and use it as a text.
+            attrib: The stylesheet attributes.
+            **extra: Extra attributes.
+
+        Raises:
+            ValueError: Both text and src are not None.
+            ValueError: Both text and src are None.
+        """
+        if text is not None and src is not None:
+            raise ValueError("Either `text` or `src` should be None.")
+
+        if text is None and src is None:
+            raise ValueError("Either `text` or `src` should be not None.")
+
+        if inline and src is not None:
+            with urllib.request.urlopen(src) as response:
+                text = response.read().decode()
+            src = None
+
+        if src is not None:
+            tag = "link"
+            attrib = {"src": src, **attrib}
+            if "rel" not in attrib:
+                attrib = {**attrib, "rel": "stylesheet"}
+        else:
+            tag = "style"
+
+        self.style = ET.Element(tag, {**attrib, **extra})
+        self.style.text = text
+        self.container = self.style
