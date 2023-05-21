@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from rico import html
+import rico.html
 
 
 def elem_to_string(elem: ET.Element | list[ET.Element], sep: str = "") -> str:
@@ -16,7 +16,7 @@ def elem_to_string(elem: ET.Element | list[ET.Element], sep: str = "") -> str:
 
 def test_html_parser_two_elements():
     text = "<p>Hello</p><p>world</p>"
-    parser = html.HTMLParser()
+    parser = rico.html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -43,7 +43,7 @@ def test_html_parser_two_elements():
 
 def test_html_parser_nested_tags():
     text = "<div><p>Hello <strong>world</strong>!</p></div>"
-    parser = html.HTMLParser()
+    parser = rico.html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -79,7 +79,7 @@ def test_html_parser_nested_tags():
 def test_html_parser_attributes():
     script_src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
     text = f"<script defer src='{script_src}' crossorigin='anonymous'></script>"
-    parser = html.HTMLParser()
+    parser = rico.html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -107,7 +107,7 @@ def test_html_parser_svg():
         '<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>'
         "</svg>"
     )
-    parser = html.HTMLParser()
+    parser = rico.html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -142,7 +142,7 @@ def test_html_parser_svg():
 
 def test_parse_html():
     text = "<p>Hello world</p>"
-    elements = html.parse_html(text)
+    elements = rico.html.parse_html(text)
 
     assert elem_to_string(elements) == text
     assert isinstance(elements, list)
@@ -159,100 +159,144 @@ def test_parse_html():
 
 @pytest.fixture
 def sample_elem():
-    root = ET.Element("div", {"class": "container"})
-    p1 = ET.SubElement(root, "p")
-    p1.text = "Hello "
-    strong = ET.SubElement(p1, "strong")
-    strong.text = "world"
-    strong.tail = "!"
-    div = ET.SubElement(root, "div", {"class": '>&"'})
-    code1 = ET.SubElement(div, "code")
-    code1.text = "should be indented"
-    pre = ET.SubElement(root, "pre")
-    code2 = ET.SubElement(pre, "code")
-    code2.text = "should not be indented"
-    p2 = ET.SubElement(root, "p2")
-    p2.text = "Hello >&<"
-    br = ET.SubElement(p2, "br")
-    br.tail = "world again"
-    return root
+    div0 = ET.Element("div", {"class": "container"})
+    div0.text = "\n"
+    p0 = ET.SubElement(div0, "p")
+    p0.text = " Hello "
+    p0.tail = "\n"
+    strong = ET.SubElement(p0, "strong")
+    strong.text = " world "
+    strong.tail = " ! "
+    div1 = ET.SubElement(div0, "div", {"class": '>&"'})
+    div1.text = "\n"
+    div1.tail = "\n"
+    code0 = ET.SubElement(div1, "code")
+    code0.text = " should be indented "
+    code0.tail = "\n"
+    pre = ET.SubElement(div0, "pre")
+    pre.text = "\n"
+    pre.tail = "\n"
+    code1 = ET.SubElement(pre, "code")
+    code1.text = " should not be indented "
+    code1.tail = "\n"
+    p1 = ET.SubElement(div0, "p")
+    p1.text = " Hello >&< "
+    p1.tail = "\n"
+    br = ET.SubElement(p1, "br")
+    br.tail = " world again "
+    return div0
 
 
 def test_indent_html_default(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
-          <p>Hello <strong>world</strong>!</p>
+          <p> Hello <strong> world </strong> ! </p>
           <div class="&gt;&amp;&quot;">
-            <code>should be indented</code>
+            <code> should be indented </code>
           </div>
-          <pre><code>should not be indented</code></pre>
-          <p2>Hello &gt;&amp;&lt;<br>world again</p2>
+          <pre>
+        <code> should not be indented </code>
+        </pre>
+          <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert elem_to_string(html.indent_html(sample_elem)) == expected_output
+    assert elem_to_string(rico.html.indent_html(sample_elem)) == expectation
 
 
 def test_indent_html_custom_space(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
-            <p>Hello <strong>world</strong>!</p>
+            <p> Hello <strong> world </strong> ! </p>
             <div class="&gt;&amp;&quot;">
-                <code>should be indented</code>
+                <code> should be indented </code>
             </div>
-            <pre><code>should not be indented</code></pre>
-            <p2>Hello &gt;&amp;&lt;<br>world again</p2>
+            <pre>
+        <code> should not be indented </code>
+        </pre>
+            <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
     assert elem_to_string(
-        html.indent_html(sample_elem, "    ")) == expected_output
+        rico.html.indent_html(sample_elem, "    ")) == expectation
+
+
+def test_strip_html(sample_elem: ET.Element):
+    p = ET.Element("p")
+    p.text = " Hello world again again "
+    sample_elem.append(p)
+
+    expectation = (
+        '<div class="container"><p>Hello <strong> world </strong> !</p>'
+        '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
+        "<code> should not be indented </code>\n"
+        "</pre><p>Hello &gt;&amp;&lt; <br>world again</p>"
+        "<p>Hello world again again</p></div>"
+    )
+
+    assert elem_to_string(rico.html.strip_html(sample_elem)) == expectation
 
 
 def test_serialize_html_default(sample_elem: ET.Element):
-    expected_output = (
-        '<div class="container">'
-        "<p>Hello <strong>world</strong>!</p>"
-        '<div class="&gt;&amp;&quot;">'
-        "<code>should be indented</code>"
-        "</div>"
-        "<pre><code>should not be indented</code></pre>"
-        "<p2>Hello &gt;&amp;&lt;<br>world again</p2>"
-        "</div>"
-    )
+    expectation = textwrap.dedent("""\
+        <div class="container">
+        <p> Hello <strong> world </strong> ! </p>
+        <div class="&gt;&amp;&quot;">
+        <code> should be indented </code>
+        </div>
+        <pre>
+        <code> should not be indented </code>
+        </pre>
+        <p> Hello &gt;&amp;&lt; <br> world again </p>
+        </div>""")
 
-    assert html.serialize_html(sample_elem) == expected_output
+    assert rico.html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_indent(sample_elem: ET.Element):
-    expected_output = textwrap.dedent("""\
+    expectation = textwrap.dedent("""\
         <div class="container">
-            <p>Hello <strong>world</strong>!</p>
+            <p> Hello <strong> world </strong> ! </p>
             <div class="&gt;&amp;&quot;">
-                <code>should be indented</code>
+                <code> should be indented </code>
             </div>
-            <pre><code>should not be indented</code></pre>
-            <p2>Hello &gt;&amp;&lt;<br>world again</p2>
+            <pre>
+        <code> should not be indented </code>
+        </pre>
+            <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert html.serialize_html(sample_elem, "    ") == expected_output
+    assert rico.html.serialize_html(sample_elem, "    ") == expectation
+
+
+def test_serialize_html_strip(sample_elem: ET.Element):
+    expectation = (
+        '<div class="container"><p>Hello <strong> world </strong> !</p>'
+        '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
+        "<code> should not be indented </code>\n"
+        "</pre><p>Hello &gt;&amp;&lt; <br>world again</p></div>"
+    )
+
+    assert rico.html.serialize_html(sample_elem, strip=True) == expectation
 
 
 def test_serialize_html_bool_attr(sample_elem: ET.Element):
     sample_elem.set("autofocus", None)  # type: ignore
-    expected_output = (
-        '<div class="container" autofocus>'
-        "<p>Hello <strong>world</strong>!</p>"
-        '<div class="&gt;&amp;&quot;">'
-        "<code>should be indented</code>"
-        "</div>"
-        "<pre><code>should not be indented</code></pre>"
-        "<p2>Hello &gt;&amp;&lt;<br>world again</p2>"
-        "</div>"
-    )
+    expectation = textwrap.dedent("""\
+        <div class="container" autofocus>
+        <p> Hello <strong> world </strong> ! </p>
+        <div class="&gt;&amp;&quot;">
+        <code> should be indented </code>
+        </div>
+        <pre>
+        <code> should not be indented </code>
+        </pre>
+        <p> Hello &gt;&amp;&lt; <br> world again </p>
+        </div>""")
 
-    assert html.serialize_html(sample_elem) == expected_output
+    assert rico.html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_style():
     elem = ET.Element("style")
     elem.text = ".>&< {border: none;}"
-    assert html.serialize_html(elem) == "<style>.>&< {border: none;}</style>"
+    assert rico.html.serialize_html(elem) == "<style>.>&< {border: none;}</style>"

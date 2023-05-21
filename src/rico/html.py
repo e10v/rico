@@ -6,15 +6,19 @@ import html.parser
 import xml.etree.ElementTree as ET
 
 
-UNINDENTED_TAGS = {"pre"}
-
-# Copy of xml.etree.ElementTree.HTML_EMPTY.
-EMPTY_TAGS = {
+TAGS_EMPTY = {
     "area", "base", "basefont", "br", "col", "embed", "frame", "hr", "img",
     "input", "isindex", "link", "meta", "param", "path", "source", "track", "wbr",
 }
 
-UNESCAPED_TAGS = {"script", "style"}
+TAGS_INLINE = {
+    "a", "abbr", "b", "bdi", "bdo", "br", "cite", "code", "data", "dfn", "em",
+    "i", "kbd", "mark", "q", "rp", "rt", "ruby", "s", "samp", "small", "span",
+    "strong", "sub", "sup", "time", "u", "var", "wbr",
+}
+
+TAGS_NOT_ESCAPED = {"script", "style"}
+TAGS_PRE_FORMATTED = {"pre"}
 
 
 class HTMLParser(html.parser.HTMLParser):
@@ -75,10 +79,10 @@ def indent_html(
     space: str = "  ",
     level: int = 0,
 ) -> ET.Element:
-    """Indent an HTML document.
+    """Indent an HTML element.
 
     Tnsert newlines and indentation space after elements.
-    Create a new document instead of updating inplace.
+    Create a new element instead of updating inplace.
     Do not indent elements inside <pre> tag.
 
     Args:
@@ -87,9 +91,9 @@ def indent_html(
         level: The initial indentation level. Should always be 0.
 
     Returns:
-        The indented HTML document.
+        The indented HTML element.
     """
-    if element.tag in UNINDENTED_TAGS or not len(element):
+    if element.tag.lower() in TAGS_PRE_FORMATTED or not len(element):
         return element
 
     indented_element = ET.Element(element.tag, attrib=element.attrib)
@@ -113,6 +117,48 @@ def indent_html(
     return indented_element
 
 
+def strip_html(element: ET.Element) -> ET.Element:
+    """Strip an HTML element.
+
+    Remove unnecessary whitespaces from the element by strippping elements'
+    text and tail.
+    Do not strip elements inside <pre> tag or inside inline tags.
+
+    Args:
+        element: The element to strip.
+
+    Returns:
+        The stripped HTML element.
+    """
+    stripped_element = ET.Element(element.tag, attrib=element.attrib)
+    stripped_element.text = element.text
+    stripped_element.tail = element.tail
+
+    if element.tag.lower() in TAGS_INLINE | TAGS_PRE_FORMATTED:
+        for child in element:
+            stripped_element.append(child)
+    else:
+        for child in element:
+            stripped_element.append(strip_html(child))
+
+        if stripped_element.text:
+            if len(stripped_element) == 0 and (
+                not stripped_element.tail or
+                not stripped_element.tail.strip()
+            ):
+                stripped_element.text = stripped_element.text.strip()
+            else:
+                stripped_element.text = stripped_element.text.lstrip()
+
+    if stripped_element.tail:
+        if len(stripped_element) == 0 and not stripped_element.text:
+            stripped_element.tail = stripped_element.tail.strip()
+        else:
+            stripped_element.tail = stripped_element.tail.rstrip()
+
+    return stripped_element
+
+
 def _escape_cdata(text: str) -> str:
     """Copy of xml.etree.ElementTree._escape_cdata."""
     if "&" in text:
@@ -133,7 +179,11 @@ def _escape_attrib_html(text: str) -> str:
         text = text.replace('"', "&quot;")
     return text
 
-def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
+def serialize_html(
+    element: ET.Element,
+    indent_space: str | None = None,
+    strip: bool = False,
+) -> str:
     """Serialize an HTML document to a string.
 
     Indent the document if `indent_space` is not None.
@@ -143,10 +193,14 @@ def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
     Args:
         element: The HTML document.
         indent_space: The whitespace for indentation.
+        strip: If True, strip unnecessary whitespace.
 
     Returns:
         The serialized HTML document.
     """
+    if strip:
+        element = strip_html(element)
+
     if indent_space is not None:
         element = indent_html(element, space=indent_space)
 
@@ -162,12 +216,12 @@ def serialize_html(element: ET.Element, indent_space: str | None = None) -> str:
     ltag = element.tag.lower()
 
     if element.text is not None:
-        text = element.text if ltag in UNESCAPED_TAGS else _escape_cdata(element.text)
+        text = element.text if ltag in TAGS_NOT_ESCAPED else _escape_cdata(element.text)
     else:
         text = ""
 
     children = "".join(serialize_html(e) for e in element)
-    closing_tag = f"</{element.tag}>" if ltag not in EMPTY_TAGS else ""
+    closing_tag = f"</{element.tag}>" if ltag not in TAGS_EMPTY else ""
     tail = _escape_cdata(element.tail) if element.tail is not None else ""
 
     return opening_tag + text + children + closing_tag + tail

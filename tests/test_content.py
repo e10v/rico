@@ -66,6 +66,11 @@ def test_content_base_indent(content_base_subclass_sample: rico.content.ContentB
     assert content_base_subclass_sample.serialize("    ") == expectation
 
 
+def test_content_base_strip(content_base_subclass_sample: rico.content.ContentBase):
+    expectation = '<div class="row"><p>Hello world</p></div>'
+    assert content_base_subclass_sample.serialize(strip=True) == expectation
+
+
 def test_tag():
     content = rico.content.Tag(
         "p",
