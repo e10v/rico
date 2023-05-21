@@ -57,18 +57,20 @@ class ContentBase:
         attrib = {"class": class_} if class_ is not None else {}
         self.container = ET.Element("div", attrib=attrib)
 
-    def serialize(self, indent_space: str | None = None) -> str:
+    def serialize(self, indent_space: str | None = None, strip: bool = False) -> str:
         """Serialize the object to string in HTML format.
 
         Indent the object if `indent_space` is not None.
 
         Args:
             indent_space: The whitespace for indentation.
+            strip: If True, strip unnecessary whitespace.
 
         Returns:
             The serialized object.
         """
-        return rico.html.serialize_html(self.container, indent_space=indent_space)
+        return rico.html.serialize_html(
+            self.container, indent_space=indent_space, strip=strip)
 
     def __str__(self) -> str:
         """Serialize the object to string in HTML format."""
