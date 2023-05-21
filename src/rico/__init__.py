@@ -3,4 +3,21 @@
 """Rich content to HTML as easy as doc.print(x)."""
 
 from rico._version import __version__
-from rico.html import HTMLParser, indent_html, parse_html, serialize_html
+from rico.content import (
+    HTML,
+    Chart,
+    Code,
+    Content,
+    ContentBase,
+    Image,
+    Markdown,
+    Tag,
+    Text,
+)
+from rico.html import (
+    HTMLParser,
+    indent_html,
+    parse_html,
+    serialize_html,
+    strip_html,
+)
