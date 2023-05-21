@@ -23,6 +23,7 @@ classifiers = [
     "Topic :: Text Processing",
     "Topic :: Text Processing :: Markup",
     "Topic :: Text Processing :: Markup :: HTML",
+    "Topic :: Text Processing :: Markup :: Markdown",
 ]
 
 [project.urls]
@@ -122,6 +123,7 @@ ignore = [
     "ANN204",
     "ANN401",
     "B006",
+    "N817",
     "PGH003",
     "PT001",
     "SLF001",
