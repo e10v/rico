@@ -5,7 +5,7 @@ import base64
 import itertools
 import textwrap
 from typing import TYPE_CHECKING
-import xml.etree.ElementTree as ET  # noqa: N817
+import xml.etree.ElementTree as ET
 
 import altair as alt
 import matplotlib.pyplot as plt
@@ -345,7 +345,7 @@ altair_chart = alt.Chart(
 ).mark_bar().encode(x="x:N", y="y:Q")
 
 pyplot_figure, pyplot_axes = plt.subplots()  # type: ignore
-pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])
+pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])  # type: ignore
 
 seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
 
@@ -355,7 +355,7 @@ seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
     ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
 )
 @pytest.mark.parametrize("format", ["svg", "png"], ids=["svg", "png"])
-def test_chart_altair(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
+def test_chart(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
     content = rico.content.Chart(chart, format=format, class_="row")
 
     div = content.container

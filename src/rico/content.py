@@ -6,7 +6,7 @@ from __future__ import annotations
 import base64
 import io
 from typing import TYPE_CHECKING
-import xml.etree.ElementTree as ET  # noqa: N817
+import xml.etree.ElementTree as ET
 
 import rico.html
 
