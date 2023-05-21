@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import textwrap
-import xml.etree.ElementTree as ET  # noqa: N817
+import xml.etree.ElementTree as ET
 
 import pytest
 

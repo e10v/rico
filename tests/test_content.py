@@ -5,7 +5,7 @@ import base64
 import itertools
 import textwrap
 from typing import TYPE_CHECKING
-import xml.etree.ElementTree as ET  # noqa: N817
+import xml.etree.ElementTree as ET
 
 import altair as alt
 import matplotlib.pyplot as plt
