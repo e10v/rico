@@ -4,11 +4,11 @@
 
 from rico._version import __version__
 from rico.content import (
-    HTML,
     Chart,
     Code,
     Content,
     ContentBase,
+    HTML,
     Image,
     Markdown,
     Tag,

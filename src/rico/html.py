@@ -18,7 +18,7 @@ TAGS_INLINE = {
 }
 
 TAGS_NOT_ESCAPED = {"script", "style"}
-TAGS_PRE_FORMATTED = {"pre"}
+TAGS_PREFORMATTED = {"pre"}
 
 
 class HTMLParser(html.parser.HTMLParser):
@@ -93,7 +93,7 @@ def indent_html(
     Returns:
         The indented HTML element.
     """
-    if element.tag.lower() in TAGS_PRE_FORMATTED or not len(element):
+    if element.tag.lower() in TAGS_PREFORMATTED or not len(element):
         return element
 
     indented_element = ET.Element(element.tag, attrib=element.attrib)
@@ -111,8 +111,8 @@ def indent_html(
 
         indented_element.append(indented_child)
 
-    if not indented_child.tail or not indented_child.tail.strip():  # pyright: ignore [reportUnboundVariable]  # noqa: E501
-        indented_child.tail = "\n" + space * level  # pyright: ignore [reportUnboundVariable]  # noqa: E501
+    if not indented_child.tail or not indented_child.tail.strip():  # type: ignore
+        indented_child.tail = "\n" + space * level  # type: ignore
 
     return indented_element
 
@@ -134,7 +134,7 @@ def strip_html(element: ET.Element) -> ET.Element:
     stripped_element.text = element.text
     stripped_element.tail = element.tail
 
-    if element.tag.lower() in TAGS_INLINE | TAGS_PRE_FORMATTED:
+    if element.tag.lower() in TAGS_INLINE | TAGS_PREFORMATTED:
         for child in element:
             stripped_element.append(child)
     else:
@@ -206,10 +206,11 @@ def serialize_html(
 
     attrib = "".join(
         f' {k}="{_escape_attrib_html(v)}"'
-        if v is not None  # pyright: ignore [reportUnnecessaryComparison]
+        if v is not None and not isinstance(v, bool)  # type: ignore
         # Serialize attributes with None values as boolean.
         else f" {k}"
         for k, v in element.items()
+        if not isinstance(v, bool) or v
     )
 
     opening_tag = f"<{element.tag}{attrib}>"
