@@ -312,7 +312,11 @@ class Chart(ContentBase):
             image = stream.getvalue()
         elif alt is not None and isinstance(obj, alt.Chart):
             convert = vlc.vegalite_to_svg if format == "svg" else vlc.vegalite_to_png  # type: ignore  # noqa: E501
-            image = convert(obj.to_json(), **kwargs)  # type: ignore
+            image = convert(  # type: ignore
+                obj.to_json(),
+                vl_version="_".join(alt.SCHEMA_VERSION.split(".")[:2]),
+                **kwargs,
+            )
         else:  # pragma: no cover
             error_msg = (
                 f"Chart type {type(obj)} is not supported "
