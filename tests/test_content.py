@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import base64
+import importlib
 import io
 import textwrap
 from typing import TYPE_CHECKING
@@ -18,6 +19,30 @@ import rico.content
 
 if TYPE_CHECKING:
     from typing import Any, Literal
+
+
+def test_import_error():
+    with unittest.mock.patch.dict("sys.modules", {"altair": None}):
+        importlib.reload(rico.content)
+        assert rico.content.alt is None
+
+    with unittest.mock.patch.dict("sys.modules", {"vl_convert": None}):
+        importlib.reload(rico.content)
+        assert rico.content.alt is None
+
+    with unittest.mock.patch.dict("sys.modules", {"markdown": None}):
+        importlib.reload(rico.content)
+        assert rico.content.markdown is None
+
+    with unittest.mock.patch.dict("sys.modules", {"matplotlib.pyplot": None}):
+        importlib.reload(rico.content)
+        assert rico.content.plt is None
+
+    with unittest.mock.patch.dict("sys.modules", {"seaborn.objects": None}):
+        importlib.reload(rico.content)
+        assert rico.content.so is None
+
+    importlib.reload(rico.content)
 
 
 def test_content_base_simple():
@@ -271,6 +296,14 @@ def test_markdown():
     assert len(p) == 0
 
 
+def test_markdown_import_error():
+    with (
+        unittest.mock.patch.object(rico.content, "markdown", None),
+        pytest.raises(ImportError),
+    ):
+        rico.content.Markdown("Hello world")
+
+
 svg_data = (
     '<svg xmlns="http://www.w3.org/2000/svg" '
     'xmlns:xlink="http://www.w3.org/1999/xlink" '
@@ -363,7 +396,7 @@ seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
     ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
 )
 @pytest.mark.parametrize("format", ["svg", "png"], ids=["svg", "png"])
-def test_chart(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
+def test_chart_complete(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
     content = rico.content.Chart(chart, format=format, class_="row")
 
     div = content.container
@@ -382,6 +415,25 @@ def test_chart(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
         img = list(div)[0]
         assert isinstance(img, ET.Element)
         assert img.tag == "img"
+
+
+@pytest.mark.parametrize(
+    ("module", "err_chart", "chart"),
+    [
+        ("alt", altair_chart, seaborn_plot),
+        ("plt", pyplot_axes, altair_chart),
+        ("so", seaborn_plot, pyplot_axes),
+    ],
+    ids=["alt", "plt", "so"],
+)
+def test_chart_error(module: str, err_chart: Any, chart: Any):
+    with unittest.mock.patch.object(rico.content, module, None):
+        with pytest.raises(TypeError):
+            rico.content.Chart(err_chart)
+
+        content = rico.content.Chart(chart, class_="row")
+        div = content.container
+        assert isinstance(div, ET.Element)
 
 
 def test_content():

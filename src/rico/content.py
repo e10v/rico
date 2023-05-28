@@ -19,22 +19,22 @@ if TYPE_CHECKING:
 try:
     import altair as alt
     import vl_convert as vlc
-except ImportError:  # pragma: no cover
+except ImportError:
     alt = None
 
 try:
     import markdown
-except ImportError:  # pragma: no cover
+except ImportError:
     markdown = None
 
 try:
     import matplotlib.pyplot as plt
-except ImportError:  # pragma: no cover
+except ImportError:
     plt = None
 
 try:
     import seaborn.objects as so
-except ImportError:  # pragma: no cover
+except ImportError:
     so = None
 
 
@@ -225,7 +225,7 @@ class Markdown(ContentBase):
             ImportError: The markdown package is not installed.
         """
         if markdown is None:
-            raise ImportError("The markdown package is not installed.")  # pragma: no cover  # noqa: E501
+            raise ImportError("The markdown package is not installed.")
 
         content = HTML(markdown.markdown(text, **kwargs), class_=class_)
         self.container = content.container
@@ -317,7 +317,7 @@ class Chart(ContentBase):
                 vl_version="_".join(alt.SCHEMA_VERSION.split(".")[:2]),
                 **kwargs,
             )
-        else:  # pragma: no cover
+        else:
             error_msg = (
                 f"Chart type {type(obj)} is not supported "
                 "or required extra package is not installed."
