@@ -89,7 +89,8 @@ def test_content_base_indent(content_base_subclass_sample: rico._content.Content
         <div class="row">
             <p>Hello world</p>
         </div>""")
-    assert content_base_subclass_sample.serialize("    ") == expectation
+    assert content_base_subclass_sample.serialize(
+        indent=True, space="    ") == expectation
 
 
 def test_content_base_strip(content_base_subclass_sample: rico._content.ContentBase):
