@@ -55,5 +55,3 @@ jobs:
         run: pdm run lint
       - name: Check with pyright
         run: pdm run type
-      - name: Check with isort
-        run: pdm run sort
