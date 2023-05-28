@@ -246,7 +246,7 @@ class Image(ContentBase):
     def __init__(
         self,
         data: bytes | str,
-        format: str | None = None,  # noqa: A002
+        format: str,  # noqa: A002
         class_: str | None = None,
     ):
         """Initialize content using image data.
@@ -257,9 +257,6 @@ class Image(ContentBase):
             class_: The container class attribute.
         """
         super().__init__(class_)
-
-        if format is None:
-            format = rico._config.get_config("image_format")  # noqa: A001
 
         if format == "svg":
             if isinstance(data, bytes):
@@ -310,7 +307,7 @@ class Chart(ContentBase):
                 or required extra package is not installed.
         """
         if format is None:
-            format = rico._config.get_config("chart_format")  # noqa: A001
+            format = rico._config.get_config("image_format")  # noqa: A001
 
         if plt is not None and isinstance(obj, plt.Axes):
             obj = obj.figure
