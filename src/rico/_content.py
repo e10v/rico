@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import urllib.request
 import xml.etree.ElementTree as ET
 
+import rico._config
 import rico._html
 
 
@@ -58,20 +59,26 @@ class ContentBase:
         attrib = {"class": class_} if class_ is not None else {}
         self.container = ET.Element("div", attrib=attrib)
 
-    def serialize(self, indent_space: str | None = None, strip: bool = False) -> str:
+    def serialize(
+        self,
+        indent: bool | None = None,
+        space: str | None = None,
+        strip: bool | None = None,
+    ) -> str:
         """Serialize the object to string in HTML format.
 
         Indent the object if `indent_space` is not None.
 
         Args:
-            indent_space: The whitespace for indentation.
+            indent: If True, indent the element.
+            space: The whitespace for indentation.
             strip: If True, strip unnecessary whitespace.
 
         Returns:
             The serialized object.
         """
         return rico._html.serialize_html(
-            self.container, indent_space=indent_space, strip=strip)
+            self.container, indent=indent, space=space, strip=strip)
 
     def __str__(self) -> str:
         """Serialize the object to string in HTML format."""
@@ -239,7 +246,7 @@ class Image(ContentBase):
     def __init__(
         self,
         data: bytes | str,
-        format: str,  # noqa: A002
+        format: str | None = None,  # noqa: A002
         class_: str | None = None,
     ):
         """Initialize content using image data.
@@ -250,6 +257,9 @@ class Image(ContentBase):
             class_: The container class attribute.
         """
         super().__init__(class_)
+
+        if format is None:
+            format = rico._config.get_config("image_format")  # noqa: A001
 
         if format == "svg":
             if isinstance(data, bytes):
@@ -282,7 +292,7 @@ class Chart(ContentBase):
     def __init__(
         self,
         obj: Any,
-        format: Literal["svg", "png"] = "svg",  # noqa: A002
+        format: Literal["svg", "png"] | None = None,  # noqa: A002
         class_: str | None = None,
         **kwargs: Any,
     ):
@@ -299,6 +309,9 @@ class Chart(ContentBase):
             TypeError: Chart type is not supported
                 or required extra package is not installed.
         """
+        if format is None:
+            format = rico._config.get_config("chart_format")  # noqa: A001
+
         if plt is not None and isinstance(obj, plt.Axes):
             obj = obj.figure
 

@@ -5,6 +5,8 @@ from __future__ import annotations
 import html.parser
 import xml.etree.ElementTree as ET
 
+import rico._config
+
 
 TAGS_EMPTY = {
     "area", "base", "basefont", "br", "col", "embed", "frame", "hr", "img",
@@ -181,28 +183,35 @@ def _escape_attrib_html(text: str) -> str:
 
 def serialize_html(
     element: ET.Element,
-    indent_space: str | None = None,
-    strip: bool = False,
+    indent: bool | None = None,
+    space: str | None = None,
+    strip: bool | None = None,
 ) -> str:
-    """Serialize an HTML document to a string.
-
-    Indent the document if `indent_space` is not None.
+    """Serialize an HTML element to a string.
 
     Serialize attributes with None values as boolean.
 
     Args:
-        element: The HTML document.
-        indent_space: The whitespace for indentation.
+        element: The HTML element.
+        indent: If True, indent the element.
+        space: The whitespace for indentation.
         strip: If True, strip unnecessary whitespace.
 
     Returns:
-        The serialized HTML document.
+        The serialized HTML element.
     """
+    global_config = rico._config.get_config()
+    if indent is None:
+        indent = global_config["indent_html"]
+    if space is None:
+        space = global_config["indent_space"]
+    if strip is None:
+        strip = global_config["strip_html"]
+
     if strip:
         element = strip_html(element)
-
-    if indent_space is not None:
-        element = indent_html(element, space=indent_space)
+    if indent:
+        element = indent_html(element, space=space)  # type: ignore
 
     attrib = "".join(
         f' {k}="{_escape_attrib_html(v)}"'

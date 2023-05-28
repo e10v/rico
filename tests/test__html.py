@@ -265,7 +265,8 @@ def test_serialize_html_indent(sample_elem: ET.Element):
             <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico._html.serialize_html(sample_elem, "    ") == expectation
+    assert rico._html.serialize_html(
+        sample_elem, indent=True, space="    ") == expectation
 
 
 def test_serialize_html_strip(sample_elem: ET.Element):

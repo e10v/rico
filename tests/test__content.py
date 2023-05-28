@@ -89,7 +89,8 @@ def test_content_base_indent(content_base_subclass_sample: rico._content.Content
         <div class="row">
             <p>Hello world</p>
         </div>""")
-    assert content_base_subclass_sample.serialize("    ") == expectation
+    assert content_base_subclass_sample.serialize(
+        indent=True, space="    ") == expectation
 
 
 def test_content_base_strip(content_base_subclass_sample: rico._content.ContentBase):
@@ -314,7 +315,7 @@ svg_data = (
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_svg(data: str | bytes):
-    content = rico._content.Image(data, format="svg", class_="row")
+    content = rico._content.Image(data, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -395,8 +396,8 @@ seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
     [altair_chart, pyplot_axes, pyplot_figure, seaborn_plot],
     ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
 )
-@pytest.mark.parametrize("format", ["svg", "png"], ids=["svg", "png"])
-def test_chart_complete(chart: Any, format: Literal["svg", "png"]):  # noqa: A002
+@pytest.mark.parametrize("format", [None, "png"], ids=["svg", "png"])
+def test_chart_complete(chart: Any, format: Literal["svg", "png"] | None):  # noqa: A002
     content = rico._content.Chart(chart, format=format, class_="row")
 
     div = content.container
@@ -407,7 +408,7 @@ def test_chart_complete(chart: Any, format: Literal["svg", "png"]):  # noqa: A00
     assert div.tail is None
     assert len(div) == 1
 
-    if format == "svg":
+    if format is None:
         svg = list(div)[0]
         assert isinstance(svg, ET.Element)
         assert svg.tag == "svg"
