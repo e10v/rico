@@ -328,8 +328,8 @@ class Chart(ContentBase):
         self.container = content.container
 
 
-class Content(ContentBase):
-    """A content definition.
+class Obj(ContentBase):
+    """An arbitrary content definition.
 
     Creates content elements from arbitrary objects and appends them to the container.
 

@@ -5,11 +5,11 @@
 from rico._content import (
     Chart,
     Code,
-    Content,
     ContentBase,
     HTML,
     Image,
     Markdown,
+    Obj,
     Script,
     Style,
     Tag,

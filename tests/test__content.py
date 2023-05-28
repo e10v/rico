@@ -436,12 +436,12 @@ def test_chart_error(module: str, err_chart: Any, chart: Any):
         assert isinstance(div, ET.Element)
 
 
-def test_content():
+def test_obj():
     class ReprHTML:
         def _repr_html_(self) -> str:
             return "<h1>Hello</h1>"
 
-    content = rico._content.Content(ReprHTML(), "world", pyplot_axes, class_="row")
+    content = rico._content.Obj(ReprHTML(), "world", pyplot_axes, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
