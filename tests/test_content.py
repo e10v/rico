@@ -296,6 +296,14 @@ def test_markdown():
     assert len(p) == 0
 
 
+def test_markdown_import_error():
+    with (
+        unittest.mock.patch.object(rico.content, "markdown", None),
+        pytest.raises(ImportError),
+    ):
+        rico.content.Markdown("Hello world")
+
+
 svg_data = (
     '<svg xmlns="http://www.w3.org/2000/svg" '
     'xmlns:xlink="http://www.w3.org/1999/xlink" '

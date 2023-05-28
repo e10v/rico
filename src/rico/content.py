@@ -225,7 +225,7 @@ class Markdown(ContentBase):
             ImportError: The markdown package is not installed.
         """
         if markdown is None:
-            raise ImportError("The markdown package is not installed.")  # pragma: no cover  # noqa: E501
+            raise ImportError("The markdown package is not installed.")
 
         content = HTML(markdown.markdown(text, **kwargs), class_=class_)
         self.container = content.container
