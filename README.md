@@ -8,4 +8,4 @@ Rich content to HTML as easy as Doc([df, plot]).
 [![License](https://img.shields.io/github/license/e10v/rico)](https://github.com/e10v/rico/blob/main/LICENSE)
 [![Version](https://img.shields.io/pypi/v/rico.svg)](https://pypi.org/project/rico/)
 [![Package Status](https://img.shields.io/pypi/status/rico.svg)](https://pypi.org/project/rico/)
-[![PyPI Python Versions](https://img.shields.io/pypi/pyversions/rico.svg)](https://pypi.python.org/pypi/rico/)
+[![PyPI Python Versions](https://img.shields.io/pypi/pyversions/rico.svg)](https://pypi.org/project/rico/)
