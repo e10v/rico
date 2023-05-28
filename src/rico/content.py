@@ -317,7 +317,7 @@ class Chart(ContentBase):
                 vl_version="_".join(alt.SCHEMA_VERSION.split(".")[:2]),
                 **kwargs,
             )
-        else:  # pragma: no cover
+        else:
             error_msg = (
                 f"Chart type {type(obj)} is not supported "
                 "or required extra package is not installed."
