@@ -3,6 +3,7 @@
 """Rich content to HTML as easy as Doc([df, plot])."""
 
 from rico._config import config_context, get_config, set_config
+from rico._container import Div
 from rico._content import (
     Chart,
     Code,
