@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-import rico.html
+import rico._html
 
 
 def elem_to_string(elem: ET.Element | list[ET.Element], sep: str = "") -> str:
@@ -16,7 +16,7 @@ def elem_to_string(elem: ET.Element | list[ET.Element], sep: str = "") -> str:
 
 def test_html_parser_two_elements():
     text = "<p>Hello</p><p>world</p>"
-    parser = rico.html.HTMLParser()
+    parser = rico._html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -43,7 +43,7 @@ def test_html_parser_two_elements():
 
 def test_html_parser_nested_tags():
     text = "<div><p>Hello <strong>world</strong>!</p></div>"
-    parser = rico.html.HTMLParser()
+    parser = rico._html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -79,7 +79,7 @@ def test_html_parser_nested_tags():
 def test_html_parser_attributes():
     script_src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
     text = f"<script defer src='{script_src}' crossorigin='anonymous'></script>"
-    parser = rico.html.HTMLParser()
+    parser = rico._html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -107,7 +107,7 @@ def test_html_parser_svg():
         '<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>'
         "</svg>"
     )
-    parser = rico.html.HTMLParser()
+    parser = rico._html.HTMLParser()
     parser.feed(text)
     elements = parser.close()
 
@@ -142,7 +142,7 @@ def test_html_parser_svg():
 
 def test_parse_html():
     text = "<p>Hello world</p>"
-    elements = rico.html.parse_html(text)
+    elements = rico._html.parse_html(text)
 
     assert elem_to_string(elements) == text
     assert isinstance(elements, list)
@@ -200,7 +200,7 @@ def test_indent_html_default(sample_elem: ET.Element):
           <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert elem_to_string(rico.html.indent_html(sample_elem)) == expectation
+    assert elem_to_string(rico._html.indent_html(sample_elem)) == expectation
 
 
 def test_indent_html_custom_space(sample_elem: ET.Element):
@@ -217,7 +217,7 @@ def test_indent_html_custom_space(sample_elem: ET.Element):
         </div>""")
 
     assert elem_to_string(
-        rico.html.indent_html(sample_elem, "    ")) == expectation
+        rico._html.indent_html(sample_elem, "    ")) == expectation
 
 
 def test_strip_html(sample_elem: ET.Element):
@@ -233,7 +233,7 @@ def test_strip_html(sample_elem: ET.Element):
         "<p>Hello world again again</p></div>"
     )
 
-    assert elem_to_string(rico.html.strip_html(sample_elem)) == expectation
+    assert elem_to_string(rico._html.strip_html(sample_elem)) == expectation
 
 
 def test_serialize_html_default(sample_elem: ET.Element):
@@ -249,7 +249,7 @@ def test_serialize_html_default(sample_elem: ET.Element):
         <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico.html.serialize_html(sample_elem) == expectation
+    assert rico._html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_indent(sample_elem: ET.Element):
@@ -265,7 +265,7 @@ def test_serialize_html_indent(sample_elem: ET.Element):
             <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico.html.serialize_html(sample_elem, "    ") == expectation
+    assert rico._html.serialize_html(sample_elem, "    ") == expectation
 
 
 def test_serialize_html_strip(sample_elem: ET.Element):
@@ -276,7 +276,7 @@ def test_serialize_html_strip(sample_elem: ET.Element):
         "</pre><p>Hello &gt;&amp;&lt; <br>world again</p></div>"
     )
 
-    assert rico.html.serialize_html(sample_elem, strip=True) == expectation
+    assert rico._html.serialize_html(sample_elem, strip=True) == expectation
 
 
 def test_serialize_html_bool_attr(sample_elem: ET.Element):
@@ -293,9 +293,9 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
         <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
 
-    assert rico.html.serialize_html(sample_elem) == expectation
+    assert rico._html.serialize_html(sample_elem) == expectation
     sample_elem.set("autofocus", True)  # type: ignore
-    assert rico.html.serialize_html(sample_elem) == expectation
+    assert rico._html.serialize_html(sample_elem) == expectation
 
     sample_elem.set("autofocus", False)  # type: ignore
     expectation = textwrap.dedent("""\
@@ -309,10 +309,10 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
         </pre>
         <p> Hello &gt;&amp;&lt; <br> world again </p>
         </div>""")
-    assert rico.html.serialize_html(sample_elem) == expectation
+    assert rico._html.serialize_html(sample_elem) == expectation
 
 
 def test_serialize_html_style():
     elem = ET.Element("style")
     elem.text = ".>&< {border: none;}"
-    assert rico.html.serialize_html(elem) == "<style>.>&< {border: none;}</style>"
+    assert rico._html.serialize_html(elem) == "<style>.>&< {border: none;}</style>"
