@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import base64
+import importlib
 import io
 import textwrap
 from typing import TYPE_CHECKING
@@ -18,6 +19,30 @@ import rico.content
 
 if TYPE_CHECKING:
     from typing import Any, Literal
+
+
+def test_import_error():
+    with unittest.mock.patch.dict("sys.modules", {"altair": None}):
+        importlib.reload(rico.content)
+        assert rico.content.alt is None
+
+    with unittest.mock.patch.dict("sys.modules", {"vl_convert": None}):
+        importlib.reload(rico.content)
+        assert rico.content.alt is None
+
+    with unittest.mock.patch.dict("sys.modules", {"markdown": None}):
+        importlib.reload(rico.content)
+        assert rico.content.markdown is None
+
+    with unittest.mock.patch.dict("sys.modules", {"matplotlib.pyplot": None}):
+        importlib.reload(rico.content)
+        assert rico.content.plt is None
+
+    with unittest.mock.patch.dict("sys.modules", {"seaborn.objects": None}):
+        importlib.reload(rico.content)
+        assert rico.content.so is None
+
+    importlib.reload(rico.content)
 
 
 def test_content_base_simple():

@@ -19,22 +19,22 @@ if TYPE_CHECKING:
 try:
     import altair as alt
     import vl_convert as vlc
-except ImportError:  # pragma: no cover
+except ImportError:
     alt = None
 
 try:
     import markdown
-except ImportError:  # pragma: no cover
+except ImportError:
     markdown = None
 
 try:
     import matplotlib.pyplot as plt
-except ImportError:  # pragma: no cover
+except ImportError:
     plt = None
 
 try:
     import seaborn.objects as so
-except ImportError:  # pragma: no cover
+except ImportError:
     so = None
 
 
