@@ -387,7 +387,7 @@ class Script(ContentBase):
         self,
         text: str | None = None,
         src: str | None = None,
-        inline: bool = False,
+        inline: bool | None = None,
         defer: bool = False,
         attrib: dict[str, Any] = {},
         **extra: Any,
@@ -410,6 +410,9 @@ class Script(ContentBase):
             ValueError: Both text and src are not None.
             ValueError: Both text and src are None.
         """
+        if inline is None:
+            inline = rico._config.get_config("inline_scripts")
+
         if text is not None and src is not None:
             raise ValueError("Either `text` or `src` should be None.")
 
@@ -445,7 +448,7 @@ class Style(ContentBase):
         self,
         text: str | None = None,
         src: str | None = None,
-        inline: bool = False,
+        inline: bool | None = None,
         attrib: dict[str, Any] = {},
         **extra: Any,
     ):
@@ -465,6 +468,9 @@ class Style(ContentBase):
             ValueError: Both text and src are not None.
             ValueError: Both text and src are None.
         """
+        if inline is None:
+            inline = rico._config.get_config("inline_scripts")
+
         if text is not None and src is not None:
             raise ValueError("Either `text` or `src` should be None.")
 
