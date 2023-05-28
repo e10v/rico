@@ -30,26 +30,26 @@ class HTMLParser(html.parser.HTMLParser):
     Converts attribute names to lower case, even for SVG.
     """
 
-    def __init__(self):  # noqa: D107
+    def __init__(self):
         super().__init__()
         self._root = "root"
         self._builder = ET.TreeBuilder()
         self._builder.start(self._root, {})
 
-    def handle_starttag(  # noqa: D102
+    def handle_starttag(
         self,
         tag: str,
         attrs: list[tuple[str, str | None]],
     ) -> None:
         self._builder.start(tag, dict(attrs))
 
-    def handle_endtag(self, tag: str) -> None:  # noqa: D102
+    def handle_endtag(self, tag: str) -> None:
         self._builder.end(tag)
 
-    def handle_data(self, data: str) -> None:  # noqa: D102
+    def handle_data(self, data: str) -> None:
         self._builder.data(data)
 
-    def close(self) -> list[ET.Element]:  # noqa: D102
+    def close(self) -> list[ET.Element]:
         super().close()
         self._builder.end(self._root)
         return list(self._builder.close())

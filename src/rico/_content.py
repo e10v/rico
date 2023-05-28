@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 import urllib.request
 import xml.etree.ElementTree as ET
 
-import rico.html
+import rico._html
 
 
 if TYPE_CHECKING:
@@ -70,7 +70,7 @@ class ContentBase:
         Returns:
             The serialized object.
         """
-        return rico.html.serialize_html(
+        return rico._html.serialize_html(
             self.container, indent_space=indent_space, strip=strip)
 
     def __str__(self) -> str:
@@ -193,7 +193,7 @@ class HTML(ContentBase):
         """
         super().__init__(class_)
 
-        for element in rico.html.parse_html(text):
+        for element in rico._html.parse_html(text):
             self.container.append(element)
 
         if strip_dataframe_borders:
@@ -255,7 +255,7 @@ class Image(ContentBase):
             if isinstance(data, bytes):
                 data = data.decode()
 
-            for element in rico.html.parse_html(data):
+            for element in rico._html.parse_html(data):
                 self.container.append(element)
         else:
             if isinstance(data, str):
