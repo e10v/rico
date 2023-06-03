@@ -6,6 +6,7 @@ import functools
 from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET
 
+import rico._config
 import rico._content
 
 
@@ -62,12 +63,15 @@ class Div(rico._content.ContentBase):
 
 
 class Doc(Div):
-    def __init__(
+    def __init__(  # noqa: C901
         self,
         *objects: Any,
         title: str | None = None,
-        extra_styles: Iterable[rico._content.Style] | None = None,
-        extra_scripts: Iterable[rico._content.Script] | None = None,
+        charset: str | None = "utf-8",
+        viewport: str | None = "width=device-width, initial-scale=1",
+        bootstrap: bool = True,
+        extra_styles: Iterable[rico._content.Style] = (),
+        extra_scripts: Iterable[rico._content.Script] = (),
         class_: str | None = "container",
     ):
         super().__init__(*objects, class_=class_)
@@ -78,14 +82,42 @@ class Doc(Div):
         self.html.append(self.body)
         self.body.append(self.container)
 
-        self.head.append(ET.Element("meta", charset="utf-8"))
-        self.head.append(ET.Element(
-            "meta",
-            name="viewport",
-            content="width=device-width, initial-scale=1",
-        ))
-
         if title is not None:
             title_element = ET.Element("title")
             title_element.text = title
             self.head.append(title_element)
+
+        if charset is not None:
+            self.head.append(ET.Element("meta", charset=charset))
+
+        if viewport is not None:
+            self.head.append(ET.Element(
+                "meta",
+                name="viewport",
+                content=viewport,
+            ))
+
+        styles : list[rico._content.Style] = []
+        scripts : list[rico._content.Script] = []
+        global_config = rico._config.get_config()
+
+        if bootstrap:
+            if global_config["bootstrap_css"]:
+                styles.append(rico._content.Style(src=global_config["bootstrap_css"]))
+            if global_config["bootstrap_js"]:
+                scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
+
+        if global_config["dataframe_style"]:
+            styles.append(rico._content.Style(src=global_config["dataframe_style"]))
+
+        styles = [*styles, *extra_styles]
+        scripts = [*scripts, *extra_scripts]
+
+        for style in styles:
+            self.head.append(style.style)
+
+        for script in scripts:
+            if script.footer:
+                self.body.append(script.script)
+            else:
+                self.head.append(script.script)
