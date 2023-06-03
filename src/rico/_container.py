@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 
 
 BOOTSTRAP_VER = "5.2"
-BOOTSTRAP_STYLE= f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/css/bootstrap.min.css"
-BOOTSTRAP_SCRIPT = f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/js/bootstrap.min.js"
+BOOTSTRAP_CSS= f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/css/bootstrap.min.css"
+BOOTSTRAP_JS = f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/js/bootstrap.min.js"
 
-DATAFRAME_STYLE = rico._content.Style(text=textwrap.dedent("""\
+DATAFRAME_CLASS = rico._content.Style(text=textwrap.dedent("""\
     .dataframe table {
         border: none;
         border-collapse: collapse;
@@ -77,7 +77,7 @@ class Doc(Div):
         *objects: Any,
         title: str | None = None,
         styles: Iterable[rico._content.Style | str] | None = (
-            BOOTSTRAP_STYLE, DATAFRAME_STYLE),
+            BOOTSTRAP_CSS, DATAFRAME_CLASS),
         scripts: Iterable[rico._content.Script | str] | None = None,
         class_: str | None = "container",
     ):
