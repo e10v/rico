@@ -109,7 +109,7 @@ class Doc(Div):
                 scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
 
         if global_config["dataframe_style"]:
-            styles.append(rico._content.Style(src=global_config["dataframe_style"]))
+            styles.append(rico._content.Style(text=global_config["dataframe_style"]))
 
         styles = [*styles, *extra_styles]
         scripts = [*scripts, *extra_scripts]
