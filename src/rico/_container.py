@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import functools
-import textwrap
 from typing import TYPE_CHECKING
 import xml.etree.ElementTree as ET
 
@@ -15,43 +14,6 @@ if TYPE_CHECKING:
     from typing import Any, Concatenate, ParamSpec
 
     P = ParamSpec("P")
-
-
-BOOTSTRAP_VER = "5.2"
-BOOTSTRAP_CSS= f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/css/bootstrap.min.css"
-BOOTSTRAP_JS = f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/js/bootstrap.min.js"
-
-DATAFRAME_CLASS = rico._content.Style(text=textwrap.dedent("""\
-    .dataframe table {
-        border: none;
-        border-collapse: collapse;
-        border-spacing: 0;
-        margin-bottom: 1em;
-        margin-left: 0;
-        margin-right: 0;
-    }
-
-    .dataframe thead {
-        border-bottom: var(--bs-border-width) solid var(--bs-border-color);
-        vertical-align: bottom;
-    }
-
-    .dataframe td,
-    .dataframe th,
-    .dataframe tr {
-        border: none;
-        line-height: var(--bs-body-line-height);
-        max-width: none;
-        padding: .25rem .5rem;
-        text-align: right;
-        vertical-align: middle;
-        white-space: normal;
-    }
-
-    .dataframe th {
-        font-weight: bold;
-    }
-"""))
 
 
 def _append(
@@ -104,9 +66,8 @@ class Doc(Div):
         self,
         *objects: Any,
         title: str | None = None,
-        styles: Iterable[rico._content.Style | str] | None = (
-            BOOTSTRAP_CSS, DATAFRAME_CLASS),
-        scripts: Iterable[rico._content.Script | str] | None = None,
+        extra_styles: Iterable[rico._content.Style] | None = None,
+        extra_scripts: Iterable[rico._content.Script] | None = None,
         class_: str | None = "container",
     ):
         super().__init__(*objects, class_=class_)
