@@ -1,12 +1,15 @@
+# pyright: reportUnknownMemberType=false, reportUnknownArgumentType=false
 from __future__ import annotations
 
 import xml.etree.ElementTree as ET
+
+import altair as alt
 
 import rico._container
 import rico._content
 
 
-def test_div():
+def test_div_init():
     content = rico._container.Div(
         "Hello world",
         rico._content.Tag("h1", "Header", class_="col"),
@@ -52,3 +55,77 @@ def test_div():
     assert h1.text == "Header"
     assert h1.tail is None
     assert len(h1) == 0
+
+
+def test_div_append_tag():
+    container = rico._container.Div()
+    container.append_tag("h1", "Hello world")
+    content = rico._content.Tag("h1", "Hello world")
+    assert str(container) == f"<div>{content}</div>"
+
+
+def test_div_append_text():
+    container = rico._container.Div()
+    container.append_text("Hello world")
+    content = rico._content.Text("Hello world")
+    assert str(container) == f"<div>{content}</div>"
+
+
+def test_div_append_code():
+    container = rico._container.Div()
+    container.append_code("Hello world")
+    content = rico._content.Code("Hello world")
+    assert str(container) == f"<div>{content}</div>"
+
+
+def test_div_append_html():
+    container = rico._container.Div()
+    container.append_html("<p>Hello world</p>")
+    content = rico._content.HTML("<p>Hello world</p>")
+    assert str(container) == f"<div>{content}</div>"
+
+
+def test_div_append_markdown():
+    container = rico._container.Div()
+    container.append_markdown("# Hello world")
+    content = rico._content.Markdown("# Hello world")
+    assert str(container) == f"<div>{content}</div>"
+
+
+svg_data = (
+    '<svg xmlns="http://www.w3.org/2000/svg" '
+    'xmlns:xlink="http://www.w3.org/1999/xlink" '
+    'width="16" height="16" fill="currentColor" class="bi bi-dash">'
+    '<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>'
+    "</svg>"
+)
+
+def test_div_append_image():
+    container = rico._container.Div()
+    container.append_image(svg_data, "svg")
+    content = rico._content.Image(svg_data, "svg")
+    assert str(container) == f"<div>{content}</div>"
+
+
+altair_chart = alt.Chart(
+    alt.Data(values=[
+        {"x": "A", "y": 5},
+        {"x": "B", "y": 3},
+        {"x": "C", "y": 6},
+        {"x": "D", "y": 7},
+        {"x": "E", "y": 2},
+    ]),
+).mark_bar().encode(x="x:N", y="y:Q")
+
+def test_div_append_chart():
+    container = rico._container.Div()
+    container.append_chart(altair_chart)
+    content = rico._content.Chart(altair_chart)
+    assert str(container) == f"<div>{content}</div>"
+
+
+def test_div_append():
+    container = rico._container.Div()
+    container.append("Hello world", altair_chart)
+    content = rico._content.Obj("Hello world", altair_chart)
+    assert str(container) == f"<div>{content}</div>"
