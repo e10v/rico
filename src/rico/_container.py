@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 
 import rico._config
 import rico._content
+import rico._html
 
 
 if TYPE_CHECKING:
@@ -121,3 +122,24 @@ class Doc(Div):
                 self.body.append(script.script)
             else:
                 self.head.append(script.script)
+
+    def serialize(
+        self,
+        indent: bool | None = None,
+        space: str | None = None,
+        strip: bool | None = None,
+    ) -> str:
+        """Serialize the document to string in HTML format.
+
+        Indent the object if `indent_space` is not None.
+
+        Args:
+            indent: If True, indent the element.
+            space: The whitespace for indentation.
+            strip: If True, strip unnecessary whitespace.
+
+        Returns:
+            The serialized document.
+        """
+        return "<!doctype html>\n" + rico._html.serialize_html(
+            self.html, indent=indent, space=space, strip=strip)
