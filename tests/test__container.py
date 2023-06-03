@@ -337,3 +337,14 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert script.text  == "alert('Hello World!');"
     assert script.tail is None
     assert len(script) == 0
+
+
+def test_doc_serialize():
+    with rico._config.config_context(dataframe_style=""):
+        doc = rico._container.Doc("Hello world", bootstrap=False)
+
+    assert doc.serialize() == (
+        '<!doctype html>\n<html><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1"></head>'
+        '<body><div class="container"><div><p>Hello world</p></div></div></body></html>'
+    )
