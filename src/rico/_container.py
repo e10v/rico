@@ -40,7 +40,7 @@ class Div(rico._content.ContentBase):
     Creates <div> container with content based on arbitrary objects.
     """
     def __init__(self, *objects: Any, class_: str | None = None):
-        """Initialize <div> container with content from arbitrary objects.
+        """Create <div> container with content from arbitrary objects.
 
         Args:
             *objects: The objects which are used to create a content.
@@ -64,6 +64,21 @@ class Div(rico._content.ContentBase):
 
 
 class Doc(Div):
+    """Creates an HTML document.
+
+    Creates and HTML document with content based on arbitrary objects.
+
+    Attributes:
+        html (Element): The <html> element.
+        head (Element): The <head> element.
+        body (Element): The <body> element.
+        container (Element): The <div> container element.
+    """
+    html: ET.Element
+    head: ET.Element
+    body: ET.Element
+    container: ET.Element
+
     def __init__(  # noqa: C901
         self,
         *objects: Any,
@@ -75,6 +90,18 @@ class Doc(Div):
         extra_scripts: Iterable[rico._content.Script] = (),
         class_: str | None = "container",
     ):
+        """Create an HTML document with content from arbitrary objects.
+
+        Args:
+            *objects: The objects which are used to create a content.
+            title: The document title.
+            charset: The document charset.
+            viewport: The document viewport property.
+            bootstrap: If True then Bootstrap included to the document.
+            extra_styles: Extra styles to be included to the document.
+            extra_scripts: Extra scripts to be included to the document.
+            class_: The container class attribute.
+        """
         super().__init__(*objects, class_=class_)
         self.html = ET.Element("html")
         self.head = ET.Element("head")
