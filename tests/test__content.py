@@ -315,7 +315,7 @@ svg_data = (
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_svg(data: str | bytes):
-    content = rico._content.Image(data, class_="row")
+    content = rico._content.Image(data, format="svg", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)

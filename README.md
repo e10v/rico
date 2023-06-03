@@ -1,5 +1,5 @@
 # rico
-Rich content to HTML as easy as Doc([df, plot]).
+Rich content to HTML as easy as `Doc(df, plot)`.
 
 <br>
 
