@@ -4,6 +4,7 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 
 import altair as alt
+import pytest
 
 import rico._container
 import rico._content
@@ -57,39 +58,39 @@ def test_div_init():
     assert len(h1) == 0
 
 
-def test_div_append_tag():
-    container = rico._container.Div()
-    container.append_tag("h1", "Hello world")
+@pytest.fixture
+def div_container() -> rico._container.Div:
+    return rico._container.Div()
+
+
+def test_div_append_tag(div_container: rico._container.Div):
+    div_container.append_tag("h1", "Hello world")
     content = rico._content.Tag("h1", "Hello world")
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
-def test_div_append_text():
-    container = rico._container.Div()
-    container.append_text("Hello world")
+def test_div_append_text(div_container: rico._container.Div):
+    div_container.append_text("Hello world")
     content = rico._content.Text("Hello world")
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
-def test_div_append_code():
-    container = rico._container.Div()
-    container.append_code("Hello world")
+def test_div_append_code(div_container: rico._container.Div):
+    div_container.append_code("Hello world")
     content = rico._content.Code("Hello world")
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
-def test_div_append_html():
-    container = rico._container.Div()
-    container.append_html("<p>Hello world</p>")
+def test_div_append_html(div_container: rico._container.Div):
+    div_container.append_html("<p>Hello world</p>")
     content = rico._content.HTML("<p>Hello world</p>")
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
-def test_div_append_markdown():
-    container = rico._container.Div()
-    container.append_markdown("# Hello world")
+def test_div_append_markdown(div_container: rico._container.Div):
+    div_container.append_markdown("# Hello world")
     content = rico._content.Markdown("# Hello world")
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
 svg_data = (
@@ -100,11 +101,10 @@ svg_data = (
     "</svg>"
 )
 
-def test_div_append_image():
-    container = rico._container.Div()
-    container.append_image(svg_data, "svg")
+def test_div_append_image(div_container: rico._container.Div):
+    div_container.append_image(svg_data, "svg")
     content = rico._content.Image(svg_data, "svg")
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
 altair_chart = alt.Chart(
@@ -117,15 +117,13 @@ altair_chart = alt.Chart(
     ]),
 ).mark_bar().encode(x="x:N", y="y:Q")
 
-def test_div_append_chart():
-    container = rico._container.Div()
-    container.append_chart(altair_chart)
+def test_div_append_chart(div_container: rico._container.Div):
+    div_container.append_chart(altair_chart)
     content = rico._content.Chart(altair_chart)
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
 
 
-def test_div_append():
-    container = rico._container.Div()
-    container.append("Hello world", altair_chart)
+def test_div_append(div_container: rico._container.Div):
+    div_container.append("Hello world", altair_chart)
     content = rico._content.Obj("Hello world", altair_chart)
-    assert str(container) == f"<div>{content}</div>"
+    assert str(div_container) == f"<div>{content}</div>"
