@@ -1,6 +1,6 @@
 # ruff: noqa: F401
 # pyright: reportUnusedImport=false
-"""Rich content to HTML as easy as Doc([df, plot])."""
+"""Rich content to HTML as easy as `Doc(df, plot)`."""
 
 from rico._config import config_context, get_config, set_config
 from rico._container import (
