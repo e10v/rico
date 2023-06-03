@@ -51,7 +51,7 @@ class ContentBase:
     container: ET.Element
 
     def __init__(self, class_: str | None = None):
-        """Initialize base content.
+        """Create base content.
 
         Args:
             class_: The container element's class attribute.
@@ -100,7 +100,7 @@ class Tag(ContentBase):
         class_: str | None = None,
         **extra: Any,
     ):
-        """Initialize content using tag parameters.
+        """Create content using tag parameters.
 
         Args:
             tag: The content element's tag.
@@ -129,7 +129,7 @@ class Text(ContentBase):
         wrap: bool = False,
         class_: str | None = None,
     ):
-        """Initialize content from a text.
+        """Create content from a text.
 
         The default tag is <p> unless the text contains a line break.
         Then the <pre> tag is used.
@@ -166,7 +166,7 @@ class Code(ContentBase):
     Creates content elements from a code and appends them to the container.
     """
     def __init__(self, text: str, class_: str | None = None):
-        """Initialize content from a code.
+        """Create content from a code.
 
         Args:
             text: The code.
@@ -191,7 +191,7 @@ class HTML(ContentBase):
         strip_dataframe_borders: bool = False,
         class_: str | None = None,
     ):
-        """Initialize content from an HTML text.
+        """Create content from an HTML text.
 
         Args:
             text: The HTML text.
@@ -221,7 +221,7 @@ class Markdown(ContentBase):
         class_: str | None = None,
         **kwargs: Any,
     ):
-        """Initialize content from a markdown text.
+        """Create content from a markdown text.
 
         Args:
             text: The markdown text.
@@ -249,7 +249,7 @@ class Image(ContentBase):
         format: str,  # noqa: A002
         class_: str | None = None,
     ):
-        """Initialize content using image data.
+        """Create content using image data.
 
         Args:
             data: The image data.
@@ -293,7 +293,7 @@ class Chart(ContentBase):
         class_: str | None = None,
         **kwargs: Any,
     ):
-        """Initialize content from a chart object.
+        """Create content from a chart object.
 
         Args:
             obj: The chart object.
@@ -346,7 +346,7 @@ class Obj(ContentBase):
     Automatically determines the content type.
     """
     def __init__(self, *objects: Any, class_: str | None = None):
-        """Initialize content from arbitrary objects.
+        """Create content from arbitrary objects.
 
         Args:
             *objects: The objects which are used to create a content.
@@ -389,7 +389,7 @@ class Script(ContentBase):
         attrib: dict[str, Any] = {},
         **extra: Any,
     ):
-        """Initialize script.
+        """Create script.
 
         Either `text` or `src` should be used.
 
@@ -449,7 +449,7 @@ class Style(ContentBase):
         attrib: dict[str, Any] = {},
         **extra: Any,
     ):
-        """Initialize stylesheet.
+        """Create stylesheet.
 
         Either `text` or `src` should be used.
 
