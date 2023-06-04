@@ -76,10 +76,9 @@ def get_config(param: str | None = None) -> Any:
     Returns:
         Parameter value if `param` is not None, or dict with all parameters otherwise.
     """
-    config = _global_config.copy()
     if param is not None:
-        return config[param]
-    return config
+        return _global_config[param]
+    return _global_config.copy()
 
 
 def set_config(
