@@ -51,15 +51,17 @@ DATAFRAME_STYLE = textwrap.dedent("""\
 
 
 _global_config = {
-    "indent_html": False,
-    "indent_space": "  ",
-    "strip_html": False,
-    "image_format": "svg",
-    "inline_scripts": False,
-    "inline_styles": False,
     "bootstrap_css": BOOTSTRAP_CSS,
     "bootstrap_js": BOOTSTRAP_JS,
     "dataframe_style": DATAFRAME_STYLE,
+    "image_format": "svg",
+    "indent_html": False,
+    "indent_space": "  ",
+    "inline_scripts": False,
+    "inline_styles": False,
+    "meta_charset": "utf-8",
+    "meta_viewport": "width=device-width, initial-scale=1",
+    "strip_html": False,
 }
 
 
@@ -79,31 +81,37 @@ def get_config(param: str | None = None) -> Any:
 
 
 def set_config(
-    indent_html: bool | None = None,
-    indent_space: str | None = None,
-    strip_html: bool | None = None,
-    image_format: Literal["svg", "png"] | None = None,
-    inline_scripts: bool | None = None,
-    inline_styles: bool | None = None,
     bootstrap_css: str | None = None,
     bootstrap_js: str | None = None,
     dataframe_style: str | None = None,
+    image_format: Literal["svg", "png"] | None = None,
+    indent_html: bool | None = None,
+    indent_space: str | None = None,
+    inline_scripts: bool | None = None,
+    inline_styles: bool | None = None,
+    meta_charset: str | None = None,
+    meta_viewport: str | None = None,
+    strip_html: bool | None = None,
 ) -> None:
     """Set global configuration.
 
     Args:
-        indent_html: Indent HTML elements in serialization methods.
-        indent_space: Default indent space.
-        strip_html: Strip HTML elements in serialization methods.
-        image_format: Default chart image format.
-        inline_scripts: If True then scripts are loaded inline.
-        inline_styles: If True then styles are loaded inline.
         bootstrap_css: A link to a bootstrap css file.
             If empty then bootstrap css is not loaded.
         bootstrap_js: A link to a bootstrap javascript file.
             If empty then bootstrap javascript is not loaded.
         dataframe_style: A dataframe table stylesheet.
             If empty then it's not used.
+        image_format: Default chart image format.
+        indent_html: Indent HTML elements in serialization methods.
+        indent_space: Default indent space.
+        inline_scripts: If True then scripts are loaded inline.
+        inline_styles: If True then styles are loaded inline.
+        meta_charset: An HTML document charset.
+            If empty then it's not used.
+        meta_viewport: An HTML document viewport property.
+            If empty then it's not used.
+        strip_html: Strip HTML elements in serialization methods.
     """
     for param, value in locals().items():
         if value is not None:
@@ -112,31 +120,37 @@ def set_config(
 
 @contextlib.contextmanager
 def config_context(
-    indent_html: bool | None = None,
-    indent_space: str | None = None,
-    strip_html: bool | None = None,
-    image_format: Literal["svg", "png"] | None = None,
-    inline_scripts: bool | None = None,
-    inline_styles: bool | None = None,
     bootstrap_css: str | None = None,
     bootstrap_js: str | None = None,
     dataframe_style: str | None = None,
+    image_format: Literal["svg", "png"] | None = None,
+    indent_html: bool | None = None,
+    indent_space: str | None = None,
+    inline_scripts: bool | None = None,
+    inline_styles: bool | None = None,
+    meta_charset: str | None = None,
+    meta_viewport: str | None = None,
+    strip_html: bool | None = None,
 ) -> Generator[None, Any, None]:
     """Context manager for configuration.
 
     Args:
-        indent_html: Indent HTML elements in serialization methods.
-        indent_space: Default indent space.
-        strip_html: Strip HTML elements in serialization methods.
-        image_format: Default chart image format.
-        inline_scripts: If True then scripts are loaded inline.
-        inline_styles: If True then styles are loaded inline.
         bootstrap_css: A link to a bootstrap css file.
             If empty then bootstrap css is not loaded.
         bootstrap_js: A link to a bootstrap javascript file.
             If empty then bootstrap javascript is not loaded.
         dataframe_style: A dataframe table stylesheet.
             If empty then it's not used.
+        image_format: Default chart image format.
+        indent_html: Indent HTML elements in serialization methods.
+        indent_space: Default indent space.
+        inline_scripts: If True then scripts are loaded inline.
+        inline_styles: If True then styles are loaded inline.
+        meta_charset: An HTML document charset.
+            If empty then it's not used.
+        meta_viewport: An HTML document viewport property.
+            If empty then it's not used.
+        strip_html: Strip HTML elements in serialization methods.
     """
     new_config = locals()
     old_config = get_config()

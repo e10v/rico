@@ -228,13 +228,15 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     extra_script = rico._content.Script(text="alert('Hello World!');")
     extra_script.footer = True
 
-    with rico._config.config_context(dataframe_style=""):
+    with rico._config.config_context(
+        meta_charset="",
+        meta_viewport="",
+        dataframe_style="",
+    ):
         doc = rico._container.Doc(
             "Hello world",
             title="Title",
-            charset=None,
-            viewport=None,
-            bootstrap="full",
+           bootstrap="full",
             extra_styles=(extra_style,),
             extra_scripts=(extra_script,),
             class_=None,

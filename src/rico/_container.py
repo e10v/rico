@@ -83,8 +83,6 @@ class Doc(Div):
         self,
         *objects: Any,
         title: str | None = None,
-        charset: str | None = "utf-8",
-        viewport: str | None = "width=device-width, initial-scale=1",
         bootstrap: Literal["css", "full", "none"] = "css",
         extra_styles: Iterable[rico._content.Style] = (),
         extra_scripts: Iterable[rico._content.Script] = (),
@@ -95,8 +93,6 @@ class Doc(Div):
         Args:
             *objects: The objects which are used to create a content.
             title: The document title.
-            charset: The document charset.
-            viewport: The document viewport property.
             bootstrap: If True then Bootstrap included to the document.
             extra_styles: Extra styles to be included to the document.
             extra_scripts: Extra scripts to be included to the document.
@@ -115,25 +111,23 @@ class Doc(Div):
             title_element.text = title
             self.head.append(title_element)
 
-        if charset is not None:
-            self.head.append(ET.Element("meta", charset=charset))
-
-        if viewport is not None:
+        global_config = rico._config.get_config()
+        if global_config["meta_charset"]:
+            self.head.append(ET.Element("meta", charset=global_config["meta_charset"]))
+        if global_config["meta_viewport"]:
             self.head.append(ET.Element(
                 "meta",
                 name="viewport",
-                content=viewport,
+                content=global_config["meta_viewport"],
             ))
 
         styles : list[rico._content.Style] = []
         scripts : list[rico._content.Script] = []
-        global_config = rico._config.get_config()
 
         if bootstrap.lower() in {"css", "full"}:
             styles.append(rico._content.Style(src=global_config["bootstrap_css"]))
         if bootstrap.lower() == "full":
             scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
-
         if global_config["dataframe_style"]:
             styles.append(rico._content.Style(text=global_config["dataframe_style"]))
 
