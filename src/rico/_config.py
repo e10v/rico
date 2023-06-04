@@ -62,6 +62,8 @@ _global_config = {
     "meta_charset": "utf-8",
     "meta_viewport": "width=device-width, initial-scale=1",
     "strip_html": False,
+    "text_mono": False,
+    "text_wrap": False,
 }
 
 
@@ -92,6 +94,8 @@ def set_config(
     meta_charset: str | None = None,
     meta_viewport: str | None = None,
     strip_html: bool | None = None,
+    text_mono: bool | None = None,
+    text_wrap: bool | None = None,
 ) -> None:
     """Set global configuration.
 
@@ -112,6 +116,8 @@ def set_config(
         meta_viewport: An HTML document viewport property.
             If empty then it's not used.
         strip_html: Strip HTML elements in serialization methods.
+        text_mono: Default value for the `mono` arg of the Text class.
+        text_wrap: Default value for the `wrap` arg of the Text class.
     """
     for param, value in locals().items():
         if value is not None:
@@ -131,6 +137,8 @@ def config_context(
     meta_charset: str | None = None,
     meta_viewport: str | None = None,
     strip_html: bool | None = None,
+    text_mono: bool | None = None,
+    text_wrap: bool | None = None,
 ) -> Generator[None, Any, None]:
     """Context manager for configuration.
 
@@ -151,6 +159,8 @@ def config_context(
         meta_viewport: An HTML document viewport property.
             If empty then it's not used.
         strip_html: Strip HTML elements in serialization methods.
+        text_mono: Default value for the `mono` arg of the Text class.
+        text_wrap: Default value for the `wrap` arg of the Text class.
     """
     new_config = locals()
     old_config = get_config()

@@ -125,8 +125,8 @@ class Text(ContentBase):
     def __init__(
         self,
         obj: Any,
-        mono: bool = False,
-        wrap: bool = False,
+        mono: bool | None = None,
+        wrap: bool | None = None,
         class_: str | None = None,
     ):
         """Create content from a text.
@@ -143,6 +143,12 @@ class Text(ContentBase):
             class_: The container class attribute.
         """
         super().__init__(class_)
+
+        global_config = rico._config.get_config()
+        if mono is None:
+            mono = global_config["text_mono"]
+        if wrap is None:
+            wrap = global_config["text_wrap"]
 
         if not isinstance(obj, str):
             obj = str(obj)
