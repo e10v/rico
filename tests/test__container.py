@@ -26,7 +26,7 @@ def test_div_init():
     assert div0.tail is None
     assert len(div0) == 2
 
-    div1 = list(div0)[0]
+    div1 = tuple(div0)[0]
     assert isinstance(div1, ET.Element)
     assert div1.tag == "div"
     assert div1.attrib == {}
@@ -34,7 +34,7 @@ def test_div_init():
     assert div1.tail is None
     assert len(div1) == 1
 
-    p = list(div1)[0]
+    p = tuple(div1)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -42,7 +42,7 @@ def test_div_init():
     assert p.tail is None
     assert len(p) == 0
 
-    div2 = list(div0)[1]
+    div2 = tuple(div0)[1]
     assert isinstance(div2, ET.Element)
     assert div2.tag == "div"
     assert div2.attrib == {"class": "col"}
@@ -50,7 +50,7 @@ def test_div_init():
     assert div2.tail is None
     assert len(div2) == 1
 
-    h1 = list(div2)[0]
+    h1 = tuple(div2)[0]
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
@@ -142,7 +142,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert len(html) == 2
 
     head = doc.head
-    assert head == list(html)[0]
+    assert head == tuple(html)[0]
     assert isinstance(head, ET.Element)
     assert head.tag == "head"
     assert head.attrib == {}
@@ -150,7 +150,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert head.tail is None
     assert len(head) == 4
 
-    charset = list(head)[0]
+    charset = tuple(head)[0]
     assert isinstance(charset, ET.Element)
     assert charset.tag == "meta"
     assert charset.attrib == {"charset": "utf-8"}
@@ -158,7 +158,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert charset.tail is None
     assert len(charset) == 0
 
-    viewport = list(head)[1]
+    viewport = tuple(head)[1]
     assert isinstance(viewport, ET.Element)
     assert viewport.tag == "meta"
     assert viewport.attrib == {
@@ -169,7 +169,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert viewport.tail is None
     assert len(viewport) == 0
 
-    bootstrap_css = list(head)[2]
+    bootstrap_css = tuple(head)[2]
     assert isinstance(bootstrap_css, ET.Element)
     assert bootstrap_css.tag == "link"
     assert bootstrap_css.attrib == {
@@ -180,7 +180,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert bootstrap_css.tail is None
     assert len(bootstrap_css) == 0
 
-    df_style = list(head)[3]
+    df_style = tuple(head)[3]
     assert isinstance(df_style, ET.Element)
     assert df_style.tag == "style"
     assert df_style.attrib == {}
@@ -189,7 +189,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert len(df_style) == 0
 
     body = doc.body
-    assert body == list(html)[1]
+    assert body == tuple(html)[1]
     assert isinstance(body, ET.Element)
     assert body.tag == "body"
     assert body.attrib == {}
@@ -198,7 +198,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert len(body) == 1
 
     div0 = doc.container
-    assert div0 == list(body)[0]
+    assert div0 == tuple(body)[0]
     assert isinstance(div0, ET.Element)
     assert div0.tag == "div"
     assert div0.attrib == {"class": "container"}
@@ -206,7 +206,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert div0.tail is None
     assert len(div0) == 1
 
-    div1 = list(div0)[0]
+    div1 = tuple(div0)[0]
     assert isinstance(div1, ET.Element)
     assert div1.tag == "div"
     assert div1.attrib == {}
@@ -214,7 +214,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert div1.tail is None
     assert len(div1) == 1
 
-    p = list(div1)[0]
+    p = tuple(div1)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -229,14 +229,14 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     extra_script.footer = True
 
     with rico._config.config_context(
-        bootstrap_js=rico._config.BOOTSTRAP_JS,
+        meta_charset="",
+        meta_viewport="",
         dataframe_style="",
     ):
         doc = rico._container.Doc(
             "Hello world",
             title="Title",
-            charset=None,
-            viewport=None,
+           bootstrap="full",
             extra_styles=(extra_style,),
             extra_scripts=(extra_script,),
             class_=None,
@@ -251,7 +251,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert len(html) == 2
 
     head = doc.head
-    assert head == list(html)[0]
+    assert head == tuple(html)[0]
     assert isinstance(head, ET.Element)
     assert head.tag == "head"
     assert head.attrib == {}
@@ -259,7 +259,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert head.tail is None
     assert len(head) == 4
 
-    title = list(head)[0]
+    title = tuple(head)[0]
     assert isinstance(title, ET.Element)
     assert title.tag == "title"
     assert title.attrib == {}
@@ -267,7 +267,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert title.tail is None
     assert len(title) == 0
 
-    bootstrap_css = list(head)[1]
+    bootstrap_css = tuple(head)[1]
     assert isinstance(bootstrap_css, ET.Element)
     assert bootstrap_css.tag == "link"
     assert bootstrap_css.attrib == {
@@ -278,8 +278,8 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert bootstrap_css.tail is None
     assert len(bootstrap_css) == 0
 
-    style = list(head)[2]
-    style = extra_style.style
+    style = tuple(head)[2]
+    style = extra_style.container
     assert isinstance(style, ET.Element)
     assert style.tag == "link"
     assert style.attrib == {"src": "style.css", "rel": "stylesheet"}
@@ -287,7 +287,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert style.tail is None
     assert len(style) == 0
 
-    bootstrap_js = list(head)[3]
+    bootstrap_js = tuple(head)[3]
     assert isinstance(bootstrap_js, ET.Element)
     assert bootstrap_js.tag == "script"
     assert bootstrap_js.attrib == {"src": rico._config.BOOTSTRAP_JS}
@@ -296,7 +296,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert len(bootstrap_js) == 0
 
     body = doc.body
-    assert body == list(html)[1]
+    assert body == tuple(html)[1]
     assert isinstance(body, ET.Element)
     assert body.tag == "body"
     assert body.attrib == {}
@@ -305,7 +305,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert len(body) == 2
 
     div0 = doc.container
-    assert div0 == list(body)[0]
+    assert div0 == tuple(body)[0]
     assert isinstance(div0, ET.Element)
     assert div0.tag == "div"
     assert div0.attrib == {}
@@ -313,7 +313,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert div0.tail is None
     assert len(div0) == 1
 
-    div1 = list(div0)[0]
+    div1 = tuple(div0)[0]
     assert isinstance(div1, ET.Element)
     assert div1.tag == "div"
     assert div1.attrib == {}
@@ -321,7 +321,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert div1.tail is None
     assert len(div1) == 1
 
-    p = list(div1)[0]
+    p = tuple(div1)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -329,8 +329,8 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert p.tail is None
     assert len(p) == 0
 
-    script = list(body)[1]
-    assert script == extra_script.script
+    script = tuple(body)[1]
+    assert script == extra_script.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == {}
@@ -341,7 +341,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
 
 def test_doc_serialize():
     with rico._config.config_context(dataframe_style=""):
-        doc = rico._container.Doc("Hello world", bootstrap=False)
+        doc = rico._container.Doc("Hello world", bootstrap="none")
 
     assert doc.serialize() == (
         '<!doctype html>\n<html><head><meta charset="utf-8">'

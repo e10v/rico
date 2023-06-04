@@ -125,8 +125,8 @@ class Text(ContentBase):
     def __init__(
         self,
         obj: Any,
-        mono: bool = False,
-        wrap: bool = False,
+        mono: bool | None = None,
+        wrap: bool | None = None,
         class_: str | None = None,
     ):
         """Create content from a text.
@@ -143,6 +143,12 @@ class Text(ContentBase):
             class_: The container class attribute.
         """
         super().__init__(class_)
+
+        global_config = rico._config.get_config()
+        if mono is None:
+            mono = global_config["text_mono"]
+        if wrap is None:
+            wrap = global_config["text_wrap"]
 
         if not isinstance(obj, str):
             obj = str(obj)
@@ -377,7 +383,7 @@ class Script(ContentBase):
         footer (bool): Defines whether the script should be placed at a document footer,
             aftert all other content.
     """
-    script: ET.Element
+    container: ET.Element
     footer: bool = False
 
     def __init__(
@@ -428,9 +434,8 @@ class Script(ContentBase):
         else:
             self.footer = defer
 
-        self.script = ET.Element("script", {**attrib, **extra})
-        self.script.text = text
-        self.container = self.script
+        self.container = ET.Element("script", {**attrib, **extra})
+        self.container.text = text
 
 
 class Style(ContentBase):
@@ -439,7 +444,7 @@ class Style(ContentBase):
     Attributes:
         style (Element): The style element.
     """
-    style: ET.Element
+    container: ET.Element
 
     def __init__(
         self,
@@ -487,6 +492,5 @@ class Style(ContentBase):
         else:
             tag = "style"
 
-        self.style = ET.Element(tag, {**attrib, **extra})
-        self.style.text = text
-        self.container = self.style
+        self.container = ET.Element(tag, {**attrib, **extra})
+        self.container.text = text

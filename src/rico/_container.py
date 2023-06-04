@@ -13,7 +13,7 @@ import rico._html
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
-    from typing import Any, Concatenate, ParamSpec
+    from typing import Any, Concatenate, Literal, ParamSpec
 
     P = ParamSpec("P")
 
@@ -79,13 +79,11 @@ class Doc(Div):
     body: ET.Element
     container: ET.Element
 
-    def __init__(  # noqa: C901
+    def __init__(
         self,
         *objects: Any,
         title: str | None = None,
-        charset: str | None = "utf-8",
-        viewport: str | None = "width=device-width, initial-scale=1",
-        bootstrap: bool = True,
+        bootstrap: Literal["css", "full", "none"] = "css",
         extra_styles: Iterable[rico._content.Style] = (),
         extra_scripts: Iterable[rico._content.Script] = (),
         class_: str | None = "container",
@@ -95,8 +93,6 @@ class Doc(Div):
         Args:
             *objects: The objects which are used to create a content.
             title: The document title.
-            charset: The document charset.
-            viewport: The document viewport property.
             bootstrap: If True then Bootstrap included to the document.
             extra_styles: Extra styles to be included to the document.
             extra_scripts: Extra scripts to be included to the document.
@@ -115,26 +111,23 @@ class Doc(Div):
             title_element.text = title
             self.head.append(title_element)
 
-        if charset is not None:
-            self.head.append(ET.Element("meta", charset=charset))
-
-        if viewport is not None:
+        global_config = rico._config.get_config()
+        if global_config["meta_charset"]:
+            self.head.append(ET.Element("meta", charset=global_config["meta_charset"]))
+        if global_config["meta_viewport"]:
             self.head.append(ET.Element(
                 "meta",
                 name="viewport",
-                content=viewport,
+                content=global_config["meta_viewport"],
             ))
 
         styles : list[rico._content.Style] = []
         scripts : list[rico._content.Script] = []
-        global_config = rico._config.get_config()
 
-        if bootstrap:
-            if global_config["bootstrap_css"]:
-                styles.append(rico._content.Style(src=global_config["bootstrap_css"]))
-            if global_config["bootstrap_js"]:
-                scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
-
+        if bootstrap.lower() in {"css", "full"}:
+            styles.append(rico._content.Style(src=global_config["bootstrap_css"]))
+        if bootstrap.lower() == "full":
+            scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
         if global_config["dataframe_style"]:
             styles.append(rico._content.Style(text=global_config["dataframe_style"]))
 
@@ -142,13 +135,13 @@ class Doc(Div):
         scripts = [*scripts, *extra_scripts]
 
         for style in styles:
-            self.head.append(style.style)
+            self.head.append(style.container)
 
         for script in scripts:
             if script.footer:
-                self.body.append(script.script)
+                self.body.append(script.container)
             else:
-                self.head.append(script.script)
+                self.head.append(script.container)
 
     def serialize(
         self,

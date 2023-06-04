@@ -116,7 +116,7 @@ def test_tag():
     assert div.tail is None
     assert len(div) == 1
 
-    p = list(div)[0]
+    p = tuple(div)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {"class": "col", "id": "42"}
@@ -136,7 +136,7 @@ def test_text_simple():
     assert div.tail is None
     assert len(div) == 1
 
-    p = list(div)[0]
+    p = tuple(div)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -149,7 +149,7 @@ def test_text_pre_mono():
     content = rico._content.Text("Hello\nworld", mono=True)
     div = content.container
 
-    pre = list(div)[0]
+    pre = tuple(div)[0]
     assert isinstance(pre, ET.Element)
     assert pre.tag == "pre"
     assert pre.attrib == {"class": "font-monospace"}
@@ -162,7 +162,7 @@ def test_text_int_mono_wrap():
     content = rico._content.Text(42, mono=True, wrap=True)
     div = content.container
 
-    p = list(div)[0]
+    p = tuple(div)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {"class": "font-monospace text-wrap"}
@@ -182,7 +182,7 @@ def test_code():
     assert div.tail is None
     assert len(div) == 1
 
-    pre = list(div)[0]
+    pre = tuple(div)[0]
     assert isinstance(pre, ET.Element)
     assert pre.tag == "pre"
     assert pre.attrib == {}
@@ -190,7 +190,7 @@ def test_code():
     assert pre.tail is None
     assert len(pre) == 1
 
-    code = list(pre)[0]
+    code = tuple(pre)[0]
     assert isinstance(code, ET.Element)
     assert code.tag == "code"
     assert code.attrib == {}
@@ -210,7 +210,7 @@ def test_html_simple():
     assert div.tail is None
     assert len(div) == 1
 
-    p = list(div)[0]
+    p = tuple(div)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {"border": "1"}
@@ -244,10 +244,10 @@ def test_html_table_border(
 
     content = rico._content.HTML(df, strip_dataframe_borders)
     if wrap_in_div:
-        div = list(content.container)[0]
-        table = list(div)[0]
+        div = tuple(content.container)[0]
+        table = tuple(div)[0]
     else:
-        table = list(content.container)[0]
+        table = tuple(content.container)[0]
 
     if border and (not dataframe or not strip_dataframe_borders):
         assert table.get("border") == "1"
@@ -272,7 +272,7 @@ def test_markdown():
     assert div.tail is None
     assert len(div) == 3
 
-    h1 = list(div)[0]
+    h1 = tuple(div)[0]
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
@@ -280,7 +280,7 @@ def test_markdown():
     assert h1.tail == "\n"
     assert len(h1) == 0
 
-    h2 = list(div)[1]
+    h2 = tuple(div)[1]
     assert isinstance(h2, ET.Element)
     assert h2.tag == "h2"
     assert h2.attrib == {}
@@ -288,7 +288,7 @@ def test_markdown():
     assert h2.tail == "\n"
     assert len(h2) == 0
 
-    p = list(div)[2]
+    p = tuple(div)[2]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -325,7 +325,7 @@ def test_image_svg(data: str | bytes):
     assert div.tail is None
     assert len(div) == 1
 
-    svg = list(div)[0]
+    svg = tuple(div)[0]
     assert isinstance(svg, ET.Element)
     assert svg.tag == "svg"
     assert svg.attrib == {
@@ -340,7 +340,7 @@ def test_image_svg(data: str | bytes):
     assert svg.tail is None
     assert len(svg) == 1
 
-    path = list(svg)[0]
+    path = tuple(svg)[0]
     assert isinstance(path, ET.Element)
     assert path.tag == "path"
     assert path.attrib == {
@@ -367,7 +367,7 @@ def test_image_png(data: str | bytes):
     assert div.tail is None
     assert len(div) == 1
 
-    img = list(div)[0]
+    img = tuple(div)[0]
     assert isinstance(img, ET.Element)
     assert img.tag == "img"
     assert img.attrib == {"src": f"data:image/png;base64,{encoded_image}"}
@@ -409,11 +409,11 @@ def test_chart_complete(chart: Any, format: Literal["svg", "png"] | None):  # no
     assert len(div) == 1
 
     if format is None:
-        svg = list(div)[0]
+        svg = tuple(div)[0]
         assert isinstance(svg, ET.Element)
         assert svg.tag == "svg"
     else:
-        img = list(div)[0]
+        img = tuple(div)[0]
         assert isinstance(img, ET.Element)
         assert img.tag == "img"
 
@@ -452,7 +452,7 @@ def test_obj():
     assert div.tail is None
     assert len(div) == 3
 
-    h1 = list(div)[0]
+    h1 = tuple(div)[0]
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
@@ -460,7 +460,7 @@ def test_obj():
     assert h1.tail is None
     assert len(h1) == 0
 
-    p = list(div)[1]
+    p = tuple(div)[1]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -468,7 +468,7 @@ def test_obj():
     assert p.tail is None
     assert len(p) == 0
 
-    svg = list(div)[2]
+    svg = tuple(div)[2]
     assert isinstance(svg, ET.Element)
     assert svg.tag == "svg"
 
@@ -479,7 +479,7 @@ def test_script_text(defer: bool):
     attrib = {"async": True}
     content = rico._content.Script(text=text, defer=defer, attrib=attrib)
 
-    script = content.script
+    script = content.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == attrib
@@ -501,7 +501,7 @@ def test_script_src(defer: bool):
     if defer:
         attrib = {"defer": True, **attrib}
 
-    script = content.script
+    script = content.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == attrib
@@ -524,7 +524,7 @@ def test_script_inline(defer: bool):
         content = rico._content.Script(src=src, inline=True, defer=defer, attrib=attrib)
         urlopen.assert_called_once_with(src)
 
-    script = content.script
+    script = content.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == attrib
@@ -548,7 +548,7 @@ def test_style_text():
     attrib = {"title": "Style title"}
     content = rico._content.Style(text=text, attrib=attrib)
 
-    style = content.style
+    style = content.container
     assert isinstance(style, ET.Element)
     assert style.tag == "style"
     assert style.attrib == attrib
@@ -566,7 +566,7 @@ def test_style_src():
 
     attrib = {"src": src, **attrib, "rel": "stylesheet"}
 
-    link = content.style
+    link = content.container
     assert isinstance(link, ET.Element)
     assert link.tag == "link"
     assert link.attrib == attrib
@@ -587,7 +587,7 @@ def test_style_inline():
         content = rico._content.Style(src=src, inline=True, attrib=attrib)
         urlopen.assert_called_once_with(src)
 
-    style = content.style
+    style = content.container
     assert isinstance(style, ET.Element)
     assert style.tag == "style"
     assert style.attrib == attrib

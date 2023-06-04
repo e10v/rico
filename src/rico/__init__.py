@@ -2,15 +2,7 @@
 # pyright: reportUnusedImport=false
 """Rich content to HTML as easy as `Doc(df, plot)`."""
 
-from rico._config import (
-    BOOTSTRAP_CSS,
-    BOOTSTRAP_JS,
-    BOOTSTRAP_VER,
-    DATAFRAME_STYLE,
-    config_context,
-    get_config,
-    set_config,
-)
+from rico._config import config_context, get_config, set_config
 from rico._container import Div, Doc
 from rico._content import (
     Chart,

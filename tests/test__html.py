@@ -8,8 +8,8 @@ import pytest
 import rico._html
 
 
-def elem_to_string(elem: ET.Element | list[ET.Element], sep: str = "") -> str:
-    if isinstance(elem, list):
+def elem_to_string(elem: ET.Element | tuple[ET.Element], sep: str = "") -> str:
+    if isinstance(elem, tuple):
         return sep.join(elem_to_string(e) for e in elem)
     return ET.tostring(elem, encoding="unicode", method="html")
 
@@ -21,7 +21,7 @@ def test_html_parser_two_elements():
     elements = parser.close()
 
     assert elem_to_string(elements) == text
-    assert isinstance(elements, list)
+    assert isinstance(elements, tuple)
     assert len(elements) == 2
 
     p0 = elements[0]
@@ -48,7 +48,7 @@ def test_html_parser_nested_tags():
     elements = parser.close()
 
     assert elem_to_string(elements) == text
-    assert isinstance(elements, list)
+    assert isinstance(elements, tuple)
     assert len(elements) == 1
 
     div = elements[0]
@@ -59,7 +59,7 @@ def test_html_parser_nested_tags():
     assert div.tail is None
     assert len(div) == 1
 
-    p = list(div)[0]
+    p = tuple(div)[0]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -67,7 +67,7 @@ def test_html_parser_nested_tags():
     assert p.tail is None
     assert len(p) == 1
 
-    strong = list(p)[0]
+    strong = tuple(p)[0]
     assert isinstance(strong, ET.Element)
     assert strong.tag == "strong"
     assert strong.attrib == {}
@@ -83,7 +83,7 @@ def test_html_parser_attributes():
     parser.feed(text)
     elements = parser.close()
 
-    assert isinstance(elements, list)
+    assert isinstance(elements, tuple)
     assert len(elements) == 1
 
     script = elements[0]
@@ -111,7 +111,7 @@ def test_html_parser_svg():
     parser.feed(text)
     elements = parser.close()
 
-    assert isinstance(elements, list)
+    assert isinstance(elements, tuple)
     assert len(elements) == 1
 
     svg = elements[0]
@@ -129,7 +129,7 @@ def test_html_parser_svg():
     assert svg.tail is None
     assert len(svg) == 1
 
-    path = list(svg)[0]
+    path = tuple(svg)[0]
     assert isinstance(path, ET.Element)
     assert path.tag == "path"
     assert path.attrib == {
@@ -145,7 +145,7 @@ def test_parse_html():
     elements = rico._html.parse_html(text)
 
     assert elem_to_string(elements) == text
-    assert isinstance(elements, list)
+    assert isinstance(elements, tuple)
     assert len(elements) == 1
 
     p = elements[0]
