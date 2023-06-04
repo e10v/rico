@@ -228,15 +228,13 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     extra_script = rico._content.Script(text="alert('Hello World!');")
     extra_script.footer = True
 
-    with rico._config.config_context(
-        bootstrap_js=rico._config.BOOTSTRAP_JS,
-        dataframe_style="",
-    ):
+    with rico._config.config_context(dataframe_style=""):
         doc = rico._container.Doc(
             "Hello world",
             title="Title",
             charset=None,
             viewport=None,
+            bootstrap="full",
             extra_styles=(extra_style,),
             extra_scripts=(extra_script,),
             class_=None,
@@ -341,7 +339,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
 
 def test_doc_serialize():
     with rico._config.config_context(dataframe_style=""):
-        doc = rico._container.Doc("Hello world", bootstrap=False)
+        doc = rico._container.Doc("Hello world", bootstrap="none")
 
     assert doc.serialize() == (
         '<!doctype html>\n<html><head><meta charset="utf-8">'

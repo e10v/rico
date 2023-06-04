@@ -13,7 +13,7 @@ import rico._html
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
-    from typing import Any, Concatenate, ParamSpec
+    from typing import Any, Concatenate, Literal, ParamSpec
 
     P = ParamSpec("P")
 
@@ -79,13 +79,13 @@ class Doc(Div):
     body: ET.Element
     container: ET.Element
 
-    def __init__(  # noqa: C901
+    def __init__(
         self,
         *objects: Any,
         title: str | None = None,
         charset: str | None = "utf-8",
         viewport: str | None = "width=device-width, initial-scale=1",
-        bootstrap: bool = True,
+        bootstrap: Literal["css", "full", "none"] = "css",
         extra_styles: Iterable[rico._content.Style] = (),
         extra_scripts: Iterable[rico._content.Script] = (),
         class_: str | None = "container",
@@ -129,11 +129,10 @@ class Doc(Div):
         scripts : list[rico._content.Script] = []
         global_config = rico._config.get_config()
 
-        if bootstrap:
-            if global_config["bootstrap_css"]:
-                styles.append(rico._content.Style(src=global_config["bootstrap_css"]))
-            if global_config["bootstrap_js"]:
-                scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
+        if bootstrap.lower() in {"css", "full"}:
+            styles.append(rico._content.Style(src=global_config["bootstrap_css"]))
+        if bootstrap.lower() == "full":
+            scripts.append(rico._content.Script(src=global_config["bootstrap_js"]))
 
         if global_config["dataframe_style"]:
             styles.append(rico._content.Style(text=global_config["dataframe_style"]))

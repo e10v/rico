@@ -58,7 +58,7 @@ _global_config = {
     "inline_scripts": False,
     "inline_styles": False,
     "bootstrap_css": BOOTSTRAP_CSS,
-    "bootstrap_js": "",
+    "bootstrap_js": BOOTSTRAP_JS,
     "dataframe_style": DATAFRAME_STYLE,
 }
 
