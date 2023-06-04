@@ -479,7 +479,7 @@ def test_script_text(defer: bool):
     attrib = {"async": True}
     content = rico._content.Script(text=text, defer=defer, attrib=attrib)
 
-    script = content.script
+    script = content.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == attrib
@@ -501,7 +501,7 @@ def test_script_src(defer: bool):
     if defer:
         attrib = {"defer": True, **attrib}
 
-    script = content.script
+    script = content.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == attrib
@@ -524,7 +524,7 @@ def test_script_inline(defer: bool):
         content = rico._content.Script(src=src, inline=True, defer=defer, attrib=attrib)
         urlopen.assert_called_once_with(src)
 
-    script = content.script
+    script = content.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == attrib
@@ -548,7 +548,7 @@ def test_style_text():
     attrib = {"title": "Style title"}
     content = rico._content.Style(text=text, attrib=attrib)
 
-    style = content.style
+    style = content.container
     assert isinstance(style, ET.Element)
     assert style.tag == "style"
     assert style.attrib == attrib
@@ -566,7 +566,7 @@ def test_style_src():
 
     attrib = {"src": src, **attrib, "rel": "stylesheet"}
 
-    link = content.style
+    link = content.container
     assert isinstance(link, ET.Element)
     assert link.tag == "link"
     assert link.attrib == attrib
@@ -587,7 +587,7 @@ def test_style_inline():
         content = rico._content.Style(src=src, inline=True, attrib=attrib)
         urlopen.assert_called_once_with(src)
 
-    style = content.style
+    style = content.container
     assert isinstance(style, ET.Element)
     assert style.tag == "style"
     assert style.attrib == attrib

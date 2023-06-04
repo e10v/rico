@@ -135,13 +135,13 @@ class Doc(Div):
         scripts = [*scripts, *extra_scripts]
 
         for style in styles:
-            self.head.append(style.style)
+            self.head.append(style.container)
 
         for script in scripts:
             if script.footer:
-                self.body.append(script.script)
+                self.body.append(script.container)
             else:
-                self.head.append(script.script)
+                self.head.append(script.container)
 
     def serialize(
         self,

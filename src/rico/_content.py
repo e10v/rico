@@ -377,7 +377,7 @@ class Script(ContentBase):
         footer (bool): Defines whether the script should be placed at a document footer,
             aftert all other content.
     """
-    script: ET.Element
+    container: ET.Element
     footer: bool = False
 
     def __init__(
@@ -428,9 +428,8 @@ class Script(ContentBase):
         else:
             self.footer = defer
 
-        self.script = ET.Element("script", {**attrib, **extra})
-        self.script.text = text
-        self.container = self.script
+        self.container = ET.Element("script", {**attrib, **extra})
+        self.container.text = text
 
 
 class Style(ContentBase):
@@ -439,7 +438,7 @@ class Style(ContentBase):
     Attributes:
         style (Element): The style element.
     """
-    style: ET.Element
+    container: ET.Element
 
     def __init__(
         self,
@@ -487,6 +486,5 @@ class Style(ContentBase):
         else:
             tag = "style"
 
-        self.style = ET.Element(tag, {**attrib, **extra})
-        self.style.text = text
-        self.container = self.style
+        self.container = ET.Element(tag, {**attrib, **extra})
+        self.container.text = text

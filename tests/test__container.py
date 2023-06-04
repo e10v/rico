@@ -279,7 +279,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert len(bootstrap_css) == 0
 
     style = tuple(head)[2]
-    style = extra_style.style
+    style = extra_style.container
     assert isinstance(style, ET.Element)
     assert style.tag == "link"
     assert style.attrib == {"src": "style.css", "rel": "stylesheet"}
@@ -330,7 +330,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert len(p) == 0
 
     script = tuple(body)[1]
-    assert script == extra_script.script
+    assert script == extra_script.container
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == {}
