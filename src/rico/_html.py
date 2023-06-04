@@ -51,13 +51,13 @@ class HTMLParser(html.parser.HTMLParser):
     def handle_data(self, data: str) -> None:
         self._builder.data(data)
 
-    def close(self) -> list[ET.Element]:
+    def close(self) -> tuple[ET.Element]:
         super().close()
         self._builder.end(self._root)
-        return list(self._builder.close())
+        return tuple(self._builder.close())
 
 
-def parse_html(data: str) -> list[ET.Element]:
+def parse_html(data: str) -> tuple[ET.Element]:
     """Parse an HTML document from a string.
 
     Assign None values to boolean attributes.
