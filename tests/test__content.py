@@ -317,6 +317,10 @@ svg_data = (
 def test_image_svg(data: str | bytes):
     content = rico._content.Image(data, format="svg", class_="row")
 
+    if isinstance(data, str):
+        data = data.encode()
+    encoded_image = base64.b64encode(data).decode()
+
     div = content.container
     assert isinstance(div, ET.Element)
     assert div.tag == "div"
@@ -325,30 +329,13 @@ def test_image_svg(data: str | bytes):
     assert div.tail is None
     assert len(div) == 1
 
-    svg = tuple(div)[0]
-    assert isinstance(svg, ET.Element)
-    assert svg.tag == "svg"
-    assert svg.attrib == {
-        "xmlns": "http://www.w3.org/2000/svg",
-        "xmlns:xlink": "http://www.w3.org/1999/xlink",
-        "width": "16",
-        "height": "16",
-        "fill": "currentColor",
-        "class": "bi bi-dash",
-    }
-    assert svg.text is None
-    assert svg.tail is None
-    assert len(svg) == 1
-
-    path = tuple(svg)[0]
-    assert isinstance(path, ET.Element)
-    assert path.tag == "path"
-    assert path.attrib == {
-        "d": "M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z",
-    }
-    assert path.text is None
-    assert path.tail is None
-    assert len(path) == 0
+    img = tuple(div)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert img.attrib == {"src": f"data:image/svg;base64,{encoded_image}"}
+    assert img.text is None
+    assert img.tail is None
+    assert len(img) == 0
 
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
@@ -408,14 +395,9 @@ def test_chart_complete(chart: Any, format: Literal["svg", "png"] | None):  # no
     assert div.tail is None
     assert len(div) == 1
 
-    if format is None:
-        svg = tuple(div)[0]
-        assert isinstance(svg, ET.Element)
-        assert svg.tag == "svg"
-    else:
-        img = tuple(div)[0]
-        assert isinstance(img, ET.Element)
-        assert img.tag == "img"
+    img = tuple(div)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
 
 
 @pytest.mark.parametrize(
@@ -468,9 +450,9 @@ def test_obj():
     assert p.tail is None
     assert len(p) == 0
 
-    svg = tuple(div)[2]
-    assert isinstance(svg, ET.Element)
-    assert svg.tag == "svg"
+    img = tuple(div)[2]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
 
 
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])

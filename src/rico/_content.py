@@ -264,22 +264,15 @@ class Image(ContentBase):
         """
         super().__init__(class_)
 
-        if format == "svg":
-            if isinstance(data, bytes):
-                data = data.decode()
+        if isinstance(data, str):
+            data = data.encode()
+        encoded_image = base64.b64encode(data).decode()
 
-            for element in rico._html.parse_html(data):
-                self.container.append(element)
-        else:
-            if isinstance(data, str):
-                data = data.encode()
-            encoded_image = base64.b64encode(data).decode()
-
-            element = ET.Element(
-                "img",
-                attrib={"src": f"data:image/{format};base64,{encoded_image}"},
-            )
-            self.container.append(element)
+        element = ET.Element(
+            "img",
+            attrib={"src": f"data:image/{format};base64,{encoded_image}"},
+        )
+        self.container.append(element)
 
 
 class Chart(ContentBase):
