@@ -486,7 +486,7 @@ class Style(ContentBase):
 
         if src is not None:
             tag = "link"
-            attrib = {"src": src, **attrib}
+            attrib = {"href": src, **attrib}
             if "rel" not in attrib:
                 attrib = {**attrib, "rel": "stylesheet"}
         else:

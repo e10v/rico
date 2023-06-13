@@ -173,7 +173,7 @@ def test_doc_init_default():  # noqa: PLR0915
     assert isinstance(bootstrap_css, ET.Element)
     assert bootstrap_css.tag == "link"
     assert bootstrap_css.attrib == {
-        "src": rico._config.BOOTSTRAP_CSS,
+        "href": rico._config.BOOTSTRAP_CSS,
         "rel": "stylesheet",
     }
     assert bootstrap_css.text is None
@@ -236,7 +236,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
         doc = rico._container.Doc(
             "Hello world",
             title="Title",
-           bootstrap="full",
+            bootstrap="full",
             extra_styles=(extra_style,),
             extra_scripts=(extra_script,),
             class_=None,
@@ -271,7 +271,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert isinstance(bootstrap_css, ET.Element)
     assert bootstrap_css.tag == "link"
     assert bootstrap_css.attrib == {
-        "src": rico._config.BOOTSTRAP_CSS,
+        "href": rico._config.BOOTSTRAP_CSS,
         "rel": "stylesheet",
     }
     assert bootstrap_css.text is None
@@ -282,7 +282,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     style = extra_style.container
     assert isinstance(style, ET.Element)
     assert style.tag == "link"
-    assert style.attrib == {"src": "style.css", "rel": "stylesheet"}
+    assert style.attrib == {"href": "style.css", "rel": "stylesheet"}
     assert style.text is None
     assert style.tail is None
     assert len(style) == 0

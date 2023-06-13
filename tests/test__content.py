@@ -564,7 +564,7 @@ def test_style_src():
     attrib = {"crossorigin": "anonymous"}
     content = rico._content.Style(src=src, attrib=attrib)
 
-    attrib = {"src": src, **attrib, "rel": "stylesheet"}
+    attrib = {"href": src, **attrib, "rel": "stylesheet"}
 
     link = content.container
     assert isinstance(link, ET.Element)
