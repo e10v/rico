@@ -361,7 +361,7 @@ class Obj(ContentBase):
         super().__init__(class_=class_)
         for obj in objects:
             if (
-                alt is not None and isinstance(obj, alt.Chart) or
+                alt is not None and isinstance(obj, alt.TopLevelMixin) or
                 plt is not None and isinstance(obj, plt.Axes | plt.Figure) or  # type: ignore  # noqa: E501
                 so is not None and isinstance(obj, so.Plot)
             ):
