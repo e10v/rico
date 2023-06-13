@@ -326,10 +326,10 @@ class Chart(ContentBase):
             stream = io.StringIO() if format == "svg" else io.BytesIO()
             obj.save(stream, format=format, **kwargs)
             image = stream.getvalue()
-        elif alt is not None and isinstance(obj, alt.Chart):
+        elif alt is not None and isinstance(obj, alt.TopLevelMixin):
             convert = vlc.vegalite_to_svg if format == "svg" else vlc.vegalite_to_png  # type: ignore  # noqa: E501
             image = convert(  # type: ignore
-                obj.to_json(),
+                obj.to_json(),  # type: ignore
                 vl_version="_".join(alt.SCHEMA_VERSION.split(".")[:2]),
                 **kwargs,
             )
