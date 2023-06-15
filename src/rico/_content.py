@@ -268,6 +268,9 @@ class Image(ContentBase):
             data = data.encode()
         encoded_image = base64.b64encode(data).decode()
 
+        if format == "svg":
+            format = "svg+xml"  # noqa: A001
+
         element = ET.Element(
             "img",
             attrib={"src": f"data:image/{format};base64,{encoded_image}"},
