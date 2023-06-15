@@ -332,7 +332,7 @@ def test_image_svg(data: str | bytes):
     img = tuple(div)[0]
     assert isinstance(img, ET.Element)
     assert img.tag == "img"
-    assert img.attrib == {"src": f"data:image/svg;base64,{encoded_image}"}
+    assert img.attrib == {"src": f"data:image/svg+xml;base64,{encoded_image}"}
     assert img.text is None
     assert img.tail is None
     assert len(img) == 0
