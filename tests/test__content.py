@@ -424,17 +424,25 @@ def test_obj():
         def _repr_html_(self) -> str:
             return "<h1>Hello</h1>"
 
-    content = rico._content.Obj(ReprHTML(), "world", pyplot_axes, class_="row")
+    content_base = rico._content.ContentBase(class_="col")
 
-    div = content.container
-    assert isinstance(div, ET.Element)
-    assert div.tag == "div"
-    assert div.attrib == {"class": "row"}
-    assert div.text is None
-    assert div.tail is None
-    assert len(div) == 3
+    content = rico._content.Obj(
+        ReprHTML(),
+        "world",
+        pyplot_axes,
+        content_base,
+        class_="row",
+    )
 
-    h1 = tuple(div)[0]
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 4
+
+    h1 = tuple(div0)[0]
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
@@ -442,7 +450,7 @@ def test_obj():
     assert h1.tail is None
     assert len(h1) == 0
 
-    p = tuple(div)[1]
+    p = tuple(div0)[1]
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
@@ -450,9 +458,17 @@ def test_obj():
     assert p.tail is None
     assert len(p) == 0
 
-    img = tuple(div)[2]
+    img = tuple(div0)[2]
     assert isinstance(img, ET.Element)
     assert img.tag == "img"
+
+    div1 = tuple(div0)[3]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {"class": "col"}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 0
 
 
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])
