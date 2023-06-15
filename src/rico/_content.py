@@ -356,18 +356,23 @@ class Obj(ContentBase):
         """
         super().__init__(class_=class_)
         for obj in objects:
-            if (
+            if isinstance(obj, ContentBase):
+                elements = (obj.container,)
+            elif (
                 alt is not None and isinstance(obj, alt.TopLevelMixin) or
                 plt is not None and isinstance(obj, plt.Axes | plt.Figure) or  # type: ignore  # noqa: E501
                 so is not None and isinstance(obj, so.Plot)
             ):
-                content = Chart(obj)
+                elements = Chart(obj).container
             elif hasattr(obj, "_repr_html_") and callable(obj._repr_html_):
-                content = HTML(obj._repr_html_(), strip_dataframe_borders=True)
+                elements = HTML(
+                    obj._repr_html_(),
+                    strip_dataframe_borders=True,
+                ).container
             else:
-                content = Text(obj)
+                elements = Text(obj).container
 
-            for element in content.container:
+            for element in elements:
                 self.container.append(element)
 
 
