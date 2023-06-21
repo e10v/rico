@@ -49,9 +49,9 @@ All extras:
 pip install rico[complete]
 ```
 
-## Quick Start
+## User Guide
 
-## Use case and alternatives
+## Use Case and Alternatives
 
 ## Internals
 
