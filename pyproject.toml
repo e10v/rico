@@ -73,7 +73,6 @@ exclude_lines = ["if TYPE_CHECKING:", "pragma: no cover"]
 
 [tool.pyright]
 typeCheckingMode = "strict"
-reportIncompatibleMethodOverride = false
 reportMissingTypeStubs = false
 
 

@@ -51,7 +51,7 @@ class HTMLParser(html.parser.HTMLParser):
     def handle_data(self, data: str) -> None:
         self._builder.data(data)
 
-    def close(self) -> tuple[ET.Element]:
+    def close(self) -> tuple[ET.Element]:  # type: ignore
         super().close()
         self._builder.end(self._root)
         return tuple(self._builder.close())
