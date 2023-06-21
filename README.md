@@ -42,7 +42,7 @@ Seaborn:
 pip install rico[seaborn]
 ```
 
-You need `rico[seaborn]` extra only if you are using the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise you need `rico[pyplot]` since old plotting functions return Matplotlib Pyplot Axes objects.
+Install `rico[seaborn]` extra only if you are using the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` since old plotting functions return Matplotlib Pyplot Axes objects.
 
 All extras:
 ```
@@ -58,7 +58,8 @@ pip install rico[complete]
 ## Roadmap
 
 * Create docs with MkDocs.
-* Support diagrams with Mermaid.js.
-* Save SVG images in XML format.
-* Save Altair Charts in Vega-Lite format.
 * Support math with KaTeX.
+* Save Altair Charts in Vega-Lite format.
+* Save SVG images in XML format.
+* Support diagrams with Mermaid.js.
+* Support other plot types: Plotly, Bokeh.
