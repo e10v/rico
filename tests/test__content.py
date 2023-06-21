@@ -379,13 +379,13 @@ pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])  # type: ignore
 seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
 
 @pytest.mark.parametrize(
-    "chart",
+    "plot",
     [altair_chart, pyplot_axes, pyplot_figure, seaborn_plot],
     ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
 )
 @pytest.mark.parametrize("format", [None, "png"], ids=["svg", "png"])
-def test_chart_complete(chart: Any, format: Literal["svg", "png"] | None):  # noqa: A002
-    content = rico._content.Chart(chart, format=format, class_="row")
+def test_plot_complete(plot: Any, format: Literal["svg", "png"] | None):  # noqa: A002
+    content = rico._content.Plot(plot, format=format, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -401,7 +401,7 @@ def test_chart_complete(chart: Any, format: Literal["svg", "png"] | None):  # no
 
 
 @pytest.mark.parametrize(
-    ("module", "err_chart", "chart"),
+    ("module", "err_plot", "plot"),
     [
         ("alt", altair_chart, seaborn_plot),
         ("plt", pyplot_axes, altair_chart),
@@ -409,12 +409,12 @@ def test_chart_complete(chart: Any, format: Literal["svg", "png"] | None):  # no
     ],
     ids=["alt", "plt", "so"],
 )
-def test_chart_error(module: str, err_chart: Any, chart: Any):
+def test_plot_error(module: str, err_plot: Any, plot: Any):
     with unittest.mock.patch.object(rico._content, module, None):
         with pytest.raises(TypeError):
-            rico._content.Chart(err_chart)
+            rico._content.Plot(err_plot)
 
-        content = rico._content.Chart(chart, class_="row")
+        content = rico._content.Plot(plot, class_="row")
         div = content.container
         assert isinstance(div, ET.Element)
 

@@ -59,6 +59,7 @@ class Div(rico._content.ContentBase):
     append_html = _append(rico._content.HTML, rico._content.HTML.__init__)
     append_markdown = _append(rico._content.Markdown, rico._content.Markdown.__init__)
     append_image = _append(rico._content.Image, rico._content.Image.__init__)
+    append_plot = _append(rico._content.Plot, rico._content.Plot.__init__)
     append_chart = _append(rico._content.Chart, rico._content.Chart.__init__)
     append = _append(rico._content.Obj, rico._content.Obj.__init__)
 

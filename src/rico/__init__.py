@@ -12,6 +12,7 @@ from rico._content import (
     Image,
     Markdown,
     Obj,
+    Plot,
     Script,
     Style,
     Tag,

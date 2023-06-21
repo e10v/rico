@@ -278,12 +278,12 @@ class Image(ContentBase):
         self.container.append(element)
 
 
-class Chart(ContentBase):
-    """An Chart content definition.
+class Plot(ContentBase):
+    """A Plot content definition.
 
-    Creates content elements from a chart object and appends them to the container.
+    Creates content elements from a plot object and appends them to the container.
 
-    The supported chart types are the following:
+    The supported plot types are the following:
     - Altair Chart,
     - Pyplot Axes and Figure,
     - Seaborn Plot (seaborn.objects interface).
@@ -295,17 +295,17 @@ class Chart(ContentBase):
         class_: str | None = None,
         **kwargs: Any,
     ):
-        """Create content from a chart object.
+        """Create content from a plot object.
 
         Args:
-            obj: The chart object.
+            obj: The plot object.
             format: The image format.
             class_: The container class attribute.
             **kwargs: Keyword arguments passed to a function
                 which converts object to an image.
 
         Raises:
-            TypeError: Chart type is not supported
+            TypeError: Plot type is not supported
                 or required extra package is not installed.
         """
         if format is None:
@@ -331,13 +331,15 @@ class Chart(ContentBase):
             )
         else:
             error_msg = (
-                f"Chart type {type(obj)} is not supported "
+                f"Plot type {type(obj)} is not supported "
                 "or required extra package is not installed."
             )
             raise TypeError(error_msg)
 
         content = Image(data=image, format=format, class_=class_)  # type: ignore
         self.container = content.container
+
+Chart = Plot
 
 
 class Obj(ContentBase):
@@ -363,7 +365,7 @@ class Obj(ContentBase):
                 plt is not None and isinstance(obj, plt.Axes | plt.Figure) or  # type: ignore  # noqa: E501
                 so is not None and isinstance(obj, so.Plot)
             ):
-                elements = Chart(obj).container
+                elements = Plot(obj).container
             elif hasattr(obj, "_repr_html_") and callable(obj._repr_html_):
                 elements = HTML(
                     obj._repr_html_(),
