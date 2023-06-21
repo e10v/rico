@@ -22,22 +22,22 @@ Core features don't have any dependencies except the standard Python packages. O
 
 Install one or several extras if you are going to use plots or markdown in HTML documents.
 
-Altair Charts:
+[Altair](https://altair-viz.github.io/):
 ```
 pip install rico[altair]
 ```
 
-Markdown:
+[Markdown](https://python-markdown.github.io/):
 ```
 pip install rico[markdown]
 ```
 
-Matplotlib Pyplot:
+[Matplotlib Pyplot](https://matplotlib.org/):
 ```
 pip install rico[pyplot]
 ```
 
-Seaborn:
+[Seaborn](https://seaborn.pydata.org/):
 ```
 pip install rico[seaborn]
 ```
@@ -57,9 +57,9 @@ pip install rico[complete]
 
 ## Roadmap
 
-* Create docs with MkDocs.
-* Support math with KaTeX.
-* Save Altair Charts in Vega-Lite format.
+* Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+* Support math with [KaTeX](https://katex.org/).
+* Save Altair Charts in [Vega-Lite](https://vega.github.io/vega-lite/) format.
 * Save SVG images in XML format.
-* Support diagrams with Mermaid.js.
-* Support other plot types: Plotly, Bokeh.
+* Support diagrams with [Mermaid.js](https://mermaid.js.org/).
+* Support other plot types: [Plotly](https://plotly.com/python/), [Bokeh](https://bokeh.org/).
