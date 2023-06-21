@@ -105,7 +105,7 @@ def set_config(
             If empty then bootstrap javascript is not loaded.
         dataframe_style: A dataframe table stylesheet.
             If empty then it's not used.
-        image_format: Default chart image format.
+        image_format: Default plot image format.
         indent_html: Indent HTML elements in serialization methods.
         indent_space: Default indent space.
         inline_scripts: If True then scripts are loaded inline.
@@ -148,7 +148,7 @@ def config_context(
             If empty then bootstrap javascript is not loaded.
         dataframe_style: A dataframe table stylesheet.
             If empty then it's not used.
-        image_format: Default chart image format.
+        image_format: Default plot image format.
         indent_html: Indent HTML elements in serialization methods.
         indent_space: Default indent space.
         inline_scripts: If True then scripts are loaded inline.

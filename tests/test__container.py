@@ -118,9 +118,9 @@ altair_chart = alt.Chart(
     ]),
 ).mark_bar().encode(x="x:N", y="y:Q")
 
-def test_div_append_chart(div_container: rico._container.Div):
-    div_container.append_chart(altair_chart)
-    content = rico._content.Chart(altair_chart)
+def test_div_append_plot(div_container: rico._container.Div):
+    div_container.append_plot(altair_chart)
+    content = rico._content.Plot(altair_chart)
     assert str(div_container) == f"<div>{content}</div>"
 
 
