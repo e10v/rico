@@ -11,12 +11,12 @@
 
 ## Installation
 
-Core features:
+Main functionality:
 ```
 pip install rico
 ```
 
-Core features don't have any dependencies except the standard Python packages. Optional additional dependencies are required for support of the following content types:
+Main functionality don't have any dependencies except the standard Python packages. Optional additional dependencies are required for support of the following content types:
 * Plots. Altair, Matplotlib Pyplot and Seaborn are currently supported.
 * Markdown.
 
@@ -51,9 +51,23 @@ pip install rico[complete]
 
 ## User Guide
 
-## Use Case and Alternatives
+### Basic Usage
 
-## Internals
+Declarative vs. imperative style API.
+
+### Other Content Types
+
+### Layout Control using Bootstrap
+
+### Styles and Scripts
+
+### Serialization
+
+### Global Configuration
+
+### Low-level Control
+
+## Use Case and Alternatives
 
 ## Roadmap
 
