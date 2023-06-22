@@ -12,7 +12,7 @@
 ## Installation
 
 Main functionality:
-```
+```bash
 pip install rico
 ```
 
@@ -23,29 +23,29 @@ Main functionality don't have any dependencies except the standard Python packag
 Install one or several extras if you are going to use plots or markdown in HTML documents.
 
 [Altair](https://altair-viz.github.io/):
-```
+```bash
 pip install rico[altair]
 ```
 
 [Markdown](https://python-markdown.github.io/):
-```
+```bash
 pip install rico[markdown]
 ```
 
 [Matplotlib Pyplot](https://matplotlib.org/):
-```
+```bash
 pip install rico[pyplot]
 ```
 
 [Seaborn](https://seaborn.pydata.org/):
-```
+```bash
 pip install rico[seaborn]
 ```
 
 Install `rico[seaborn]` extra only if you are using the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` since old plotting functions return Matplotlib Pyplot Axes objects.
 
 All extras:
-```
+```bash
 pip install rico[complete]
 ```
 
@@ -53,15 +53,94 @@ pip install rico[complete]
 
 ### Basic Usage
 
-Declarative vs. imperative style API.
+**rico** provides both declarative and imperative style API.
+
+Declarative style:
+```python
+import pandas as pd
+import rico
+
+
+df = pd.DataFrame({
+    'a': list('CCCDDDEEE'),
+    'b': [2, 7, 4, 1, 2, 6, 8, 4, 7],
+})
+plot = df.plot.scatter(x='a', y='b')
+
+doc = rico.Doc(df, plot)
+```
+
+Imperative style:
+```python
+doc = rico.Doc()
+doc.append(df, plot)
+```
+
+Also imperative style:
+```python
+doc = rico.Doc()
+doc.append(df)
+doc.append(plot)
+```
+
+Mix-and-match:
+```python
+doc = rico.Doc(df)
+doc.append(plot)
+```
+
+### Serialization
+
+Serialize document to HTML using `str(doc)`:
+```python
+with open("doc.html", "w") as f:
+    f.write(str(doc))
+```
+
+Implicit serialization:
+```python
+with open("doc.html", "w") as f:
+    print(doc, file=f)
+```
+
+Internally `str(doc)` calls `doc.serialize()` with default parameters' values. Call `doc.serialize()` if you want to indent the HTML element tree visually:
+```python
+with open("doc.html", "w") as f:
+    f.write(doc.serialize(indent=True))
+```
+
+Also you can set the whitespace for indentation:
+```python
+with open("doc.html", "w") as f:
+    f.write(doc.serialize(indent=True, space="    "))
+```
+
+You can strip unnecessary whitespaces between tags:
+```python
+with open("doc.html", "w") as f:
+    f.write(doc.serialize(strip=True))
+```
+
+Control the default behavoir of `str(doc)` and `doc.serialize()` with global parameters `indent_html`, `indent_space` and `strip_html`:
+```python
+with open("doc.html", "w") as f, rico.config_context(indent_html=True):
+    f.write(str(doc))
+```
+
+The default values are:
+* `indent_html = False`,
+* `indent_space = "  "`,
+* `strip_html = False`.
 
 ### Other Content Types
 
-### Layout Control using Bootstrap
+### HTML Classes, Layout Control and Bootstrap
 
 ### Styles and Scripts
 
-### Serialization
+Custom.
+Inline.
+Global config.
 
 ### Global Configuration
 
