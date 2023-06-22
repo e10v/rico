@@ -67,25 +67,26 @@ df = pd.DataFrame({
 })
 plot = df.plot.scatter(x="a", y="b")
 
-doc = rico.Doc(df, plot)
+doc = rico.Doc("Hello world!", df, plot)
 ```
 
 Imperative style:
 ```python
 doc = rico.Doc()
-doc.append(df, plot)
+doc.append("Hello world!", df, plot)
 ```
 
 Also imperative style:
 ```python
 doc = rico.Doc()
+doc.append("Hello world!")
 doc.append(df)
 doc.append(plot)
 ```
 
 Mix-and-match:
 ```python
-doc = rico.Doc(df)
+doc = rico.Doc("Hello world!", df)
 doc.append(plot)
 ```
 
@@ -121,7 +122,7 @@ with open("doc.html", "w") as f:
     f.write(doc.serialize(strip=True))
 ```
 
-Control the default behavoir of `str(doc)` and `doc.serialize()` using global options `indent_html`, `indent_space` and `strip_html`:
+Control the default behavior of `str(doc)` and `doc.serialize()` using global options `indent_html`, `indent_space` and `strip_html`:
 ```python
 with open("doc.html", "w") as f, rico.config_context(indent_html=True):
     f.write(str(doc))
@@ -134,7 +135,66 @@ The default options' values are:
 
 ### Rich Content Types
 
+**rico** automatically recognizes the following content types:
+* `rico` content classes (subclasses of `rico.ContentBase`).
+* Plots (Altair, Matplotlib Pyplot, Seaborn).
+* Dataframes and other types with `_repr_html_` method.
+* All other types are processes as text.
 
+Use special classes for plots and texts in order to change the default behavior:
+```python
+doc = rico.Doc(
+    rico.Text("Hello world!", mono=True),  # The default value is False.
+    df,
+    rico.Plot(plot, format="png"),  # The default value is "svg".
+)
+```
+
+Or:
+```python
+doc = rico.Doc()
+doc.append_text("Hello world!", mono=True)
+doc.append(df)
+doc.append_plot(plot, format="png")
+```
+
+Some options can be set as global configuration:
+```python
+with rico.config_context(text_mono=True, image_format="png"):
+    doc = rico.Doc("Hello world!", df, plot)
+```
+
+Use special classes and methods for other content types:
+* Images: `Image` and `Doc.append_image`.
+* Code: `Code` and `Doc.append_code`.
+* Markdown: `Markdown` and `Doc.append_markdown`.
+* HTML tag: `Tag` and `Doc.append_tag`.
+* Raw HTML: `HTML` and `Doc.append_html`.
+
+Example:
+```python
+doc = rico.Doc(
+    rico.Markdown("## Dataframe"),
+    df,
+    rico.Tag("h2", "Plot"),  # Alternative way to add a header.
+    plot,
+    rico.HTML("<h2>Code</h2>"),  # Another way to add a header.
+    rico.Code("print('Hello world!')"),
+)
+```
+
+Or:
+```python
+doc = rico.Doc()
+doc.append_markdown("## Dataframe")
+doc.append(df)
+doc.append_tag("h2", "Plot")
+doc.append(plot)
+doc.append_html("<h2>Code</h2>")
+doc.append_code("print('Hello world!')")
+```
+
+Check the classes' and methods' docstrings for additional parameters.
 
 ### HTML Classes, Layout Control and Bootstrap
 
