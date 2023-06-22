@@ -62,10 +62,10 @@ import rico
 
 
 df = pd.DataFrame({
-    'a': list('CCCDDDEEE'),
-    'b': [2, 7, 4, 1, 2, 6, 8, 4, 7],
+    "a": list("CCCDDDEEE"),
+    "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
 })
-plot = df.plot.scatter(x='a', y='b')
+plot = df.plot.scatter(x="a", y="b")
 
 doc = rico.Doc(df, plot)
 ```
@@ -109,7 +109,7 @@ with open("doc.html", "w") as f:
     f.write(doc.serialize(indent=True))
 ```
 
-You can also set the whitespace for indentation:
+You can also set custom whitespace for indentation:
 ```python
 with open("doc.html", "w") as f:
     f.write(doc.serialize(indent=True, space="    "))
@@ -132,7 +132,9 @@ The default options' values are:
 * `indent_space = "  "`,
 * `strip_html = False`.
 
-### Other Content Types
+### Rich Content Types
+
+
 
 ### HTML Classes, Layout Control and Bootstrap
 
