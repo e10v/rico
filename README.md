@@ -109,25 +109,25 @@ with open("doc.html", "w") as f:
     f.write(doc.serialize(indent=True))
 ```
 
-Also you can set the whitespace for indentation:
+You can also set the whitespace for indentation:
 ```python
 with open("doc.html", "w") as f:
     f.write(doc.serialize(indent=True, space="    "))
 ```
 
-You can strip unnecessary whitespaces between tags:
+You can strip unnecessary whitespace between tags:
 ```python
 with open("doc.html", "w") as f:
     f.write(doc.serialize(strip=True))
 ```
 
-Control the default behavoir of `str(doc)` and `doc.serialize()` with global parameters `indent_html`, `indent_space` and `strip_html`:
+Control the default behavoir of `str(doc)` and `doc.serialize()` using global options `indent_html`, `indent_space` and `strip_html`:
 ```python
 with open("doc.html", "w") as f, rico.config_context(indent_html=True):
     f.write(str(doc))
 ```
 
-The default values are:
+The default options' values are:
 * `indent_html = False`,
 * `indent_space = "  "`,
 * `strip_html = False`.
