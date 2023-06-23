@@ -222,7 +222,7 @@ The possible values are:
 * `"full"` -- include both the CSS and JS.
 * `"none"` -- don't include Bootstrap*.
 
-*Beware that **rico** relies on Bootstrap classes and styles. For example:
+*Keep in mind that **rico** relies on Bootstrap classes and styles. For example:
 * The `mono` and `wrap` parameters of the `Text` class use Bootstrap's `font-monospace` and `font-monospace` classes.
 * **rico**'s dataframe style definition uses Bootstrap variables.
 
@@ -251,20 +251,38 @@ The code above creates a document with two columns, one with a dataframe and ano
 Another example:
 ```python
 doc = rico.Doc(
-    rico.Tag("h1", "My report"),
-
+    rico.Tag("h1", "My doc"),
     rico.Tag("h2", "Description"),
     "This is an example of custom document layout using Bootstrap classes.",
-
     rico.Tag("h2", "Data"),
     rico.Div(
         rico.Obj("Dataframe", df, class_="col"),
         rico.Obj("Plot", plot, class_="col"),
         class_="row row-cols-auto",
     ),
-    title="My report",
+    title="My doc",
 )
 ```
+
+Or:
+```python
+doc = rico.Doc(title="My doc")
+doc.append_tag("h1", "My doc")
+doc.append_tag("h2", "Description")
+doc.append("This is an example of custom document layout using Bootstrap classes.")
+doc.append_tag("h2", "Data")
+div = rico.Div(class_="row row-cols-auto")
+doc.append(div)
+div.append("Dataframe", df, class_="col")
+div.append("Dataframe", plot, class_="col")
+```
+
+Keep in mind that `obj.append(x, y)` works differently than
+```python
+obj.append(x)
+obj.append(y)
+```
+The first one wraps both elements in a single `<div>` container. The second one creates a separate `<div>` container for each element.
 
 More on Bootstrap layout and grid system:
 * [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
