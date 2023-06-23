@@ -67,18 +67,18 @@ df = pd.DataFrame({
 })
 plot = df.plot.scatter(x="a", y="b")
 
-doc = rico.Doc("Hello world!", df, plot)
+doc = rico.Doc("Hello world!", df, plot, title="My doc")
 ```
 
 Imperative style:
 ```python
-doc = rico.Doc()
+doc = rico.Doc(title="My doc")
 doc.append("Hello world!", df, plot)
 ```
 
 Also imperative style:
 ```python
-doc = rico.Doc()
+doc = rico.Doc(title="My doc")
 doc.append("Hello world!")
 doc.append(df)
 doc.append(plot)
@@ -86,7 +86,7 @@ doc.append(plot)
 
 Mix-and-match:
 ```python
-doc = rico.Doc("Hello world!", df)
+doc = rico.Doc("Hello world!", df, title="My doc")
 doc.append(plot)
 ```
 
@@ -147,12 +147,13 @@ doc = rico.Doc(
     rico.Text("Hello world!", mono=True),  # The default value is False.
     df,
     rico.Plot(plot, format="png"),  # The default value is "svg".
+    title="My doc",
 )
 ```
 
 Or:
 ```python
-doc = rico.Doc()
+doc = rico.Doc(title="My doc")
 doc.append_text("Hello world!", mono=True)
 doc.append(df)
 doc.append_plot(plot, format="png")
@@ -161,7 +162,7 @@ doc.append_plot(plot, format="png")
 Some options can be set in the global configuration:
 ```python
 with rico.config_context(text_mono=True, image_format="png"):
-    doc = rico.Doc("Hello world!", df, plot)
+    doc = rico.Doc("Hello world!", df, plot, title="My doc")
 ```
 
 Use specific classes and methods for other content types:
@@ -180,12 +181,13 @@ doc = rico.Doc(
     plot,
     rico.HTML("<h2>Code</h2>"),  # Another way to add a header.
     rico.Code("print('Hello world!')"),
+    title="My doc",
 )
 ```
 
 Or:
 ```python
-doc = rico.Doc()
+doc = rico.Doc(title="My doc")
 doc.append_markdown("## Dataframe")
 doc.append(df)
 doc.append_tag("h2", "Plot")
@@ -196,7 +198,58 @@ doc.append_code("print('Hello world!')")
 
 Check the docstrings for additional parameters.
 
-### HTML classes, layout control and Bootstrap
+Serialize content to HTML using `str()` or `object.serialize()`:
+```python
+obj = rico.Tag("p", "Hello world!")
+
+print(obj)
+# <div><p>Hello world!<p></div>
+
+print(obj.serialize(indent=True, space="    "))
+# <div>
+#     <p>Hello world!<p>
+# </div>
+```
+
+### HTML classes, layout and Bootstrap
+
+Each content element is wrapped in a `<div>` container. Specify the element's container class using the `class_` parameter:
+```python
+print(rico.Tag("p", "Hello world!", class_="col"))
+# <div class="col"><p>Hello world!<p></div>
+```
+
+All elements' containers in a document are also wrapped in a `<div>` container. Specify the document's container class using the `class_` parameter:
+```python
+doc = rico.Doc("Hello world!", class_="container-fluid")
+```
+
+By default the [Bootstrap](https://getbootstrap.com/)'s CSS are included in a document. Change the default behavior using the `bootstrap` parameter:
+```python
+doc = rico.Doc("Hello world!", bootstrap="full")
+```
+
+The possible values are:
+* `"css"` (default) -- include only CSS.
+* `"full"` -- include both the CSS and JS.
+* `"none"` -- don't include Bootstrap.
+
+Define the document layout using the Bootstrap classes and a `Div` object:
+```python
+doc = rico.Doc(rico.Div(
+    rico.Obj(df, class_="col"),
+    rico.Obj(plot, class_="col"),
+    class_="row row-cols-auto",
+))
+```
+
+The code above creates a document with two columns, one with a dataframe and another with a plot.
+
+More about the Bootstrap layout and grid system:
+* [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
+* [Containers](https://getbootstrap.com/docs/5.3/layout/containers/)
+* [Grid system](https://getbootstrap.com/docs/5.3/layout/grid/)
+* [Columns](https://getbootstrap.com/docs/5.3/layout/columns/)
 
 ### Styles and scripts
 
