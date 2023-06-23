@@ -60,7 +60,6 @@ Declarative style:
 import pandas as pd
 import rico
 
-
 df = pd.DataFrame({
     "a": list("CCCDDDEEE"),
     "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
@@ -245,7 +244,34 @@ doc = rico.Doc(rico.Div(
 
 The code above creates a document with two columns, one with a dataframe and another with a plot.
 
-More about the Bootstrap layout and grid system:
+Another example:
+```python
+import textwrap
+
+doc = rico.Doc(
+    rico.Tag("h1", "My report"),
+
+    rico.Tag("h2", "Code"),
+    rico.Code(textwrap.dedent("""\
+        import pandas as pd
+
+        df = pd.DataFrame({
+            "a": list("CCCDDDEEE"),
+            "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
+        })
+        plot = df.plot.scatter(x="a", y="b")""")),
+
+    rico.Tag("h2", "Data"),
+    rico.Div(
+        rico.Obj("Dataframe", df, class_="col"),
+        rico.Obj("Plot", plot, class_="col"),
+        class_="row row-cols-auto",
+    ),
+    title="My report",
+)
+```
+
+More on the Bootstrap's layout and grid system:
 * [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
 * [Containers](https://getbootstrap.com/docs/5.3/layout/containers/)
 * [Grid system](https://getbootstrap.com/docs/5.3/layout/grid/)
