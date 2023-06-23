@@ -210,7 +210,21 @@ print(obj.serialize(indent=True, space="    "))
 # </div>
 ```
 
-### HTML classes, layout and Bootstrap
+### Bootstrap, HTML classes and document layout
+
+By default [Bootstrap](https://getbootstrap.com/) CSS are included in a document. Change the default behavior using the `bootstrap` parameter:
+```python
+doc = rico.Doc("Hello world!", bootstrap="full")
+```
+
+The possible values are:
+* `"css"` (default) -- include only CSS.
+* `"full"` -- include both the CSS and JS.
+* `"none"` -- don't include Bootstrap*.
+
+*Beware that **rico** relies on Bootstrap classes and styles. For example:
+* The `mono` and `wrap` parameters of the `Text` class use Bootstrap's `font-monospace` and `font-monospace` classes.
+* **rico**'s dataframe style definition uses Bootstrap variables.
 
 Each content element is wrapped in a `<div>` container. Specify the element's container class using the `class_` parameter:
 ```python
@@ -222,16 +236,6 @@ All elements' containers in a document are also wrapped in a `<div>` container. 
 ```python
 doc = rico.Doc("Hello world!", class_="container-fluid")
 ```
-
-By default the [Bootstrap](https://getbootstrap.com/)'s CSS are included in a document. Change the default behavior using the `bootstrap` parameter:
-```python
-doc = rico.Doc("Hello world!", bootstrap="full")
-```
-
-The possible values are:
-* `"css"` (default) -- include only CSS.
-* `"full"` -- include both the CSS and JS.
-* `"none"` -- don't include Bootstrap.
 
 Define the document layout using the Bootstrap classes and a `Div` object:
 ```python
@@ -246,20 +250,11 @@ The code above creates a document with two columns, one with a dataframe and ano
 
 Another example:
 ```python
-import textwrap
-
 doc = rico.Doc(
     rico.Tag("h1", "My report"),
 
-    rico.Tag("h2", "Code"),
-    rico.Code(textwrap.dedent("""\
-        import pandas as pd
-
-        df = pd.DataFrame({
-            "a": list("CCCDDDEEE"),
-            "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
-        })
-        plot = df.plot.scatter(x="a", y="b")""")),
+    rico.Tag("h2", "Description"),
+    "This is an example of custom document layout using Bootstrap classes.",
 
     rico.Tag("h2", "Data"),
     rico.Div(
@@ -271,7 +266,7 @@ doc = rico.Doc(
 )
 ```
 
-More on the Bootstrap's layout and grid system:
+More on Bootstrap layout and grid system:
 * [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
 * [Containers](https://getbootstrap.com/docs/5.3/layout/containers/)
 * [Grid system](https://getbootstrap.com/docs/5.3/layout/grid/)
