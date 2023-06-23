@@ -121,7 +121,7 @@ with open("doc.html", "w") as f:
     f.write(doc.serialize(strip=True))
 ```
 
-Control the default behavior of `str(doc)` and `doc.serialize()` using the global options `indent_html`, `indent_space` and `strip_html`:
+Control the default behavior of `str(doc)` and `doc.serialize()` using the global options `indent_html`, `indent_space`, and `strip_html`:
 ```python
 with open("doc.html", "w") as f, rico.config_context(indent_html=True):
     f.write(str(doc))
@@ -138,7 +138,7 @@ The default option values are:
 * `rico` content classes (subclasses of `rico.ContentBase`).
 * Plots (Altair, Matplotlib Pyplot, Seaborn).
 * Dataframes and other types with `_repr_html_` method.
-* All other types are processes as text.
+* Text.
 
 Use specific classes for plots and texts to change the default behavior:
 ```python
@@ -165,11 +165,11 @@ with rico.config_context(text_mono=True, image_format="png"):
 ```
 
 Use specific classes and methods for other content types:
-* Images: `Image` and `Doc.append_image`.
-* Code: `Code` and `Doc.append_code`.
-* Markdown: `Markdown` and `Doc.append_markdown`.
-* HTML tag: `Tag` and `Doc.append_tag`.
-* Raw HTML: `HTML` and `Doc.append_html`.
+* Images: `Image` or `Doc.append_image`.
+* Code: `Code` or `Doc.append_code`.
+* Markdown: `Markdown` or `Doc.append_markdown`.
+* HTML tag: `Tag` or `Doc.append_tag`.
+* Raw HTML: `HTML` or `Doc.append_html`.
 
 Example:
 ```python
@@ -202,11 +202,11 @@ Serialize content to HTML using `str()` or `object.serialize()`:
 obj = rico.Tag("p", "Hello world!")
 
 print(obj)
-# <div><p>Hello world!<p></div>
+# <div><p>Hello world!</p></div>
 
 print(obj.serialize(indent=True, space="    "))
 # <div>
-#     <p>Hello world!<p>
+#     <p>Hello world!</p>
 # </div>
 ```
 
@@ -229,7 +229,7 @@ The possible values are:
 Each content element is wrapped in a `<div>` container. Specify the element's container class using the `class_` parameter:
 ```python
 print(rico.Tag("p", "Hello world!", class_="col"))
-# <div class="col"><p>Hello world!<p></div>
+# <div class="col"><p>Hello world!</p></div>
 ```
 
 All elements' containers in the document are also wrapped in a `<div>` container. Specify the document's container class using the `class_` parameter:
@@ -237,7 +237,7 @@ All elements' containers in the document are also wrapped in a `<div>` container
 doc = rico.Doc("Hello world!", class_="container-fluid")
 ```
 
-Define the document layout using the Bootstrap classes and a `Div` object:
+Define the document layout using Bootstrap and `Div` class:
 ```python
 doc = rico.Doc(rico.Div(
     rico.Obj(df, class_="col"),
@@ -359,7 +359,7 @@ Use global configuration to:
 The following globals options define the default parameter values:
 
 | Global option    | Parameter | Classes, methods, functions       |
-|------------------|-----------|-----------------------------------|
+|:-----------------|:----------|:----------------------------------|
 | `indent_html`    | `indent`  | `obj.serialize`, `serialize_html` |
 | `indent_space`   | `space`   | `obj.serialize`, `serialize_html` |
 | `strip_html`     | `strip`   | `obj.serialize`, `serialize_html` |
@@ -370,11 +370,11 @@ The following globals options define the default parameter values:
 | `inline_scripts` | `inline`  | `Script`                          |
 
 The following globals options define document properties:
-* `meta_charset` defines the document charset metadata.
-* `meta_viewport` defines the document viewport metadata.
+* `meta_charset` defines a document [charset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset) metadata.
+* `meta_viewport` defines a document [viewport](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag) metadata.
 * `bootstrap_css` defines a link to the Bootstrap CSS file.
 * `bootstrap_js` defines a link to the Bootstrap JS file.
-* `dataframe_style` defines the dataframe style.
+* `dataframe_style` defines a dataframe style.
 
 Get a dictionary with global options using `get_config` without parameters:
 ```python
@@ -432,8 +432,8 @@ Alternatives:
 
 More on the topic:
 * [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
-* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406).
-* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U) and [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
+* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
+* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
 * [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
 
 ## Roadmap
