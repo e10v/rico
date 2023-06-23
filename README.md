@@ -11,7 +11,7 @@
 
 ## Installation
 
-The core functionality:
+Install the core functionality:
 ```bash
 pip install rico
 ```
