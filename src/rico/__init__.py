@@ -2,8 +2,9 @@
 # pyright: reportUnusedImport=false
 """Rich content to HTML as easy as Doc(df, plot).
 
-A Python package for creating HTML documents from rich content: dataframes, plots,
-images, markdown etc. It provides a high-level, easy-to-use API with reasonable defaults
+A Python package for creating HTML documents from rich content:
+dataframes, plots, images, markdown etc.
+It provides a high-level, easy-to-use API with reasonable defaults,
 as well as low-level access for better control.
 """
 
