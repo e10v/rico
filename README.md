@@ -212,7 +212,7 @@ print(obj.serialize(indent=True, space="    "))
 
 ### Bootstrap, HTML classes and document layout
 
-By default, [Bootstrap](https://getbootstrap.com/) CSS are included in the document. Change the default behavior using the `bootstrap` parameter:
+By default, [Bootstrap](https://getbootstrap.com/) styles are included in the document. Change the default behavior using the `bootstrap` parameter:
 ```python
 doc = rico.Doc("Hello world!", bootstrap="full")
 ```
@@ -334,7 +334,7 @@ doc = rico.Doc(
 )
 ```
 
-In the example above, the Bootstrap CSS are still included as links. Use the global options `inline_styles` and `inline_scripts` to include the contents of the style and script files in the document:
+In the example above, the Bootstrap styles are still included as a link. Use the global options `inline_styles` and `inline_scripts` to include the contents of the style and script files in the document:
 ```python
 with rico.config_context(inline_styles=True, inline_scripts=True):
     doc = rico.Doc(
@@ -351,6 +351,61 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
 ```
 
 ### Global configuration
+
+Use global configuration to:
+* Get or set default parameter values.
+* Get or set document properties.
+
+The following globals options define the default parameter values:
+
+| Global option    | Parameter | Classes, methods, functions       |
+|------------------|-----------|-----------------------------------|
+| `indent_html`    | `indent`  | `obj.serialize`, `serialize_html` |
+| `indent_space`   | `space`   | `obj.serialize`, `serialize_html` |
+| `strip_html`     | `strip`   | `obj.serialize`, `serialize_html` |
+| `text_mono`      | `mono`    | `Text`, `obj.append_text`         |
+| `text_wrap`      | `wrap`    | `Text`, `obj.append_text`         |
+| `image_format`   | `format`  | `Plot`, `obj.append_plot`         |
+| `inline_styles`  | `inline`  | `Style`                           |
+| `inline_scripts` | `inline`  | `Script`                          |
+
+The following globals options define document properties:
+* `meta_charset` defines the document charset metadata.
+* `meta_viewport` defines the document viewport metadata.
+* `bootstrap_css` defines a link to Bootstrap CSS.
+* `bootstrap_js` defines a link to Bootstrap JS.
+* `dataframe_style` defines the dataframe style.
+
+Get a dictionary with global options using `get_config` without parameters:
+```python
+global_config = rico.get_config()
+print(global_config["indent_html"])
+# False
+```
+
+Get a global option value using `get_config` with the option name as a parameter:
+```python
+print(rico.get_config("indent_html"))
+# False
+```
+
+Set a global option value using `set_config`:
+```python
+rico.set_config(indent_html=True)
+print(rico.get_config("indent_html"))
+# True
+rico.set_config(indent_html=False)
+```
+
+Set a global option value within a context using `config_context`:
+```python
+with rico.config_context(indent_html=True):
+    print(rico.get_config("indent_html"))
+    # True
+
+print(rico.get_config("indent_html"))
+# False
+```
 
 ### Low-level control
 
