@@ -372,8 +372,8 @@ The following globals options define the default parameter values:
 The following globals options define document properties:
 * `meta_charset` defines the document charset metadata.
 * `meta_viewport` defines the document viewport metadata.
-* `bootstrap_css` defines a link to Bootstrap CSS.
-* `bootstrap_js` defines a link to Bootstrap JS.
+* `bootstrap_css` defines a link to the Bootstrap CSS file.
+* `bootstrap_js` defines a link to the Bootstrap JS file.
 * `dataframe_style` defines the dataframe style.
 
 Get a dictionary with global options using `get_config` without parameters:
@@ -408,6 +408,12 @@ print(rico.get_config("indent_html"))
 ```
 
 ### Low-level control
+
+Internally, **rico** uses the standard [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) module:
+* Every content object (`Tag`, `Text`, `Div` etc.) has a `container` attribute of type `xml.etree.ElementTree.Element`. The value is a `<div>` container element.
+* `Doc` objects has additional attributes `html`, `head`, and `body` of type `xml.etree.ElementTree.Element`. They represent the `<html>`, `<head>`, and `<body>` elements accordingly.
+
+Access these attributes and use `xml.etree.ElementTree` API to gain low-level control over the document and its elements.
 
 ## Use case and alternatives
 
