@@ -212,7 +212,7 @@ print(obj.serialize(indent=True, space="    "))
 
 ### Bootstrap, HTML classes and document layout
 
-By default [Bootstrap](https://getbootstrap.com/) CSS are included in a document. Change the default behavior using the `bootstrap` parameter:
+By default, [Bootstrap](https://getbootstrap.com/) CSS are included in the document. Change the default behavior using the `bootstrap` parameter:
 ```python
 doc = rico.Doc("Hello world!", bootstrap="full")
 ```
@@ -232,7 +232,7 @@ print(rico.Tag("p", "Hello world!", class_="col"))
 # <div class="col"><p>Hello world!<p></div>
 ```
 
-All elements' containers in a document are also wrapped in a `<div>` container. Specify the document's container class using the `class_` parameter:
+All elements' containers in the document are also wrapped in a `<div>` container. Specify the document's container class using the `class_` parameter:
 ```python
 doc = rico.Doc("Hello world!", class_="container-fluid")
 ```
@@ -284,7 +284,7 @@ obj.append(y)
 ```
 The first one wraps both elements in a single `<div>` container. The second one creates a separate `<div>` container for each element.
 
-Also, `Obj(x, y, class_="z")` wraps both `x` and `y` elements in a single `<div>` container with `class` attribute set to `"z"`.
+`Obj(x, y, class_="z")` wraps both `x` and `y` elements in a single `<div>` container with `class` attribute set to `"z"`.
 
 More on Bootstrap layout and grid system:
 * [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
@@ -294,9 +294,61 @@ More on Bootstrap layout and grid system:
 
 ### Styles and scripts
 
-Custom.
-Inline.
-Global config.
+By default, **rico** includes the following styles in the document:
+* Bootstrap CSS. Change the default behavior using the `bootstrap` parameter of the `Doc` class.
+* Dataframe style. Change it by setting the `dataframe_style` global option.
+
+Exclude dataframe style from the document by setting `dataframe_style` to `""`:
+```python
+with rico.config_context(dataframe_style=""):
+    doc = rico.Doc(df)
+```
+
+Include custom styles and scripts using the `Style` and `Script` classes:
+```python
+doc = rico.Doc(
+    "Hello world",
+    extra_styles=(
+        rico.Style("p {color: red;}"),
+        rico.Style(src="style.css"),
+    ),
+    extra_scripts=(
+        rico.Script("alert('Hello World!');"),
+        rico.Script(src="javascript.js"),
+    ),
+)
+```
+
+By default, external styles and scripts are included as file links. This means that these files must be available when someone opens the document. Include the contents of these files in the document using the `inline` parameter:
+```python
+doc = rico.Doc(
+    "Hello world",
+    extra_styles=(
+        rico.Style("p {color: red;}"),
+        rico.Style(src="style.css", inline=True),
+    ),
+    extra_scripts=(
+        rico.Script("alert('Hello World!');"),
+        rico.Script(src="javascript.js", inline=True),
+    ),
+)
+```
+
+In the example above, the Bootstrap CSS are still included as links. Use the global options `inline_styles` and `inline_scripts` to include the contents of the style and script files in the document:
+```python
+with rico.config_context(inline_styles=True, inline_scripts=True):
+    doc = rico.Doc(
+        "Hello world",
+        extra_styles=(
+            rico.Style("p {color: red;}"),
+            rico.Style(src="style.css"),
+        ),
+        extra_scripts=(
+            rico.Script("alert('Hello World!');"),
+            rico.Script(src="javascript.js"),
+        ),
+    )
+```
 
 ### Global configuration
 
