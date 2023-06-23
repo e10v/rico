@@ -246,7 +246,7 @@ doc = rico.Doc(rico.Div(
 ))
 ```
 
-The code above creates a document with two columns, one with a dataframe and another with a plot.
+The code above creates a document with two columns, one with a dataframe and another with a plot. The `Obj` is a magic class which automatically determines the content type in the same way that `Doc` and `Doc.append` do.
 
 Another example:
 ```python
@@ -274,7 +274,7 @@ doc.append_tag("h2", "Data")
 div = rico.Div(class_="row row-cols-auto")
 doc.append(div)
 div.append("Dataframe", df, class_="col")
-div.append("Dataframe", plot, class_="col")
+div.append("Plot", plot, class_="col")
 ```
 
 Keep in mind that `obj.append(x, y)` works differently than
@@ -283,6 +283,8 @@ obj.append(x)
 obj.append(y)
 ```
 The first one wraps both elements in a single `<div>` container. The second one creates a separate `<div>` container for each element.
+
+Also, `Obj(x, y, class_="z")` wraps both `x` and `y` elements in a single `<div>` container with `class` attribute set to `"z"`.
 
 More on Bootstrap layout and grid system:
 * [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
