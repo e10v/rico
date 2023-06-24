@@ -67,17 +67,18 @@ _global_config = {
 }
 
 
-def get_config(param: str | None = None) -> Any:
+def get_config(option: str | None = None) -> Any:
     """Get global configuration.
 
     Args:
-        param: Paramater name.
+        option: The option name.
 
     Returns:
-        Parameter value if `param` is not None, or dict with all parameters otherwise.
+        The value of the option if it's not None,
+        or a dictionary with all options otherwise.
     """
-    if param is not None:
-        return _global_config[param]
+    if option is not None:
+        return _global_config[option]
     return _global_config.copy()
 
 
@@ -99,24 +100,28 @@ def set_config(
     """Set global configuration.
 
     Args:
-        bootstrap_css: A link to a bootstrap css file.
-            If empty then bootstrap css is not loaded.
-        bootstrap_js: A link to a bootstrap javascript file.
-            If empty then bootstrap javascript is not loaded.
-        dataframe_style: A dataframe table stylesheet.
-            If empty then it's not used.
+        bootstrap_css: A link to the Bootstrap CSS file.
+            If empty, then the Bootstrap CSS is not loaded.
+        bootstrap_js: A link to the Bootstrap JS file.
+            If empty, then the Bootstrap JS is not loaded.
+        dataframe_style: A dataframe style. If empty, then it's not used.
         image_format: Default plot image format.
-        indent_html: Indent HTML elements in serialization methods.
-        indent_space: Default indent space.
-        inline_scripts: If True then scripts are loaded inline.
-        inline_styles: If True then styles are loaded inline.
-        meta_charset: An HTML document charset.
-            If empty then it's not used.
-        meta_viewport: An HTML document viewport property.
-            If empty then it's not used.
-        strip_html: Strip HTML elements in serialization methods.
-        text_mono: Default value for the `mono` arg of the Text class.
-        text_wrap: Default value for the `wrap` arg of the Text class.
+        indent_html: Default value of the `indent` parameter for serialization methods.
+            If True, indent the elements.
+        indent_space: Default value of the `space` parameter for serialization methods.
+            Whitespace for indentation.
+        inline_scripts: Default value of the `inline` parameter of the Script class.
+            If True, load script inline, downdload it from source link.
+        inline_styles: Default value of the `inline` parameter of the Style class.
+            If True, load stylesheet inline, downdload it from source link.
+        meta_charset: HTML document charset. If empty, then it's not used.
+        meta_viewport: HTML document viewport property. If empty, then it's not used.
+        strip_html: Default value of the `strip` parameter for serialization methods.
+            If True, strip unnecessary whitespace.
+        text_mono: Default value of the `mono` parameter of the Text class.
+            If True, set the text font to monospaced.
+        text_wrap: Default value of the `wrap` parameter of the Text class.
+            If True, wrap the text.
     """
     for param, value in locals().items():
         if value is not None:
@@ -142,24 +147,28 @@ def config_context(
     """Context manager for configuration.
 
     Args:
-        bootstrap_css: A link to a bootstrap css file.
-            If empty then bootstrap css is not loaded.
-        bootstrap_js: A link to a bootstrap javascript file.
-            If empty then bootstrap javascript is not loaded.
-        dataframe_style: A dataframe table stylesheet.
-            If empty then it's not used.
+        bootstrap_css: A link to the Bootstrap CSS file.
+            If empty, then the Bootstrap CSS is not loaded.
+        bootstrap_js: A link to the Bootstrap JS file.
+            If empty, then the Bootstrap JS is not loaded.
+        dataframe_style: A dataframe style. If empty, then it's not used.
         image_format: Default plot image format.
-        indent_html: Indent HTML elements in serialization methods.
-        indent_space: Default indent space.
-        inline_scripts: If True then scripts are loaded inline.
-        inline_styles: If True then styles are loaded inline.
-        meta_charset: An HTML document charset.
-            If empty then it's not used.
-        meta_viewport: An HTML document viewport property.
-            If empty then it's not used.
-        strip_html: Strip HTML elements in serialization methods.
-        text_mono: Default value for the `mono` arg of the Text class.
-        text_wrap: Default value for the `wrap` arg of the Text class.
+        indent_html: Default value of the `indent` parameter for serialization methods.
+            If True, indent the elements.
+        indent_space: Default value of the `space` parameter for serialization methods.
+            Whitespace for indentation.
+        inline_scripts: Default value of the `inline` parameter of the Script class.
+            If True, load script inline, downdload it from source link.
+        inline_styles: Default value of the `inline` parameter of the Style class.
+            If True, load stylesheet inline, downdload it from source link.
+        meta_charset: HTML document charset. If empty, then it's not used.
+        meta_viewport: HTML document viewport property. If empty, then it's not used.
+        strip_html: Default value of the `strip` parameter for serialization methods.
+            If True, strip unnecessary whitespace.
+        text_mono: Default value of the `mono` parameter of the Text class.
+            If True, set the text font to monospaced.
+        text_wrap: Default value of the `wrap` parameter of the Text class.
+            If True, wrap the text.
     """
     new_config = locals()
     old_config = get_config()
