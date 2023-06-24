@@ -252,14 +252,14 @@ class Image(ContentBase):
     def __init__(
         self,
         data: bytes | str,
-        format: str,  # noqa: A002
+        mime_subtype: str,
         class_: str | None = None,
     ):
         """Create content using image data.
 
         Args:
             data: The image data.
-            format: The image format.
+            mime_subtype: The image MIME subtype. Examples: "png", "svg+xml".
             class_: The container class attribute.
         """
         super().__init__(class_)
@@ -268,12 +268,9 @@ class Image(ContentBase):
             data = data.encode()
         encoded_image = base64.b64encode(data).decode()
 
-        if format == "svg":
-            format = "svg+xml"  # noqa: A001
-
         element = ET.Element(
             "img",
-            attrib={"src": f"data:image/{format};base64,{encoded_image}"},
+            attrib={"src": f"data:image/{mime_subtype};base64,{encoded_image}"},
         )
         self.container.append(element)
 
@@ -336,7 +333,8 @@ class Plot(ContentBase):
             )
             raise TypeError(error_msg)
 
-        content = Image(data=image, format=format, class_=class_)  # type: ignore
+        mime_subtype = "svg+xml" if format == "svg" else format
+        content = Image(data=image, mime_subtype=mime_subtype, class_=class_)  # type: ignore  # noqa: E501
         self.container = content.container
 
 Chart = Plot

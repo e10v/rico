@@ -315,7 +315,7 @@ svg_data = (
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_svg(data: str | bytes):
-    content = rico._content.Image(data, format="svg", class_="row")
+    content = rico._content.Image(data, mime_subtype="svg+xml", class_="row")
 
     if isinstance(data, str):
         data = data.encode()
@@ -340,7 +340,7 @@ def test_image_svg(data: str | bytes):
 
 @pytest.mark.parametrize("data", [svg_data, svg_data.encode()], ids=["str", "bytes"])
 def test_image_png(data: str | bytes):
-    content = rico._content.Image(data, format="png")
+    content = rico._content.Image(data, mime_subtype="png")
 
     if isinstance(data, str):
         data = data.encode()
