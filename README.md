@@ -2,6 +2,19 @@
 
 **rico** is a Python package for creating HTML documents from rich content: dataframes, plots, images, markdown etc. It provides a high-level, easy-to-use API with reasonable defaults, as well as low-level access for better control.
 
+Use **rico** if you want to create an HTML document from objects created in a Python script.
+
+With **rico** you can *avoid*:
+* Writing data to intermediate files or a database from a script.
+* Loading data into a Jupyter notebook.
+* Using nbconvert or similar tools for creating HTML files.
+
+More on the topic:
+* [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
+* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
+* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
+* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
+
 [![CI](https://github.com/e10v/rico/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/e10v/rico/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/github/e10v/rico/coverage.svg?branch=main)](https://codecov.io/gh/e10v/rico)
 [![License](https://img.shields.io/github/license/e10v/rico)](https://github.com/e10v/rico/blob/main/LICENSE)
@@ -195,7 +208,7 @@ doc.append_html("<h2>Code</h2>")
 doc.append_code("print('Hello world!')")
 ```
 
-Check the docstrings for additional parameters.
+Check the docstrings for details.
 
 Serialize content to HTML using `str()` or `object.serialize()`:
 ```python
@@ -217,10 +230,9 @@ By default, [Bootstrap](https://getbootstrap.com/) styles are included in the do
 doc = rico.Doc("Hello world!", bootstrap="full")
 ```
 
-The possible values are:
-* `"css"` (default) -- include only CSS.
-* `"full"` -- include both the CSS and JS.
-* `"none"` -- don't include Bootstrap*.
+* Set `bootstrap` to `"css"` (default) to include only CSS.
+* Set `bootstrap` to `"full"` to include both the CSS and JS.
+* Set `bootstrap` to `"none"` to not include Bootstrap*.
 
 *Keep in mind that **rico** relies on Bootstrap classes and styles. For example:
 * The `mono` and `wrap` parameters of the `Text` class use Bootstrap's `font-monospace` and `font-monospace` classes.
@@ -307,7 +319,7 @@ with rico.config_context(dataframe_style=""):
 Include custom styles and scripts using the `Style` and `Script` classes:
 ```python
 css = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
-js = "https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"
+js = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
 
 doc = rico.Doc(
     "Hello world",
@@ -373,11 +385,11 @@ The following globals options define the default parameter values:
 | `inline_scripts` | `inline`  | `Script`                          |
 
 The following globals options define document properties:
-* `meta_charset` defines a document [charset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset) metadata.
-* `meta_viewport` defines a document [viewport](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag) metadata.
+* `meta_charset` defines a document [charset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset) metadata. Set it to `""` to disable.
+* `meta_viewport` defines a document [viewport](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag) metadata. Set it to `""` to disable.
 * `bootstrap_css` defines a link to the Bootstrap CSS file.
 * `bootstrap_js` defines a link to the Bootstrap JS file.
-* `dataframe_style` defines a dataframe style.
+* `dataframe_style` defines a dataframe style. Set it to `""` to disable.
 
 Get a dictionary with global options using `get_config` without parameters:
 ```python
@@ -418,32 +430,27 @@ Internally, **rico** uses the standard [xml.etree.ElementTree](https://docs.pyth
 
 Access these attributes and use `xml.etree.ElementTree` API to gain low-level control over the document and its elements.
 
-## Use case and alternatives
+Also **rico** provides the following functions for working with `xml.etree.ElementTree.Element` objects:
+* `parse_html` parses HTML from a string.
+* `indent_html` indents an HTML element tree visually.
+* `strip_html` removes unnecessary whitespace between tags.
+* `serialize_html` serializes `xml.etree.ElementTree.Element` object.
 
-Use **rico** if you want to create an HTML document from objects created in a Python script.
+Check the docstrings for details.
 
-With **rico** you can avoid:
-* Writing data to intermediate files or a database from a script.
-* Loading data into a Jupyter notebook.
-* Using [nbconvert](https://nbconvert.readthedocs.io/) or similar tools.
+## Alternatives
 
-Alternatives:
 * Use [Jupyter Notebook](https://jupyter.org/) for interactive computing.
 * Use [nbconvert](https://nbconvert.readthedocs.io/) or [papermill](https://papermill.readthedocs.io/) if you're processing data and creating objects for a document in a Jupyter notebook.
 * Use [Quarto](https://quarto.org/) if you prefer R Markdown style notebooks and a variety of output formats.
 * Use [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html), [lxml](https://lxml.de/), [Yattag](https://www.yattag.org/), or [Airium](https://gitlab.com/kamichal/airium) if you need low-level control.
 
-More on the topic:
-* [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
-* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
-* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
-* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
-
 ## Roadmap
 
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+* Create short quick start.
+* Create examples with resulting HTML files.
 * Support math with [KaTeX](https://katex.org/).
 * Save Altair Charts in [Vega-Lite](https://vega.github.io/vega-lite/) format.
-* Save SVG images in XML format.
 * Support diagrams with [Mermaid.js](https://mermaid.js.org/).
 * Support other plot types: [Plotly](https://plotly.com/python/), [Bokeh](https://bokeh.org/).
