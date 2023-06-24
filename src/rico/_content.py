@@ -40,21 +40,13 @@ except ImportError:
 
 
 class ContentBase:
-    """A base content definition.
-
-    Creates a container element on init.
-    Defines serialization method and string representation.
-
-    Attributes:
-        container (Element): The container element.
-    """
     container: ET.Element
 
     def __init__(self, class_: str | None = None):
-        """Create base content.
+        """Create an empty <div> container.
 
         Args:
-            class_: The container element's class attribute.
+            class_: The container class attribute.
         """
         attrib = {"class": class_} if class_ is not None else {}
         self.container = ET.Element("div", attrib=attrib)
@@ -65,32 +57,27 @@ class ContentBase:
         space: str | None = None,
         strip: bool | None = None,
     ) -> str:
-        """Serialize the object to string in HTML format.
+        """Serialize the object's HTML elements to a string.
 
-        Indent the object if `indent_space` is not None.
+        Indents elements if `indent_space` is not None.
 
         Args:
-            indent: If True, indent the element.
-            space: The whitespace for indentation.
+            indent: If True, indent the elements.
+            space: Whitespace for indentation.
             strip: If True, strip unnecessary whitespace.
 
         Returns:
-            The serialized object.
+            A string with serialized HTML.
         """
         return rico._html.serialize_html(
             self.container, indent=indent, space=space, strip=strip)
 
     def __str__(self) -> str:
-        """Serialize the object to string in HTML format."""
+        """Serialize the object's HTML elements to a string."""
         return self.serialize()
 
 
 class Tag(ContentBase):
-    """A Tag content definition.
-
-    Creates a content element using tag parameters and appends it to the container.
-    """
-
     def __init__(
         self,
         tag: str,
@@ -100,12 +87,12 @@ class Tag(ContentBase):
         class_: str | None = None,
         **extra: Any,
     ):
-        """Create content using tag parameters.
+        """Create an HTML element using tag parameters and wrap it in a <div> container.
 
         Args:
-            tag: The content element's tag.
+            tag: The tag name.
             text: Text before first subelement.
-            tail: Text after the end tag.
+            tail: Text after the closing tag.
             attrib: The tag's attributes.
             extra: Extra attributes.
             class_: The container class attribute.
@@ -118,10 +105,6 @@ class Tag(ContentBase):
 
 
 class Text(ContentBase):
-    """A Text content definition.
-
-    Creates a content element from a text and appends it to the container.
-    """
     def __init__(
         self,
         obj: Any,
@@ -129,17 +112,17 @@ class Text(ContentBase):
         wrap: bool | None = None,
         class_: str | None = None,
     ):
-        """Create content from a text.
+        """Create an HTML element from text and wrap it in a <div> container.
 
-        The default tag is <p> unless the text contains a line break.
-        Then the <pre> tag is used.
+        The default tag is <p> if the text doesn't contains a line break.
+        Otherwise, the <pre> tag is used.
 
         The `mono` and `wrap` parameters rely on Bootstrap CSS.
 
         Args:
             obj: The text. If it's not an instance of str, then it's converted to str.
-            mono: If True then "font-monospace" class is assigned to the text element.
-            wrap: If True then "text-wrap" class is assigned to the text element.
+            mono: If True, set the text font to monospaced.
+            wrap: If True, wrap the text.
             class_: The container class attribute.
         """
         super().__init__(class_)
@@ -167,12 +150,8 @@ class Text(ContentBase):
 
 
 class Code(ContentBase):
-    """A Code content definition.
-
-    Creates content elements from a code and appends them to the container.
-    """
     def __init__(self, text: str, class_: str | None = None):
-        """Create content from a code.
+        """Create HTML elements from code and wrap them in a <div> container.
 
         Args:
             text: The code.
@@ -187,21 +166,17 @@ class Code(ContentBase):
 
 
 class HTML(ContentBase):
-    """An HTML content definition.
-
-    Creates content elements from an HTML text and appends them to the container.
-    """
     def __init__(
         self,
         text: str,
         strip_dataframe_borders: bool = False,
         class_: str | None = None,
     ):
-        """Create content from an HTML text.
+        """Create HTML elements from raw HTML and wrap them in a <div> container.
 
         Args:
-            text: The HTML text.
-            strip_dataframe_borders: Delete borders attributes from dataframes.
+            text: A string with raw HTML.
+            strip_dataframe_borders: If True, remove borders attributes from dataframes.
             class_: The container class attribute.
         """
         super().__init__(class_)
@@ -217,20 +192,16 @@ class HTML(ContentBase):
 
 
 class Markdown(ContentBase):
-    """A Markdown content definition.
-
-    Creates content elements from a markdown text and appends them to the container.
-    """
     def __init__(
         self,
         text: str,
         class_: str | None = None,
         **kwargs: Any,
     ):
-        """Create content from a markdown text.
+        """Create HTML elements from Markdown text and wrap them in a <div> container.
 
         Args:
-            text: The markdown text.
+            text: The Markdown text.
             class_: The container class attribute.
             **kwargs: Keyword arguments passed to the `markdown.markdown` function.
 
@@ -245,17 +216,15 @@ class Markdown(ContentBase):
 
 
 class Image(ContentBase):
-    """An Image content definition.
-
-    Creates content elements using an image data and appends them to the container.
-    """
     def __init__(
         self,
         data: bytes | str,
         mime_subtype: str,
         class_: str | None = None,
     ):
-        """Create content using image data.
+        """Create an HTML element from image data and wrap it in a <div> container.
+
+        The image is byte64-encoded.
 
         Args:
             data: The image data.
@@ -276,15 +245,6 @@ class Image(ContentBase):
 
 
 class Plot(ContentBase):
-    """A Plot content definition.
-
-    Creates content elements from a plot object and appends them to the container.
-
-    The supported plot types are the following:
-    - Altair Chart,
-    - Pyplot Axes and Figure,
-    - Seaborn Plot (seaborn.objects interface).
-    """
     def __init__(
         self,
         obj: Any,
@@ -292,18 +252,23 @@ class Plot(ContentBase):
         class_: str | None = None,
         **kwargs: Any,
     ):
-        """Create content from a plot object.
+        """Create an HTML element from a plot object and wrap it in a <div> container.
+
+        The supported plot types are the following:
+        - Altair Chart,
+        - Pyplot Axes and Figure,
+        - Seaborn Plot (seaborn.objects interface).
 
         Args:
             obj: The plot object.
-            format: The image format.
+            format: Image format.
             class_: The container class attribute.
-            **kwargs: Keyword arguments passed to a function
-                which converts object to an image.
+            **kwargs: Keyword arguments passed to the function
+                which converts the object to an image.
 
         Raises:
-            TypeError: Plot type is not supported
-                or required extra package is not installed.
+            TypeError: The plot type is not supported
+                or a required extra package is not installed.
         """
         if format is None:
             format = rico._config.get_config("image_format")  # noqa: A001
@@ -328,8 +293,8 @@ class Plot(ContentBase):
             )
         else:
             error_msg = (
-                f"Plot type {type(obj)} is not supported "
-                "or required extra package is not installed."
+                f"The plot type {type(obj)} is not supported "
+                "or a required extra package is not installed."
             )
             raise TypeError(error_msg)
 
@@ -341,17 +306,18 @@ Chart = Plot
 
 
 class Obj(ContentBase):
-    """An arbitrary content definition.
-
-    Creates content elements from arbitrary objects and appends them to the container.
-
-    Automatically determines the content type.
-    """
     def __init__(self, *objects: Any, class_: str | None = None):
-        """Create content from arbitrary objects.
+        """Create HTML elements from objects and wrap them in a <div> container.
+
+        Automatically determines the content type in the following order:
+        1. `rico` content classes (subclasses of `ContentBase`).
+        2. Plots.
+        3. Dataframes and other types with `_repr_html_` method.
+        4. Text.
+        All other types are converted to text.
 
         Args:
-            *objects: The objects which are used to create a content.
+            *objects: The objects.
             class_: The container class attribute.
         """
         super().__init__(class_=class_)
@@ -377,14 +343,6 @@ class Obj(ContentBase):
 
 
 class Script(ContentBase):
-    """A script definition.
-
-    Attributes:
-        script (Element): The script element.
-        footer (bool): Defines whether the script should be placed at a document footer,
-            aftert all other content.
-    """
-    container: ET.Element
     footer: bool = False
 
     def __init__(
@@ -396,7 +354,7 @@ class Script(ContentBase):
         attrib: dict[str, Any] = {},
         **extra: Any,
     ):
-        """Create script.
+        """Create an HTML script element.
 
         Either `text` or `src` should be used.
 
@@ -404,9 +362,10 @@ class Script(ContentBase):
             text: The script text.
             src: The script source link.
             inline: If True, load script inline, downdload it from source link
-                and use it as a text.
-            defer: The script "defer" attribute. For inline script defines whether
-                it should be placed at a document footer, aftert all other content.
+                and use it as `text`.
+            defer: The "defer" attribute of the script. For an inline script, defines
+                whether it should be placed in the footer of the document aftert all
+                other content.
             attrib: The script attributes.
             **extra: Extra attributes.
 
@@ -440,13 +399,6 @@ class Script(ContentBase):
 
 
 class Style(ContentBase):
-    """A stylesheet definition.
-
-    Attributes:
-        style (Element): The style element.
-    """
-    container: ET.Element
-
     def __init__(
         self,
         text: str | None = None,
@@ -455,7 +407,7 @@ class Style(ContentBase):
         attrib: dict[str, Any] = {},
         **extra: Any,
     ):
-        """Create stylesheet.
+        """Create an HTML style element.
 
         Either `text` or `src` should be used.
 
@@ -463,7 +415,7 @@ class Style(ContentBase):
             text: The stylesheet text.
             src: The stylesheet source link.
             inline: If True, load stylesheet inline, downdload it from source link
-                and use it as a text.
+                and use it as `text`.
             attrib: The stylesheet attributes.
             **extra: Extra attributes.
 
