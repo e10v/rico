@@ -85,7 +85,10 @@ class Doc(Div):
         Args:
             *objects: Objects that are used to create HTML elements.
             title: The document title.
-            bootstrap: If True, then Bootstrap is included to the document.
+            bootstrap: Defines which Bootatrap files are included in the document.
+                If "css", include only CSS.
+                If "full", include both the CSS and JS.
+                If "none", don'e include Bootstrap.
             extra_styles: Extra styles to include in the document.
             extra_scripts: Extra scripts to include in the document.
             class_: The container class attribute.
