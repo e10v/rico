@@ -6,7 +6,7 @@ Use **rico** if you want to create an HTML document from objects created in a Py
 
 With **rico** you can *avoid*:
 * Writing data to intermediate files or a database from a script.
-* Loading data into a Jupyter notebook.
+* Loading data into a Jupyter notebook from intermediate files or a database.
 * Using nbconvert or similar tools for creating HTML files.
 
 More on the topic:
@@ -55,7 +55,7 @@ pip install rico[pyplot]
 pip install rico[seaborn]
 ```
 
-Install `rico[seaborn]` extra only to use the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` as the old plotting functions return Matplotlib Pyplot Axes objects.
+Install `rico[seaborn]` extra only to use the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` as the old Seaborn plotting functions return Matplotlib Pyplot Axes objects.
 
 All extras:
 ```bash
@@ -128,7 +128,7 @@ with open("doc.html", "w") as f:
     f.write(doc.serialize(indent=True, space="    "))
 ```
 
-Remove unnecessary whitespace between tags by setting `strip` to `True`:
+Remove unnecessary whitespace by setting `strip` to `True`:
 ```python
 with open("doc.html", "w") as f:
     f.write(doc.serialize(strip=True))
@@ -433,7 +433,7 @@ Access these attributes and use `xml.etree.ElementTree` API to gain low-level co
 Also **rico** provides the following functions for working with `xml.etree.ElementTree.Element` objects:
 * `parse_html` parses HTML from a string.
 * `indent_html` indents an HTML element tree visually.
-* `strip_html` removes unnecessary whitespace between tags.
+* `strip_html` removes unnecessary whitespace.
 * `serialize_html` serializes `xml.etree.ElementTree.Element` object.
 
 Check the docstrings for details.

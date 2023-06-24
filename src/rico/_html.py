@@ -23,15 +23,7 @@ TAGS_NOT_ESCAPED = {"script", "style"}
 TAGS_PREFORMATTED = {"pre"}
 
 
-class HTMLParser(html.parser.HTMLParser):
-    """Simple HTML parser. Returns a list of instances of ET.Element on close().
-
-    Assigns None values to boolean attributes.
-
-    Ignores comments, doctype declaration and processing instructions.
-    Converts attribute names to lower case, even for SVG.
-    """
-
+class _HTMLParser(html.parser.HTMLParser):
     def __init__(self):
         super().__init__()
         self._root = "root"
@@ -58,20 +50,20 @@ class HTMLParser(html.parser.HTMLParser):
 
 
 def parse_html(data: str) -> tuple[ET.Element]:
-    """Parse an HTML document from a string.
+    """Parse HTML from a string.
 
-    Assign None values to boolean attributes.
+    Assigns None values to boolean attributes.
 
-    Ignore comments, doctype declaration and processing instructions.
-    Convert attribute names to lower case, even for SVG.
+    Ignores comments, doctype declaration and processing instructions.
+    Converts attribute names to lower case, even for SVG.
 
     Args:
-        data: The HTML data.
+        data: The string containing HTML data.
 
     Returns:
-        The parsed HTML document.
+        HTML elements parsed from the string.
     """
-    parser = HTMLParser()
+    parser = _HTMLParser()
     parser.feed(data)
     return parser.close()
 
@@ -81,19 +73,19 @@ def indent_html(
     space: str = "  ",
     level: int = 0,
 ) -> ET.Element:
-    """Indent an HTML element.
+    """Indent an HTML element and its chidren.
 
-    Tnsert newlines and indentation space after elements.
-    Create a new element instead of updating inplace.
-    Do not indent elements inside <pre> tag.
+    Tnserts newlines and indentation space after elements.
+    Creates a new element instead of updating in place.
+    Doesn't indent elements inside the <pre> tag.
 
     Args:
         element: The element to indent.
-        space: The whitespace to insert for each indentation level.
+        space: Whitespace to insert for each indentation level.
         level: The initial indentation level. Should always be 0.
 
     Returns:
-        The indented HTML element.
+        Indented HTML element.
     """
     if element.tag.lower() in TAGS_PREFORMATTED or not len(element):
         return element
@@ -120,17 +112,16 @@ def indent_html(
 
 
 def strip_html(element: ET.Element) -> ET.Element:
-    """Strip an HTML element.
+    """Remove unnecessary whitespace from an HTML element and its children.
 
-    Remove unnecessary whitespaces from the element by strippping elements'
-    text and tail.
-    Do not strip elements inside <pre> tag or inside inline tags.
+    Removes leading and trailing whitespace from elements' text and tail.
+    Doesn't strip elements inside the <pre> tag or inside inline tags.
 
     Args:
         element: The element to strip.
 
     Returns:
-        The stripped HTML element.
+        An HTML element with stripped leading and trailing whitespace.
     """
     stripped_element = ET.Element(element.tag, attrib=element.attrib)
     stripped_element.text = element.text
@@ -187,18 +178,18 @@ def serialize_html(
     space: str | None = None,
     strip: bool | None = None,
 ) -> str:
-    """Serialize an HTML element to a string.
+    """Serialize an HTML element and its children to a string.
 
-    Serialize attributes with None values as boolean.
+    Serializes attributes with None values as boolean.
 
     Args:
         element: The HTML element.
         indent: If True, indent the element.
-        space: The whitespace for indentation.
+        space: Whitespace for indentation.
         strip: If True, strip unnecessary whitespace.
 
     Returns:
-        The serialized HTML element.
+        A string with serialized HTML.
     """
     global_config = rico._config.get_config()
     if indent is None:
