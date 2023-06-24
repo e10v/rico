@@ -2,6 +2,19 @@
 
 **rico** is a Python package for creating HTML documents from rich content: dataframes, plots, images, markdown etc. It provides a high-level, easy-to-use API with reasonable defaults, as well as low-level access for better control.
 
+Use **rico** if you want to create an HTML document from objects created in a Python script.
+
+With **rico** you can *avoid*:
+* Writing data to intermediate files or a database from a script.
+* Loading data into a Jupyter notebook.
+* Using nbconvert or similar tools for creating HTML files.
+
+More on the topic:
+* [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
+* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
+* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
+* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
+
 [![CI](https://github.com/e10v/rico/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/e10v/rico/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/github/e10v/rico/coverage.svg?branch=main)](https://codecov.io/gh/e10v/rico)
 [![License](https://img.shields.io/github/license/e10v/rico)](https://github.com/e10v/rico/blob/main/LICENSE)
@@ -425,26 +438,12 @@ Also **rico** provides the following functions for working with `xml.etree.Eleme
 
 Check the docstrings for details.
 
-## Use case and alternatives
+## Alternatives
 
-Use **rico** if you want to create an HTML document from objects created in a Python script.
-
-With **rico** you can avoid:
-* Writing data to intermediate files or a database from a script.
-* Loading data into a Jupyter notebook.
-* Using nbconvert or similar tools for creating HTML files.
-
-Alternatives:
 * Use [Jupyter Notebook](https://jupyter.org/) for interactive computing.
 * Use [nbconvert](https://nbconvert.readthedocs.io/) or [papermill](https://papermill.readthedocs.io/) if you're processing data and creating objects for a document in a Jupyter notebook.
 * Use [Quarto](https://quarto.org/) if you prefer R Markdown style notebooks and a variety of output formats.
 * Use [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html), [lxml](https://lxml.de/), [Yattag](https://www.yattag.org/), or [Airium](https://gitlab.com/kamichal/airium) if you need low-level control.
-
-More on the topic:
-* [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
-* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
-* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
-* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
 
 ## Roadmap
 
