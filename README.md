@@ -307,7 +307,7 @@ with rico.config_context(dataframe_style=""):
 Include custom styles and scripts using the `Style` and `Script` classes:
 ```python
 css = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
-js = "https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"
+js = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
 
 doc = rico.Doc(
     "Hello world",
@@ -373,11 +373,11 @@ The following globals options define the default parameter values:
 | `inline_scripts` | `inline`  | `Script`                          |
 
 The following globals options define document properties:
-* `meta_charset` defines a document [charset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset) metadata.
-* `meta_viewport` defines a document [viewport](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag) metadata.
+* `meta_charset` defines a document [charset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset) metadata. Set it to `""` to disable.
+* `meta_viewport` defines a document [viewport](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag) metadata. Set it to `""` to disable.
 * `bootstrap_css` defines a link to the Bootstrap CSS file.
 * `bootstrap_js` defines a link to the Bootstrap JS file.
-* `dataframe_style` defines a dataframe style.
+* `dataframe_style` defines a dataframe style. Set it to `""` to disable.
 
 Get a dictionary with global options using `get_config` without parameters:
 ```python
