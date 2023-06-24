@@ -444,6 +444,5 @@ More on the topic:
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 * Support math with [KaTeX](https://katex.org/).
 * Save Altair Charts in [Vega-Lite](https://vega.github.io/vega-lite/) format.
-* Save SVG images in XML format.
 * Support diagrams with [Mermaid.js](https://mermaid.js.org/).
 * Support other plot types: [Plotly](https://plotly.com/python/), [Bokeh](https://bokeh.org/).
