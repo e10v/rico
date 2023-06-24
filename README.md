@@ -306,15 +306,18 @@ with rico.config_context(dataframe_style=""):
 
 Include custom styles and scripts using the `Style` and `Script` classes:
 ```python
+css = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
+js = "https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"
+
 doc = rico.Doc(
     "Hello world",
     extra_styles=(
         rico.Style("p {color: red;}"),
-        rico.Style(src="style.css"),
+        rico.Style(src=css),
     ),
     extra_scripts=(
         rico.Script("alert('Hello World!');"),
-        rico.Script(src="javascript.js"),
+        rico.Script(src=js),
     ),
 )
 ```
@@ -325,11 +328,11 @@ doc = rico.Doc(
     "Hello world",
     extra_styles=(
         rico.Style("p {color: red;}"),
-        rico.Style(src="style.css", inline=True),
+        rico.Style(src=css, inline=True),
     ),
     extra_scripts=(
         rico.Script("alert('Hello World!');"),
-        rico.Script(src="javascript.js", inline=True),
+        rico.Script(src=js, inline=True),
     ),
 )
 ```
@@ -341,11 +344,11 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
         "Hello world",
         extra_styles=(
             rico.Style("p {color: red;}"),
-            rico.Style(src="style.css"),
+            rico.Style(src=css),
         ),
         extra_scripts=(
             rico.Script("alert('Hello World!');"),
-            rico.Script(src="javascript.js"),
+            rico.Script(src=js),
         ),
     )
 ```
