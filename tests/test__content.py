@@ -424,13 +424,13 @@ def test_obj():
         def _repr_html_(self) -> str:
             return "<h1>Hello</h1>"
 
-    content_base = rico._content.ContentBase(class_="col")
+    text = rico._content.Text("Hi")
 
     content = rico._content.Obj(
         ReprHTML(),
         "world",
         pyplot_axes,
-        content_base,
+        text,
         class_="row",
     )
 
@@ -450,25 +450,25 @@ def test_obj():
     assert h1.tail is None
     assert len(h1) == 0
 
-    p = tuple(div0)[1]
-    assert isinstance(p, ET.Element)
-    assert p.tag == "p"
-    assert p.attrib == {}
-    assert p.text == "world"
-    assert p.tail is None
-    assert len(p) == 0
+    p0 = tuple(div0)[1]
+    assert isinstance(p0, ET.Element)
+    assert p0.tag == "p"
+    assert p0.attrib == {}
+    assert p0.text == "world"
+    assert p0.tail is None
+    assert len(p0) == 0
 
     img = tuple(div0)[2]
     assert isinstance(img, ET.Element)
     assert img.tag == "img"
 
-    div1 = tuple(div0)[3]
-    assert isinstance(div1, ET.Element)
-    assert div1.tag == "div"
-    assert div1.attrib == {"class": "col"}
-    assert div1.text is None
-    assert div1.tail is None
-    assert len(div1) == 0
+    p1 = tuple(div0)[3]
+    assert isinstance(p1, ET.Element)
+    assert p1.tag == "p"
+    assert p1.attrib == {}
+    assert p1.text == "Hi"
+    assert p1.tail is None
+    assert len(p1) == 0
 
 
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])
