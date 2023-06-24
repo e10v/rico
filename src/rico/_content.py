@@ -59,8 +59,6 @@ class ContentBase:
     ) -> str:
         """Serialize the object's HTML elements to a string.
 
-        Indents elements if `indent_space` is not None.
-
         Args:
             indent: If True, indent the elements.
             space: Whitespace for indentation.

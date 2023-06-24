@@ -35,15 +35,13 @@ def _append(
 
 
 class Div(rico._content.ContentBase):
-    """A <div> container definition.
-
-    Creates <div> container with content based on arbitrary objects.
-    """
     def __init__(self, *objects: Any, class_: str | None = None):
-        """Create <div> container with content from arbitrary objects.
+        """Create a <div> container, create HTML elements and add them to the container.
+
+        Each HTML element is also wrapped in a separate <div> container.
 
         Args:
-            *objects: The objects which are used to create a content.
+            *objects: Objects that are used to create HTML elements.
             class_: The container class attribute.
         """
         super().__init__(class_=class_)
@@ -65,20 +63,9 @@ class Div(rico._content.ContentBase):
 
 
 class Doc(Div):
-    """Creates an HTML document.
-
-    Creates and HTML document with content based on arbitrary objects.
-
-    Attributes:
-        html (Element): The <html> element.
-        head (Element): The <head> element.
-        body (Element): The <body> element.
-        container (Element): The <div> container element.
-    """
     html: ET.Element
     head: ET.Element
     body: ET.Element
-    container: ET.Element
 
     def __init__(
         self,
@@ -89,14 +76,18 @@ class Doc(Div):
         extra_scripts: Iterable[rico._content.Script] = (),
         class_: str | None = "container",
     ):
-        """Create an HTML document with content from arbitrary objects.
+        """Create an HTML document.
+
+        Creates a <div> container inside the <body> element.
+        Create HTML elements and add them to the container.
+        Each HTML element is also wrapped in a separate <div> container.
 
         Args:
-            *objects: The objects which are used to create a content.
+            *objects: Objects that are used to create HTML elements.
             title: The document title.
-            bootstrap: If True then Bootstrap included to the document.
-            extra_styles: Extra styles to be included to the document.
-            extra_scripts: Extra scripts to be included to the document.
+            bootstrap: If True, then Bootstrap is included to the document.
+            extra_styles: Extra styles to include in the document.
+            extra_scripts: Extra scripts to include in the document.
             class_: The container class attribute.
         """
         super().__init__(*objects, class_=class_)
@@ -147,17 +138,15 @@ class Doc(Div):
         space: str | None = None,
         strip: bool | None = None,
     ) -> str:
-        """Serialize the document to string in HTML format.
-
-        Indent the object if `indent_space` is not None.
+        """Serialize the HTML document to s string.
 
         Args:
-            indent: If True, indent the element.
-            space: The whitespace for indentation.
+            indent: If True, indent the elements.
+            space: Whitespace for indentation.
             strip: If True, strip unnecessary whitespace.
 
         Returns:
-            The serialized document.
+            A string with serialized HTML.
         """
         return "<!doctype html>\n" + rico._html.serialize_html(
             self.html, indent=indent, space=space, strip=strip)
