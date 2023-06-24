@@ -195,7 +195,7 @@ doc.append_html("<h2>Code</h2>")
 doc.append_code("print('Hello world!')")
 ```
 
-Check the docstrings for additional parameters.
+Check the docstrings for details.
 
 Serialize content to HTML using `str()` or `object.serialize()`:
 ```python
@@ -217,10 +217,9 @@ By default, [Bootstrap](https://getbootstrap.com/) styles are included in the do
 doc = rico.Doc("Hello world!", bootstrap="full")
 ```
 
-The possible values are:
-* `"css"` (default) -- include only CSS.
-* `"full"` -- include both the CSS and JS.
-* `"none"` -- don't include Bootstrap*.
+* Set `bootstrap` to `"css"` (default) to include only CSS.
+* Set `bootstrap` to `"full"` to include both the CSS and JS.
+* Set `bootstrap` to `"none"` to not include Bootstrap*.
 
 *Keep in mind that **rico** relies on Bootstrap classes and styles. For example:
 * The `mono` and `wrap` parameters of the `Text` class use Bootstrap's `font-monospace` and `font-monospace` classes.
@@ -417,6 +416,14 @@ Internally, **rico** uses the standard [xml.etree.ElementTree](https://docs.pyth
 * `Doc` objects has additional attributes `html`, `head`, and `body` of type `xml.etree.ElementTree.Element`. They represent the `<html>`, `<head>`, and `<body>` elements, respectively.
 
 Access these attributes and use `xml.etree.ElementTree` API to gain low-level control over the document and its elements.
+
+Also **rico** provides the following functions for working with `xml.etree.ElementTree.Element` objects:
+* `parse_html` parses HTML from a string.
+* `indent_html` indents an HTML element tree visually.
+* `strip_html` removes unnecessary whitespace between tags.
+* `serialize_html` serializes `xml.etree.ElementTree.Element` object.
+
+Check the docstrings for details.
 
 ## Use case and alternatives
 
