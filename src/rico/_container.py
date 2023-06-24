@@ -132,13 +132,10 @@ class Doc(Div):
         if global_config["dataframe_style"]:
             styles.append(rico._content.Style(text=global_config["dataframe_style"]))
 
-        styles = [*styles, *extra_styles]
-        scripts = [*scripts, *extra_scripts]
-
-        for style in styles:
+        for style in (*styles, *extra_styles):
             self.head.append(style.container)
 
-        for script in scripts:
+        for script in (*scripts, *extra_scripts):
             if script.footer:
                 self.body.append(script.container)
             else:
