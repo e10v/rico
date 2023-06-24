@@ -24,5 +24,5 @@ from rico._content import (
     Tag,
     Text,
 )
-from rico._html import HTMLParser, indent_html, parse_html, serialize_html, strip_html
+from rico._html import indent_html, parse_html, serialize_html, strip_html
 from rico._version import __version__
