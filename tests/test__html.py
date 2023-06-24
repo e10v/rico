@@ -14,11 +14,9 @@ def elem_to_string(elem: ET.Element | tuple[ET.Element], sep: str = "") -> str:
     return ET.tostring(elem, encoding="unicode", method="html")
 
 
-def test_html_parser_two_elements():
+def test_parse_html_two_elements():
     text = "<p>Hello</p><p>world</p>"
-    parser = rico._html.HTMLParser()
-    parser.feed(text)
-    elements = parser.close()
+    elements = rico._html.parse_html(text)
 
     assert elem_to_string(elements) == text
     assert isinstance(elements, tuple)
@@ -41,11 +39,9 @@ def test_html_parser_two_elements():
     assert len(p1) == 0
 
 
-def test_html_parser_nested_tags():
+def test_parse_html_nested_tags():
     text = "<div><p>Hello <strong>world</strong>!</p></div>"
-    parser = rico._html.HTMLParser()
-    parser.feed(text)
-    elements = parser.close()
+    elements = rico._html.parse_html(text)
 
     assert elem_to_string(elements) == text
     assert isinstance(elements, tuple)
@@ -76,12 +72,10 @@ def test_html_parser_nested_tags():
     assert len(strong) == 0
 
 
-def test_html_parser_attributes():
+def test_parse_html_attributes():
     script_src = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
     text = f"<script defer src='{script_src}' crossorigin='anonymous'></script>"
-    parser = rico._html.HTMLParser()
-    parser.feed(text)
-    elements = parser.close()
+    elements = rico._html.parse_html(text)
 
     assert isinstance(elements, tuple)
     assert len(elements) == 1
@@ -99,7 +93,7 @@ def test_html_parser_attributes():
     assert len(script) == 0
 
 
-def test_html_parser_svg():
+def test_parse_html_svg():
     text = (
         '<svg xmlns="http://www.w3.org/2000/svg" '
         'xmlns:xlink="http://www.w3.org/1999/xlink" '
@@ -107,9 +101,7 @@ def test_html_parser_svg():
         '<path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>'
         "</svg>"
     )
-    parser = rico._html.HTMLParser()
-    parser.feed(text)
-    elements = parser.close()
+    elements = rico._html.parse_html(text)
 
     assert isinstance(elements, tuple)
     assert len(elements) == 1
@@ -138,23 +130,6 @@ def test_html_parser_svg():
     assert path.text is None
     assert path.tail is None
     assert len(path) == 0
-
-
-def test_parse_html():
-    text = "<p>Hello world</p>"
-    elements = rico._html.parse_html(text)
-
-    assert elem_to_string(elements) == text
-    assert isinstance(elements, tuple)
-    assert len(elements) == 1
-
-    p = elements[0]
-    assert isinstance(p, ET.Element)
-    assert p.tag == "p"
-    assert p.attrib == {}
-    assert p.text == "Hello world"
-    assert p.tail is None
-    assert len(p) == 0
 
 
 @pytest.fixture
