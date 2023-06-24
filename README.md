@@ -55,7 +55,7 @@ pip install rico[pyplot]
 pip install rico[seaborn]
 ```
 
-Install `rico[seaborn]` extra only to use the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` as the old plotting functions return Matplotlib Pyplot Axes objects.
+Install `rico[seaborn]` extra only to use the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` as the old Seaborn plotting functions return Matplotlib Pyplot Axes objects.
 
 All extras:
 ```bash
