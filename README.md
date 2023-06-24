@@ -432,7 +432,7 @@ Use **rico** if you want to create an HTML document from objects created in a Py
 With **rico** you can avoid:
 * Writing data to intermediate files or a database from a script.
 * Loading data into a Jupyter notebook.
-* Using [nbconvert](https://nbconvert.readthedocs.io/) or similar tools.
+* Using nbconvert or similar tools for creating HTML files.
 
 Alternatives:
 * Use [Jupyter Notebook](https://jupyter.org/) for interactive computing.
@@ -449,6 +449,8 @@ More on the topic:
 ## Roadmap
 
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
+* Create short quick start.
+* Create examples with resulting HTML files.
 * Support math with [KaTeX](https://katex.org/).
 * Save Altair Charts in [Vega-Lite](https://vega.github.io/vega-lite/) format.
 * Support diagrams with [Mermaid.js](https://mermaid.js.org/).
