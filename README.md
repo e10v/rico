@@ -318,17 +318,17 @@ with rico.config_context(dataframe_style=""):
 
 Include custom styles and scripts using the `Style` and `Script` classes:
 ```python
-css = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
-js = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
+icons = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
+jquery = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
 
 doc = rico.Doc(
     rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
     extra_styles=(
-        rico.Style(src=css),
+        rico.Style(src=icons),
         rico.Style("i {color: red;}"),
     ),
     extra_scripts=(
-        rico.Script(src=js),
+        rico.Script(src=jquery),
         rico.Script(
             "$('i').on('click', function() {alert('Hello world!');})",
             defer=True,
@@ -344,11 +344,11 @@ By default, external styles and scripts are included as file links. This means t
 doc = rico.Doc(
     rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
     extra_styles=(
-        rico.Style(src=css),
+        rico.Style(src=icons),
         rico.Style("i {color: red;}"),
     ),
     extra_scripts=(
-        rico.Script(src=js),
+        rico.Script(src=jquery),
         rico.Script(
             "$('i').on('click', function() {alert('Hello world!');})",
             defer=True,
@@ -363,11 +363,11 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
     doc = rico.Doc(
         rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
         extra_styles=(
-            rico.Style(src=css),
+            rico.Style(src=icons),
             rico.Style("i {color: red;}"),
         ),
         extra_scripts=(
-            rico.Script(src=js),
+            rico.Script(src=jquery),
             rico.Script(
                 "$('i').on('click', function() {alert('Hello world!');})",
                 defer=True,
