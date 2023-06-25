@@ -344,11 +344,11 @@ By default, external styles and scripts are included as file links. This means t
 doc = rico.Doc(
     rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
     extra_styles=(
-        rico.Style(src=icons),
+        rico.Style(src=icons, inline=True),
         rico.Style("i {color: red;}"),
     ),
     extra_scripts=(
-        rico.Script(src=jquery),
+        rico.Script(src=jquery, inline=True),
         rico.Script(
             "$('i').on('click', function() {alert('Hello world!');})",
             defer=True,
