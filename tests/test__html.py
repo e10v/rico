@@ -165,14 +165,12 @@ def sample_elem():
 def test_indent_html_default(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
-          <p> Hello <strong> world </strong> ! </p>
-          <div class="&gt;&amp;&quot;">
-            <code> should be indented </code>
-          </div>
+          <p>Hello <strong> world </strong> !</p>
+          <div class="&gt;&amp;&quot;"><code> should be indented </code></div>
           <pre>
         <code> should not be indented </code>
         </pre>
-          <p> Hello &gt;&amp;&lt; <br> world again </p>
+          <p>Hello &gt;&amp;&lt; <br> world again</p>
         </div>""")
 
     assert elem_to_string(rico._html.indent_html(sample_elem)) == expectation
@@ -181,14 +179,12 @@ def test_indent_html_default(sample_elem: ET.Element):
 def test_indent_html_custom_space(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
-            <p> Hello <strong> world </strong> ! </p>
-            <div class="&gt;&amp;&quot;">
-                <code> should be indented </code>
-            </div>
+            <p>Hello <strong> world </strong> !</p>
+            <div class="&gt;&amp;&quot;"><code> should be indented </code></div>
             <pre>
         <code> should not be indented </code>
         </pre>
-            <p> Hello &gt;&amp;&lt; <br> world again </p>
+            <p>Hello &gt;&amp;&lt; <br> world again</p>
         </div>""")
 
     assert elem_to_string(
@@ -230,14 +226,12 @@ def test_serialize_html_default(sample_elem: ET.Element):
 def test_serialize_html_indent(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
-            <p> Hello <strong> world </strong> ! </p>
-            <div class="&gt;&amp;&quot;">
-                <code> should be indented </code>
-            </div>
+            <p>Hello <strong> world </strong> !</p>
+            <div class="&gt;&amp;&quot;"><code> should be indented </code></div>
             <pre>
         <code> should not be indented </code>
         </pre>
-            <p> Hello &gt;&amp;&lt; <br> world again </p>
+            <p>Hello &gt;&amp;&lt; <br> world again</p>
         </div>""")
 
     assert rico._html.serialize_html(

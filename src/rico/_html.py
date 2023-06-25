@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html.parser
+import textwrap
 import xml.etree.ElementTree as ET
 
 import rico._config
@@ -87,26 +88,51 @@ def indent_html(
     Returns:
         Indented HTML element.
     """
-    if element.tag.lower() in TAGS_PREFORMATTED or not len(element):
+    if element.tag.lower() in TAGS_PREFORMATTED | TAGS_INLINE:
         return element
 
     indented_element = ET.Element(element.tag, attrib=element.attrib)
     indented_element.text = element.text
     indented_element.tail = element.tail
 
-    if not element.text or not element.text.strip():
-        indented_element.text = "\n" + space * (level + 1)
-
+    has_children = False
     for child in element:
+        has_children |= child.tag.lower() not in TAGS_INLINE
         indented_child = indent_html(child, space=space, level=level + 1)
-
-        if not indented_child.tail or not indented_child.tail.strip():
-            indented_child.tail = "\n" + space * (level + 1)
-
+        if indented_child.tail is None:
+            indented_child.tail = ""
+        if indented_child.tag.lower() not in TAGS_INLINE:
+            indented_child.tail = indented_child.tail.lstrip()
+        indented_child.tail += "\n" + space * (level + 1)
         indented_element.append(indented_child)
 
-    if not indented_child.tail or not indented_child.tail.strip():  # type: ignore
-        indented_child.tail = "\n" + space * level  # type: ignore
+    if indented_element.text:
+        indented_element.text = textwrap.dedent(indented_element.text)
+        if len(element) > 0 and element[0].tag.lower() in TAGS_INLINE:
+            indented_element.text = indented_element.text.lstrip()
+        else:
+            indented_element.text = indented_element.text.strip()
+
+    if indented_element.text and (has_children or "\n" in indented_element.text):
+        indented_element.text = textwrap.indent(
+            indented_element.text,
+            space * (level + 1),
+        )
+        indented_element.text = "\n" + indented_element.text + "\n" + space * level
+        if has_children:
+            indented_element.text += space
+    elif has_children:
+        indented_element.text = "\n" + space * (level + 1)
+
+    if len(indented_element) > 0:
+        last_child = indented_element[-1]
+        if last_child.tail:
+            last_child.tail = last_child.tail.rstrip()
+        if indented_element.text and "\n" in indented_element.text:
+            if last_child.tail:
+                last_child.tail += "\n" + space * level
+            else:
+                last_child.tail = "\n" + space * level
 
     return indented_element
 
