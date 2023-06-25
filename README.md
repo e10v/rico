@@ -116,7 +116,7 @@ with open("doc.html", "w") as f:
     print(doc, file=f)
 ```
 
-Internally, `str(doc)` calls `doc.serialize()` with default parameter values. Call `doc.serialize()` to indent the HTML element tree visually:
+Internally, `str(doc)` calls `doc.serialize()` with default parameter values. Call `doc.serialize(indent=True)` to indent the HTML element tree visually:
 ```python
 with open("doc.html", "w") as f:
     f.write(doc.serialize(indent=True))
@@ -163,7 +163,7 @@ doc = rico.Doc(
 )
 ```
 
-Or:
+The following code gives the same result as the code above:
 ```python
 doc = rico.Doc(title="My doc")
 doc.append_text("Hello world!", mono=True)
@@ -184,7 +184,7 @@ Use specific classes and methods for other content types:
 * HTML tag: `Tag` or `Doc.append_tag`.
 * Raw HTML: `HTML` or `Doc.append_html`.
 
-Example:
+For example:
 ```python
 doc = rico.Doc(
     rico.Markdown("## Dataframe"),
@@ -197,7 +197,7 @@ doc = rico.Doc(
 )
 ```
 
-Or:
+The following code gives the same result as the code above:
 ```python
 doc = rico.Doc(title="My doc")
 doc.append_markdown("## Dataframe")
@@ -210,7 +210,7 @@ doc.append_code("print('Hello world!')")
 
 Check the docstrings for details.
 
-Serialize content to HTML using `str()` or `object.serialize()`:
+Serialize content to HTML using `str(object)` or `object.serialize()`:
 ```python
 obj = rico.Tag("p", "Hello world!")
 
@@ -276,7 +276,7 @@ doc = rico.Doc(
 )
 ```
 
-Or:
+The following code gives the same result as the code above:
 ```python
 doc = rico.Doc(title="My doc")
 doc.append_tag("h1", "My doc")
@@ -322,29 +322,37 @@ css = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
 js = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
 
 doc = rico.Doc(
-    "Hello world",
+    rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
     extra_styles=(
-        rico.Style("p {color: red;}"),
         rico.Style(src=css),
+        rico.Style("i {color: red;}"),
     ),
     extra_scripts=(
-        rico.Script("alert('Hello World!');"),
         rico.Script(src=js),
+        rico.Script(
+            "$('i').on('click', function() {alert('Hello world!');})",
+            defer=True,
+        ),
     ),
 )
 ```
 
+The `defer` parameter adds the `defer` attribute to the `<script>` tag if the `src` parameter is used. Otherwise, if the `text` parameter is used, the script is placed in the footer of the document.
+
 By default, external styles and scripts are included as file links. This means that these files must be available when someone opens the document. Include the contents of these files in the document using the `inline` parameter:
 ```python
 doc = rico.Doc(
-    "Hello world",
+    rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
     extra_styles=(
-        rico.Style("p {color: red;}"),
-        rico.Style(src=css, inline=True),
+        rico.Style(src=css),
+        rico.Style("i {color: red;}"),
     ),
     extra_scripts=(
-        rico.Script("alert('Hello World!');"),
-        rico.Script(src=js, inline=True),
+        rico.Script(src=js),
+        rico.Script(
+            "$('i').on('click', function() {alert('Hello world!');})",
+            defer=True,
+        ),
     ),
 )
 ```
@@ -353,14 +361,17 @@ In the example above, the Bootstrap styles are still included as a link. Use the
 ```python
 with rico.config_context(inline_styles=True, inline_scripts=True):
     doc = rico.Doc(
-        "Hello world",
+        rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
         extra_styles=(
-            rico.Style("p {color: red;}"),
             rico.Style(src=css),
+            rico.Style("i {color: red;}"),
         ),
         extra_scripts=(
-            rico.Script("alert('Hello World!');"),
             rico.Script(src=js),
+            rico.Script(
+                "$('i').on('click', function() {alert('Hello world!');})",
+                defer=True,
+            ),
         ),
     )
 ```
@@ -371,7 +382,7 @@ Use global configuration to:
 * Get or set default parameter values.
 * Get or set document properties.
 
-The following globals options define the default parameter values:
+The following global options define the default parameter values:
 
 | Global option    | Parameter | Classes, methods, functions       |
 |:-----------------|:----------|:----------------------------------|
@@ -384,7 +395,7 @@ The following globals options define the default parameter values:
 | `inline_styles`  | `inline`  | `Style`                           |
 | `inline_scripts` | `inline`  | `Script`                          |
 
-The following globals options define document properties:
+The following global options define document properties:
 * `meta_charset` defines a document [charset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset) metadata. Set it to `""` to disable.
 * `meta_viewport` defines a document [viewport](https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag) metadata. Set it to `""` to disable.
 * `bootstrap_css` defines a link to the Bootstrap CSS file.
@@ -430,7 +441,7 @@ Internally, **rico** uses the standard [xml.etree.ElementTree](https://docs.pyth
 
 Access these attributes and use `xml.etree.ElementTree` API to gain low-level control over the document and its elements.
 
-Also **rico** provides the following functions for working with `xml.etree.ElementTree.Element` objects:
+Also, **rico** provides the following functions for working with `xml.etree.ElementTree.Element` objects:
 * `parse_html` parses HTML from a string.
 * `indent_html` indents an HTML element tree visually.
 * `strip_html` removes unnecessary whitespace.
