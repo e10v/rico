@@ -69,14 +69,6 @@ def parse_html(data: str) -> tuple[ET.Element]:
     return parser.close()
 
 
-def _indent_text(text: str | None, prefix: str) -> str:
-    new_text = text.strip() if text else ""
-    if new_text:
-        new_text = "\n" + textwrap.indent(textwrap.dedent(new_text), prefix)
-    if not new_text or new_text[-1] != "\n":
-        new_text += "\n"
-    return new_text
-
 def indent_html(
     element: ET.Element,
     space: str = "  ",
@@ -100,32 +92,41 @@ def indent_html(
     indented_element.text = element.text
     indented_element.tail = element.tail
 
-    if element.tag.lower() in TAGS_PREFORMATTED:
+    if element.tag.lower() in TAGS_PREFORMATTED | TAGS_INLINE:
         for child in element:
             indented_element.append(child)
     else:
-        if indented_element.text:
-            indented_element.text = indented_element.text.strip()
-
         has_children = len(element) > 0
-        if has_children or (indented_element.text and "\n" in indented_element.text):
-            indented_element.text = _indent_text(
-                indented_element.text,
-                space * (level + 1),
-            )
-            indented_element.text += space * level
-            if has_children:
-                indented_element.text += space
+        left_stripped_text = (
+            indented_element.text.lstrip()
+            if indented_element.text else
+            indented_element.text
+        )
+        if (
+            not has_children and
+            indented_element.text is not None and
+            left_stripped_text
+        ):
+            if "\n" in left_stripped_text:
+                indented_element.text = "\n" + textwrap.indent(
+                    textwrap.dedent(indented_element.text).strip(),
+                    space * (level + 1),
+                ) + "\n" + space * level
+            else:
+                indented_element.text = left_stripped_text
+        elif not left_stripped_text:
+            indented_element.text = "\n" + space * (level + 1) if has_children else None
 
-        recent_child = None
         for child in element:
-            if recent_child is not None:
-                recent_child.tail += space  # type: ignore
             indented_child = indent_html(child, space=space, level=level + 1)
             indented_element.append(indented_child)
-            indented_child.tail = _indent_text(indented_child.tail, space * (level + 1))
-            indented_child.tail += space * level
-            recent_child = indented_child
+            if not indented_child.tail or not indented_child.tail.strip():
+                indented_child.tail = "\n" + space * (level + 1)
+
+        if has_children:
+            last_child = indented_element[-1]
+            if not last_child.tail or not last_child.tail.strip():
+                last_child.tail = "\n" + space * level
 
     return indented_element
 
