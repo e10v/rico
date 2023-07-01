@@ -228,8 +228,9 @@ def serialize_html(
         if not isinstance(v, bool) or v
     )
 
-    opening_tag = f"<{element.tag}{attrib}>"
     ltag = element.tag.lower()
+    closing_slash = "/" if ltag in TAGS_EMPTY else ""
+    opening_tag = f"<{element.tag}{attrib}{closing_slash}>"
 
     if element.text is not None:
         text = element.text if ltag in TAGS_NOT_ESCAPED else _escape_cdata(element.text)
