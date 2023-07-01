@@ -213,15 +213,16 @@ def test_strip_html(sample_elem: ET.Element):
     p.text = " Hello world again again "
     sample_elem.append(p)
 
-    expectation = (
-        '<div class="container">'
-        '<style>strong {color: red;}\ncode {color: blue;}</style>'
-        '<p>Hello <strong> world </strong> !</p>'
-        '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
-        "<code> should not be indented </code>\n"
-        "</pre><p>Hello &gt;&amp;&lt; <br>world again</p>"
-        "<p>Hello world again again</p></div>"
-    )
+    expectation = textwrap.dedent("""\
+        <div class="container"><style>strong {color: red;}
+        code {color: blue;}</style><p>Hello <strong> world </strong> ! </p>
+        <div class="&gt;&amp;&quot;"><code> should be indented </code>
+        </div>
+        <pre>
+        <code> should not be indented </code>
+        </pre>
+        <p>Hello &gt;&amp;&lt; <br> world again </p>
+        <p>Hello world again again</p></div>""")
 
     assert elem_to_string(rico._html.strip_html(sample_elem)) == expectation
 
@@ -266,14 +267,16 @@ def test_serialize_html_indent(sample_elem: ET.Element):
 
 
 def test_serialize_html_strip(sample_elem: ET.Element):
-    expectation = (
-        '<div class="container">'
-        '<style>strong {color: red;}\ncode {color: blue;}</style>'
-        '<p>Hello <strong> world </strong> !</p>'
-        '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
-        "<code> should not be indented </code>\n"
-        "</pre><p>Hello &gt;&amp;&lt; <br>world again</p></div>"
-    )
+    expectation = textwrap.dedent("""\
+        <div class="container"><style>strong {color: red;}
+        code {color: blue;}</style><p>Hello <strong> world </strong> ! </p>
+        <div class="&gt;&amp;&quot;"><code> should be indented </code>
+        </div>
+        <pre>
+        <code> should not be indented </code>
+        </pre>
+        <p>Hello &gt;&amp;&lt; <br> world again </p>
+        </div>""")
 
     assert rico._html.serialize_html(sample_elem, strip=True) == expectation
 

@@ -78,7 +78,7 @@ def indent_html(
 
     Tnserts newlines and indentation space after elements.
     Creates a new element instead of updating in place.
-    Doesn't indent elements inside the <pre> tag.
+    Doesn't indent elements inside the <pre> tag or inside inline tags.
 
     Args:
         element: The element to indent.
@@ -134,7 +134,7 @@ def indent_html(
 def strip_html(element: ET.Element) -> ET.Element:
     """Remove unnecessary whitespace from an HTML element and its children.
 
-    Removes leading and trailing whitespace from elements' text and tail.
+    Removes leading whitespace from elements' text.
     Doesn't strip elements inside the <pre> tag or inside inline tags.
 
     Args:
@@ -151,23 +151,18 @@ def strip_html(element: ET.Element) -> ET.Element:
         for child in element:
             stripped_element.append(child)
     else:
+        stripped_element.text = (
+            stripped_element.text.lstrip()
+            if stripped_element.text else
+            stripped_element.text
+        )
+
+        has_children = len(element) > 0
+        if stripped_element.text and not has_children:
+            stripped_element.text = stripped_element.text.rstrip()
+
         for child in element:
             stripped_element.append(strip_html(child))
-
-        if stripped_element.text:
-            if len(stripped_element) == 0 and (
-                not stripped_element.tail or
-                not stripped_element.tail.strip()
-            ):
-                stripped_element.text = stripped_element.text.strip()
-            else:
-                stripped_element.text = stripped_element.text.lstrip()
-
-    if stripped_element.tail:
-        if len(stripped_element) == 0 and not stripped_element.text:
-            stripped_element.tail = stripped_element.tail.strip()
-        else:
-            stripped_element.tail = stripped_element.tail.rstrip()
 
     return stripped_element
 
