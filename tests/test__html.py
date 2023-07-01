@@ -136,6 +136,11 @@ def test_parse_html_svg():
 def sample_elem():
     div0 = ET.Element("div", {"class": "container"})
     div0.text = "\n"
+    style = ET.SubElement(div0, "style")
+    style.text = textwrap.dedent("""\
+        strong {color: red;}
+        code {color: blue;}
+    """)
     p0 = ET.SubElement(div0, "p")
     p0.text = " Hello "
     p0.tail = "\n"
@@ -165,6 +170,10 @@ def sample_elem():
 def test_indent_html_default(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
+          <style>
+            strong {color: red;}
+            code {color: blue;}
+          </style>
           <p> Hello <strong> world </strong> ! </p>
           <div class="&gt;&amp;&quot;">
             <code> should be indented </code>
@@ -181,6 +190,10 @@ def test_indent_html_default(sample_elem: ET.Element):
 def test_indent_html_custom_space(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
+            <style>
+                strong {color: red;}
+                code {color: blue;}
+            </style>
             <p> Hello <strong> world </strong> ! </p>
             <div class="&gt;&amp;&quot;">
                 <code> should be indented </code>
@@ -201,7 +214,9 @@ def test_strip_html(sample_elem: ET.Element):
     sample_elem.append(p)
 
     expectation = (
-        '<div class="container"><p>Hello <strong> world </strong> !</p>'
+        '<div class="container">'
+        '<style>strong {color: red;}\ncode {color: blue;}</style>'
+        '<p>Hello <strong> world </strong> !</p>'
         '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
         "<code> should not be indented </code>\n"
         "</pre><p>Hello &gt;&amp;&lt; <br>world again</p>"
@@ -214,7 +229,9 @@ def test_strip_html(sample_elem: ET.Element):
 def test_serialize_html_default(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
-        <p> Hello <strong> world </strong> ! </p>
+        <style>strong {color: red;}
+        code {color: blue;}
+        </style><p> Hello <strong> world </strong> ! </p>
         <div class="&gt;&amp;&quot;">
         <code> should be indented </code>
         </div>
@@ -230,6 +247,10 @@ def test_serialize_html_default(sample_elem: ET.Element):
 def test_serialize_html_indent(sample_elem: ET.Element):
     expectation = textwrap.dedent("""\
         <div class="container">
+            <style>
+                strong {color: red;}
+                code {color: blue;}
+            </style>
             <p> Hello <strong> world </strong> ! </p>
             <div class="&gt;&amp;&quot;">
                 <code> should be indented </code>
@@ -246,7 +267,9 @@ def test_serialize_html_indent(sample_elem: ET.Element):
 
 def test_serialize_html_strip(sample_elem: ET.Element):
     expectation = (
-        '<div class="container"><p>Hello <strong> world </strong> !</p>'
+        '<div class="container">'
+        '<style>strong {color: red;}\ncode {color: blue;}</style>'
+        '<p>Hello <strong> world </strong> !</p>'
         '<div class="&gt;&amp;&quot;"><code> should be indented </code></div><pre>\n'
         "<code> should not be indented </code>\n"
         "</pre><p>Hello &gt;&amp;&lt; <br>world again</p></div>"
@@ -259,7 +282,9 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
     sample_elem.set("autofocus", None)  # type: ignore
     expectation = textwrap.dedent("""\
         <div class="container" autofocus>
-        <p> Hello <strong> world </strong> ! </p>
+        <style>strong {color: red;}
+        code {color: blue;}
+        </style><p> Hello <strong> world </strong> ! </p>
         <div class="&gt;&amp;&quot;">
         <code> should be indented </code>
         </div>
@@ -276,7 +301,9 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
     sample_elem.set("autofocus", False)  # type: ignore
     expectation = textwrap.dedent("""\
         <div class="container">
-        <p> Hello <strong> world </strong> ! </p>
+        <style>strong {color: red;}
+        code {color: blue;}
+        </style><p> Hello <strong> world </strong> ! </p>
         <div class="&gt;&amp;&quot;">
         <code> should be indented </code>
         </div>
