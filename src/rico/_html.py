@@ -30,18 +30,29 @@ class _HTMLParser(html.parser.HTMLParser):
         self._root = "root"
         self._builder = ET.TreeBuilder()
         self._builder.start(self._root, {})
+        self._empty_tag = None
 
     def handle_starttag(
         self,
         tag: str,
         attrs: list[tuple[str, str | None]],
     ) -> None:
+        if self._empty_tag:
+            self._builder.end(self._empty_tag)
+        self._empty_tag = tag if tag.lower() in TAGS_EMPTY else None
         self._builder.start(tag, dict(attrs))
 
     def handle_endtag(self, tag: str) -> None:
+        if self._empty_tag:
+            if self._empty_tag.lower() != tag.lower():
+                self._builder.end(self._empty_tag)
+            self._empty_tag = None
         self._builder.end(tag)
 
     def handle_data(self, data: str) -> None:
+        if self._empty_tag:
+            self._builder.end(self._empty_tag)
+            self._empty_tag = None
         self._builder.data(data)
 
     def close(self) -> tuple[ET.Element]:  # type: ignore
