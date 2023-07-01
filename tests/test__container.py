@@ -344,7 +344,7 @@ def test_doc_serialize():
         doc = rico._container.Doc("Hello world", bootstrap="none")
 
     assert doc.serialize() == (
-        '<!doctype html>\n<html><head><meta charset="utf-8">'
-        '<meta name="viewport" content="width=device-width, initial-scale=1"></head>'
+        '<!doctype html>\n<html><head><meta charset="utf-8"/>'
+        '<meta name="viewport" content="width=device-width, initial-scale=1"/></head>'
         '<body><div class="container"><div><p>Hello world</p></div></div></body></html>'
     )

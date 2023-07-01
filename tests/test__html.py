@@ -239,7 +239,7 @@ def test_serialize_html_default(sample_elem: ET.Element):
         <pre>
         <code> should not be indented </code>
         </pre>
-        <p> Hello &gt;&amp;&lt; <br> world again </p>
+        <p> Hello &gt;&amp;&lt; <br/> world again </p>
         </div>""")
 
     assert rico._html.serialize_html(sample_elem) == expectation
@@ -259,7 +259,7 @@ def test_serialize_html_indent(sample_elem: ET.Element):
             <pre>
         <code> should not be indented </code>
         </pre>
-            <p> Hello &gt;&amp;&lt; <br> world again </p>
+            <p> Hello &gt;&amp;&lt; <br/> world again </p>
         </div>""")
 
     assert rico._html.serialize_html(
@@ -275,7 +275,7 @@ def test_serialize_html_strip(sample_elem: ET.Element):
         <pre>
         <code> should not be indented </code>
         </pre>
-        <p>Hello &gt;&amp;&lt; <br> world again </p>
+        <p>Hello &gt;&amp;&lt; <br/> world again </p>
         </div>""")
 
     assert rico._html.serialize_html(sample_elem, strip=True) == expectation
@@ -294,7 +294,7 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
         <pre>
         <code> should not be indented </code>
         </pre>
-        <p> Hello &gt;&amp;&lt; <br> world again </p>
+        <p> Hello &gt;&amp;&lt; <br/> world again </p>
         </div>""")
 
     assert rico._html.serialize_html(sample_elem) == expectation
@@ -313,7 +313,7 @@ def test_serialize_html_bool_attr(sample_elem: ET.Element):
         <pre>
         <code> should not be indented </code>
         </pre>
-        <p> Hello &gt;&amp;&lt; <br> world again </p>
+        <p> Hello &gt;&amp;&lt; <br/> world again </p>
         </div>""")
     assert rico._html.serialize_html(sample_elem) == expectation
 
