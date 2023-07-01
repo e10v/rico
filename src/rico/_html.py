@@ -43,11 +43,16 @@ class _HTMLParser(html.parser.HTMLParser):
         self._builder.start(tag, dict(attrs))
 
     def handle_endtag(self, tag: str) -> None:
-        self._builder.end(tag)
         if self._empty_tag:
+            if self._empty_tag.lower() != tag.lower():
+                self._builder.end(self._empty_tag)
             self._empty_tag = None
+        self._builder.end(tag)
 
     def handle_data(self, data: str) -> None:
+        if self._empty_tag:
+            self._builder.end(self._empty_tag)
+            self._empty_tag = None
         self._builder.data(data)
 
     def close(self) -> tuple[ET.Element]:  # type: ignore

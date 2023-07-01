@@ -132,6 +132,47 @@ def test_parse_html_svg():
     assert len(path) == 0
 
 
+def test_parse_html_empty_tag():
+    text = "<p>Hello<br><br>world<br></p>"
+    elements = rico._html.parse_html(text)
+
+    assert elem_to_string(elements) == text
+    assert isinstance(elements, tuple)
+    assert len(elements) == 1
+
+    p = elements[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "Hello"
+    assert p.tail is None
+    assert len(p) == 3
+
+    br0 = p[0]
+    assert isinstance(br0, ET.Element)
+    assert br0.tag == "br"
+    assert br0.attrib == {}
+    assert br0.text is None
+    assert br0.tail is None
+    assert len(br0) == 0
+
+    br1 = p[1]
+    assert isinstance(br1, ET.Element)
+    assert br1.tag == "br"
+    assert br1.attrib == {}
+    assert br1.text is None
+    assert br1.tail == "world"
+    assert len(br1) == 0
+
+    br2 = p[2]
+    assert isinstance(br2, ET.Element)
+    assert br2.tag == "br"
+    assert br2.attrib == {}
+    assert br2.text is None
+    assert br2.tail is None
+    assert len(br2) == 0
+
+
 @pytest.fixture
 def sample_elem():
     div0 = ET.Element("div", {"class": "container"})
