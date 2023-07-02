@@ -462,7 +462,15 @@ def test_obj():
     assert isinstance(img, ET.Element)
     assert img.tag == "img"
 
-    p1 = tuple(div0)[3]
+    div1 = tuple(div0)[3]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    p1 = tuple(div1)[0]
     assert isinstance(p1, ET.Element)
     assert p1.tag == "p"
     assert p1.attrib == {}
