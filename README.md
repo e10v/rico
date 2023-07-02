@@ -12,8 +12,6 @@ With **rico** you can *avoid*:
 More on the topic:
 * [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
 * [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
-* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
-* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
 
 [![CI](https://github.com/e10v/rico/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/e10v/rico/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/github/e10v/rico/coverage.svg?branch=main)](https://codecov.io/gh/e10v/rico)
@@ -318,19 +316,19 @@ with rico.config_context(dataframe_style=""):
 
 Include custom styles and scripts using the `Style` and `Script` classes:
 ```python
-icons = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css"
+dark_theme = "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/darkly/bootstrap.min.css"
 jquery = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
 
 doc = rico.Doc(
-    rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
+    rico.Text("Click me", class_="click"),
     extra_styles=(
-        rico.Style(src=icons),
-        rico.Style("i {color: red;}"),
+        rico.Style(src=dark_theme),
+        rico.Style(".click {color: red;}"),
     ),
     extra_scripts=(
         rico.Script(src=jquery),
         rico.Script(
-            "$('i').on('click', function() {alert('Hello world!');})",
+            "$('p').on('click', function() {alert('Hello world!');})",
             defer=True,
         ),
     ),
@@ -342,15 +340,15 @@ The `defer` parameter adds the `defer` attribute to the `<script>` tag if the `s
 By default, external styles and scripts are included as file links. This means that these files must be available when someone opens the document. Include the contents of these files in the document using the `inline` parameter:
 ```python
 doc = rico.Doc(
-    rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
+    rico.Text("Click me", class_="click"),
     extra_styles=(
-        rico.Style(src=icons, inline=True),
-        rico.Style("i {color: red;}"),
+        rico.Style(src=dark_theme, inline=True),
+        rico.Style(".click {color: red;}"),
     ),
     extra_scripts=(
         rico.Script(src=jquery, inline=True),
         rico.Script(
-            "$('i').on('click', function() {alert('Hello world!');})",
+            "$('p').on('click', function() {alert('Hello world!');})",
             defer=True,
         ),
     ),
@@ -361,15 +359,15 @@ In the example above, the Bootstrap styles are still included as a link. Use the
 ```python
 with rico.config_context(inline_styles=True, inline_scripts=True):
     doc = rico.Doc(
-        rico.Tag("i", attrib={"class": "bi bi-emoji-smile"}),
+        rico.Text("Click me", class_="click"),
         extra_styles=(
-            rico.Style(src=icons),
-            rico.Style("i {color: red;}"),
+            rico.Style(src=dark_theme),
+            rico.Style(".click {color: red;}"),
         ),
         extra_scripts=(
             rico.Script(src=jquery),
             rico.Script(
-                "$('i').on('click', function() {alert('Hello world!');})",
+                "$('p').on('click', function() {alert('Hello world!');})",
                 defer=True,
             ),
         ),
@@ -456,12 +454,14 @@ Check the docstrings for details.
 * Use [Quarto](https://quarto.org/) if you prefer R Markdown style notebooks and a variety of output formats.
 * Use [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html), [lxml](https://lxml.de/), [Yattag](https://www.yattag.org/), or [Airium](https://gitlab.com/kamichal/airium) if you need low-level control.
 
+More on the topic:
+* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
+* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
+
 ## Roadmap
 
+* Support most of IPython rich representation [methods](https://ipython.readthedocs.io/en/stable/config/integrating.html#rich-display).
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 * Create short quick start.
 * Create examples with resulting HTML files.
 * Support math with [KaTeX](https://katex.org/).
-* Save Altair Charts in [Vega-Lite](https://vega.github.io/vega-lite/) format.
-* Support diagrams with [Mermaid.js](https://mermaid.js.org/).
-* Support other plot types: [Plotly](https://plotly.com/python/), [Bokeh](https://bokeh.org/).
