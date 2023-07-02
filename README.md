@@ -316,7 +316,7 @@ with rico.config_context(dataframe_style=""):
 
 Include custom styles and scripts using the `Style` and `Script` classes:
 ```python
-dark_theme = "https://cdn.jsdelivr.net/npm/bootswatch@5.3.0/dist/darkly/bootstrap.min.css"
+dark_theme = "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/darkly/bootstrap.min.css"
 jquery = "https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"
 
 doc = rico.Doc(
