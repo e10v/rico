@@ -51,8 +51,7 @@ build-backend = "pdm.backend"
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 lint = ["ruff", "pyright"]
-test = ["pytest", "coverage[toml]"]
-md = ["markdown-it-py", "markdown"]
+test = ["pytest", "coverage[toml]", "markdown-it-py", "markdown"]
 
 [tool.pdm.scripts]
 test = "coverage run -m pytest"

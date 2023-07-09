@@ -303,8 +303,8 @@ summary = "Convert Vega-Lite chart specifications to SVG, PNG, or Vega"
 [metadata]
 lock_version = "4.2"
 cross_platform = true
-groups = ["default", "altair", "complete", "lint", "markdown", "md", "pyplot", "seaborn", "test"]
-content_hash = "sha256:3e5436e4c9fab8b8c47d516eab3c8a16c508629484cf54e2f513a52e98d96fb1"
+groups = ["default", "altair", "complete", "lint", "markdown", "pyplot", "seaborn", "test"]
+content_hash = "sha256:b3750faa9233eec925a90b5cea9ab70f066b6d3c955dce62170268042383ad59"
 
 [metadata.files]
 "altair 5.0.1" = [
