@@ -29,18 +29,12 @@ pip install rico
 
 The core functionality has no dependencies other than the standard Python packages. Optional additional dependencies are required to support the following content types:
 * Plots. Altair, Matplotlib Pyplot and Seaborn are currently supported.
-* Markdown.
 
 Install one or several extras to use plots or Markdown in HTML documents.
 
 [Altair](https://altair-viz.github.io/):
 ```bash
 pip install rico[altair]
-```
-
-[Markdown](https://python-markdown.github.io/):
-```bash
-pip install rico[markdown]
 ```
 
 [Matplotlib Pyplot](https://matplotlib.org/):
@@ -59,6 +53,10 @@ All extras:
 ```bash
 pip install rico[complete]
 ```
+
+### Deprecated
+
+There is also the `rico[markdown]` extra. But it's no longer needed and will be removed in version 0.4.0.
 
 ## User guide
 
@@ -379,6 +377,7 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
 Use global configuration to:
 * Get or set default parameter values.
 * Get or set document properties.
+* Get or set a markdown renderer method.
 
 The following global options define the default parameter values:
 
@@ -399,6 +398,11 @@ The following global options define document properties:
 * `bootstrap_css` defines a link to the Bootstrap CSS file.
 * `bootstrap_js` defines a link to the Bootstrap JS file.
 * `dataframe_style` defines a dataframe style. Set it to `""` to disable.
+
+The `markdown_renderer` global option defines a callable that converts Markdown to HTML. It should accept a Markdown string as the first argument and return HTML as a string. The default value is defined as follows:
+* If the `markdown_it` module can be imported, then the default value is `markdown_it.MarkdownIt().render`.
+* Otherwise, if the `markdown` module can be imported, then the default value is `markdown.markdown`.
+* Otherwise, the default value is `None`. In this case, calling `rico.Markdown` or `obj.append_markdown` will throw an error.
 
 Get a dictionary with global options using `get_config` without parameters:
 ```python

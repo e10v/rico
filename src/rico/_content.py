@@ -24,11 +24,6 @@ except ImportError:
     alt = None
 
 try:
-    import markdown
-except ImportError:
-    markdown = None
-
-try:
     import matplotlib.pyplot as plt
 except ImportError:
     plt = None
@@ -204,12 +199,13 @@ class Markdown(ContentBase):
             **kwargs: Keyword arguments passed to the `markdown.markdown` function.
 
         Raises:
-            ImportError: The markdown package is not installed.
+            RuntimeError: The markdown renderer is not defined.
         """
-        if markdown is None:
-            raise ImportError("The markdown package is not installed.")
+        md_renderer = rico._config.get_config("markdown_renderer")
+        if md_renderer is None:
+            raise RuntimeError("The markdown renderer is not defined.")
 
-        content = HTML(markdown.markdown(text, **kwargs), class_=class_)
+        content = HTML(md_renderer(text, **kwargs), class_=class_)
         self.container = content.container
 
 

@@ -9,8 +9,19 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
     from typing import Any, Literal
+
+
+try:
+    import markdown_it
+    md_renderer = markdown_it.MarkdownIt().render
+except ImportError:
+    try:
+        import markdown
+        md_renderer = markdown.markdown
+    except ImportError:
+        md_renderer = None
 
 
 BOOTSTRAP_VER = "5"
@@ -59,6 +70,7 @@ _global_config = {
     "indent_space": "  ",
     "inline_scripts": False,
     "inline_styles": False,
+    "markdown_renderer": md_renderer,
     "meta_charset": "utf-8",
     "meta_viewport": "width=device-width, initial-scale=1",
     "strip_html": False,
@@ -91,6 +103,7 @@ def set_config(
     indent_space: str | None = None,
     inline_scripts: bool | None = None,
     inline_styles: bool | None = None,
+    markdown_renderer: Callable[..., str] | None = None,
     meta_charset: str | None = None,
     meta_viewport: str | None = None,
     strip_html: bool | None = None,
@@ -114,6 +127,9 @@ def set_config(
             If True, load script inline, downdload it from source link.
         inline_styles: Default value of the `inline` parameter of the Style class.
             If True, load stylesheet inline, downdload it from source link.
+        markdown_renderer: A callable that converts Markdown to HTML.
+            Should accept a Markdown string as the first argument and
+            return HTML as a string.
         meta_charset: HTML document charset. If empty, then it's not used.
         meta_viewport: HTML document viewport property. If empty, then it's not used.
         strip_html: Default value of the `strip` parameter for serialization methods.
@@ -138,6 +154,7 @@ def config_context(
     indent_space: str | None = None,
     inline_scripts: bool | None = None,
     inline_styles: bool | None = None,
+    markdown_renderer: Callable[..., str] | None = None,
     meta_charset: str | None = None,
     meta_viewport: str | None = None,
     strip_html: bool | None = None,
@@ -161,6 +178,9 @@ def config_context(
             If True, load script inline, downdload it from source link.
         inline_styles: Default value of the `inline` parameter of the Style class.
             If True, load stylesheet inline, downdload it from source link.
+        markdown_renderer: A callable that converts Markdown to HTML.
+            Should accept a Markdown string as the first argument and
+            return HTML as a string.
         meta_charset: HTML document charset. If empty, then it's not used.
         meta_viewport: HTML document viewport property. If empty, then it's not used.
         strip_html: Default value of the `strip` parameter for serialization methods.
