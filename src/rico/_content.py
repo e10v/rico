@@ -199,7 +199,7 @@ class Markdown(ContentBase):
             **kwargs: Keyword arguments passed to the `markdown.markdown` function.
 
         Raises:
-            RuntimeError: The markdown package is not installed.
+            RuntimeError: The markdown renderer is not defined.
         """
         md_renderer = rico._config.get_config("markdown_renderer")
         if md_renderer is None:
