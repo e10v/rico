@@ -1,16 +1,53 @@
 # pyright: reportPrivateUsage=false
 from __future__ import annotations
 
+import importlib
 from typing import TYPE_CHECKING
+import unittest.mock
 
+import markdown
+import markdown_it
 import pytest
 
 import rico._config
 
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
     from typing import Any
+
+
+def assert_fn_eq(fn1: Callable[..., Any], fn2: Callable[..., Any]) -> None:
+    assert fn1.__annotations__ == fn2.__annotations__
+    assert fn1.__code__ == fn2.__code__
+    assert fn1.__defaults__ == fn2.__defaults__
+    assert fn1.__dict__ == fn2.__dict__
+    assert fn1.__doc__ == fn2.__doc__
+    assert fn1.__kwdefaults__ == fn2.__kwdefaults__
+    assert fn1.__module__ == fn2.__module__
+    assert fn1.__name__ == fn2.__name__
+    assert fn1.__qualname__ == fn2.__qualname__
+
+def test_markdown_import():
+    md_renderer = rico._config._global_config["markdown_renderer"]
+    assert callable(md_renderer)
+    assert_fn_eq(md_renderer, markdown_it.MarkdownIt().render)
+
+    with unittest.mock.patch.dict("sys.modules", {"markdown_it": None}):
+        importlib.reload(rico._config)
+        md_renderer = rico._config._global_config["markdown_renderer"]
+        assert callable(md_renderer)
+        assert_fn_eq(md_renderer, markdown.markdown)
+
+    with unittest.mock.patch.dict(
+        "sys.modules",
+        {"markdown_it": None, "markdown": None},
+    ):
+        importlib.reload(rico._config)
+        md_renderer = rico._config._global_config["markdown_renderer"]
+        assert md_renderer is None
+
+    importlib.reload(rico._config)
 
 
 @pytest.fixture

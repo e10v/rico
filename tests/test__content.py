@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import pytest
 import seaborn.objects as so
 
+import rico._config
 import rico._content
 
 
@@ -29,10 +30,6 @@ def test_import_error():
     with unittest.mock.patch.dict("sys.modules", {"vl_convert": None}):
         importlib.reload(rico._content)
         assert rico._content.alt is None
-
-    with unittest.mock.patch.dict("sys.modules", {"markdown": None}):
-        importlib.reload(rico._content)
-        assert rico._content.markdown is None
 
     with unittest.mock.patch.dict("sys.modules", {"matplotlib.pyplot": None}):
         importlib.reload(rico._content)
@@ -293,16 +290,19 @@ def test_markdown():
     assert p.tag == "p"
     assert p.attrib == {}
     assert p.text == "Hello world"
-    assert p.tail is None
     assert len(p) == 0
 
 
-def test_markdown_import_error():
-    with (
-        unittest.mock.patch.object(rico._content, "markdown", None),
-        pytest.raises(ImportError),
+def test_markdown_error():
+    with unittest.mock.patch.dict(
+        "sys.modules",
+        {"markdown_it": None, "markdown": None},
     ):
-        rico._content.Markdown("Hello world")
+        importlib.reload(rico._config)
+        with pytest.raises(RuntimeError):
+            rico._content.Markdown("Hello world")
+
+    importlib.reload(rico._config)
 
 
 svg_data = (
