@@ -16,6 +16,8 @@ import rico._html
 if TYPE_CHECKING:
     from typing import Any, Literal
 
+    _ReprResult = str | bytes | dict[str, str | bytes]
+
 
 try:
     import altair as alt
@@ -299,6 +301,60 @@ class Plot(ContentBase):
 Chart = Plot
 
 
+def _call_repr(
+    obj: Any,
+    repr_name: str,
+    mime_type: str = "text/plain",
+) -> dict[str, str | bytes]:
+    if hasattr(obj, repr_name):
+        repr_fn = getattr(obj, repr_name)
+        if callable(repr_fn):
+            data : _ReprResult | tuple[_ReprResult, _ReprResult] | None = repr_fn()
+            if isinstance(data, tuple):
+                data = data[0]
+            if data is None:
+                return {}
+            if not isinstance(data, dict):
+                return {mime_type: data}
+            return data
+    return {}
+
+def _decode(data: str | bytes) -> str:
+    return data.decode() if isinstance(data, bytes) else data
+
+def _get_repr(obj: Any) -> ET.Element:  # noqa: C901, PLR0911, PLR0912
+    data = _call_repr(obj, "_repr_mimebundle_")
+    if data == {}:
+        data = _call_repr(obj, "_repr_javascript_", "application/javascript")
+    if data == {}:
+        data = _call_repr(obj, "_repr_html_", "text/html")
+    if data == {}:
+        data = _call_repr(obj, "_repr_markdown_", "text/markdown")
+    if data == {}:
+        data = _call_repr(obj, "_repr_svg_", "image/svg+xml")
+    if data == {}:
+        data = _call_repr(obj, "_repr_png_", "image/png")
+    if data == {}:
+        data = _call_repr(obj, "_repr_jpeg_", "image/jpeg")
+
+    if "application/javascript" in data and data["application/javascript"]:
+        return Script(_decode(data["application/javascript"])).container
+    if "text/html" in data and data["text/html"]:
+        return HTML(_decode(data["text/html"])).container
+    if "text/markdown" in data and data["text/markdown"]:
+        return Markdown(_decode(data["text/markdown"])).container
+    if "image/svg+xml" in data and data["image/svg+xml"]:
+        return Image(data["image/svg+xml"], "svg+xml").container
+    if "image/png" in data and data["image/png"]:
+        return Image(data["image/png"], "png").container
+    if "image/jpeg" in data and data["image/jpeg"]:
+        return Image(data["image/jpeg"], "jpeg").container
+    if "image/gif" in data and data["image/gif"]:
+        return Image(data["image/gif"], "gif").container
+    if "text/plain" in data and data["text/plain"]:
+        return Text(data["text/plain"]).container
+    return Text(str(obj)).container
+
 class Obj(ContentBase):
     def __init__(self, *objects: Any, class_: str | None = None):
         """Create HTML elements from objects and wrap them in a <div> container.
@@ -317,23 +373,10 @@ class Obj(ContentBase):
         super().__init__(class_=class_)
         for obj in objects:
             if isinstance(obj, ContentBase):
-                elements = (obj.container,)
-            elif (
-                alt is not None and isinstance(obj, alt.TopLevelMixin) or
-                plt is not None and isinstance(obj, plt.Axes | plt.Figure) or  # type: ignore  # noqa: E501
-                so is not None and isinstance(obj, so.Plot)
-            ):
-                elements = Plot(obj).container
-            elif hasattr(obj, "_repr_html_") and callable(obj._repr_html_):
-                elements = HTML(
-                    obj._repr_html_(),
-                    strip_dataframe_borders=True,
-                ).container
+                self.container.append(obj.container)
             else:
-                elements = Text(obj).container
-
-            for element in elements:
-                self.container.append(element)
+                for element in _get_repr(obj):
+                    self.container.append(element)
 
 
 class Script(ContentBase):
