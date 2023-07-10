@@ -125,8 +125,8 @@ def test_div_append_plot(div_container: rico._container.Div):
 
 
 def test_div_append(div_container: rico._container.Div):
-    div_container.append("Hello world", altair_chart)
-    content = rico._content.Obj("Hello world", altair_chart)
+    div_container.append("Hello world")
+    content = rico._content.Obj("Hello world")
     assert str(div_container) == f"<div>{content}</div>"
 
 
