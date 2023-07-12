@@ -419,66 +419,6 @@ def test_plot_error(module: str, err_plot: Any, plot: Any):
         assert isinstance(div, ET.Element)
 
 
-def test_obj():
-    class ReprHTML:
-        def _repr_html_(self) -> str:
-            return "<h1>Hello</h1>"
-
-    text = rico._content.Text("Hi")
-
-    content = rico._content.Obj(
-        ReprHTML(),
-        "world",
-        pyplot_axes,
-        text,
-        class_="row",
-    )
-
-    div0 = content.container
-    assert isinstance(div0, ET.Element)
-    assert div0.tag == "div"
-    assert div0.attrib == {"class": "row"}
-    assert div0.text is None
-    assert div0.tail is None
-    assert len(div0) == 4
-
-    h1 = tuple(div0)[0]
-    assert isinstance(h1, ET.Element)
-    assert h1.tag == "h1"
-    assert h1.attrib == {}
-    assert h1.text == "Hello"
-    assert h1.tail is None
-    assert len(h1) == 0
-
-    p0 = tuple(div0)[1]
-    assert isinstance(p0, ET.Element)
-    assert p0.tag == "p"
-    assert p0.attrib == {}
-    assert p0.text == "world"
-    assert p0.tail is None
-    assert len(p0) == 0
-
-    img = tuple(div0)[2]
-    assert isinstance(img, ET.Element)
-    assert img.tag == "img"
-
-    div1 = tuple(div0)[3]
-    assert isinstance(div1, ET.Element)
-    assert div1.tag == "div"
-    assert div1.attrib == {}
-    assert div1.text is None
-    assert div1.tail is None
-    assert len(div1) == 1
-
-    p1 = tuple(div1)[0]
-    assert isinstance(p1, ET.Element)
-    assert p1.tag == "p"
-    assert p1.attrib == {}
-    assert p1.text == "Hi"
-    assert p1.tail is None
-    assert len(p1) == 0
-
-
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])
 def test_script_text(defer: bool):
     text = "alert('Hello World!');"
@@ -609,3 +549,381 @@ def test_style_raises():
         rico._content.Style()
     with pytest.raises(ValueError):
         rico._content.Style(src="style.css", text="p {color: red;}")
+
+
+def test_obj_content_base():
+    content = rico._content.Obj(
+        rico._content.ContentBase(class_="col"),
+        class_="row",
+    )
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {"class": "col"}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 0
+
+
+def test_obj_pyplot():
+    content = rico._content.Obj(pyplot_axes, class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    img = tuple(div1)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert len(img) == 0
+
+
+def test_obj_javascript():
+    class Repr:
+        def _repr_javascript_(self) -> str:
+            return "alert('Hello World!');"
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    script = tuple(div0)[0]
+    assert isinstance(script, ET.Element)
+    assert script.tag == "script"
+    assert script.attrib == {}
+    assert script.text == "alert('Hello World!');"
+    assert script.tail is None
+    assert len(script) == 0
+
+
+def test_obj_html():
+    class Repr:
+        def _repr_html_(self) -> str:
+            return "<p>Hello world!</p>"
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    p = tuple(div1)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "Hello world!"
+    assert p.tail is None
+    assert len(p) == 0
+
+
+def test_obj_markdown():
+    class Repr:
+        def _repr_markdown_(self) -> str:
+            return "# Hello world!"
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    h1 = tuple(div1)[0]
+    assert isinstance(h1, ET.Element)
+    assert h1.tag == "h1"
+    assert h1.attrib == {}
+    assert h1.text == "Hello world!"
+    assert len(h1) == 0
+
+
+def test_obj_svg():
+    image = svg_data
+    class Repr:
+        def _repr_svg_(self) -> str:
+            return image
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    encoded_image = base64.b64encode(image.encode()).decode()
+
+    img = tuple(div1)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert img.attrib == {"src": f"data:image/svg+xml;base64,{encoded_image}"}
+    assert img.text is None
+    assert img.tail is None
+    assert len(img) == 0
+
+
+def test_obj_png():
+    image = svg_data.encode()
+    class Repr:
+        def _repr_png_(self) -> bytes:
+            return image
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    encoded_image = base64.b64encode(image).decode()
+
+    img = tuple(div1)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert img.attrib == {"src": f"data:image/png;base64,{encoded_image}"}
+    assert img.text is None
+    assert img.tail is None
+    assert len(img) == 0
+
+
+def test_obj_jpeg():
+    image = svg_data.encode()
+    class Repr:
+        def _repr_jpeg_(self) -> bytes:
+            return image
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    encoded_image = base64.b64encode(image).decode()
+
+    img = tuple(div1)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert img.attrib == {"src": f"data:image/jpeg;base64,{encoded_image}"}
+    assert img.text is None
+    assert img.tail is None
+    assert len(img) == 0
+
+
+def test_obj_gif():
+    image = svg_data.encode()
+    class Repr:
+        def _repr_mimebundle_(self) -> dict[str, Any]:
+            return {"image/gif": image}
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    encoded_image = base64.b64encode(image).decode()
+
+    img = tuple(div1)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert img.attrib == {"src": f"data:image/gif;base64,{encoded_image}"}
+    assert img.text is None
+    assert img.tail is None
+    assert len(img) == 0
+
+
+def test_obj_text():
+    class Repr:
+        def _repr_mimebundle_(self) -> dict[str, Any]:
+            return {"text/plain": "Hello world!"}
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    p = tuple(div1)[0]
+    assert isinstance(p, ET.Element)
+    assert p.tag == "p"
+    assert p.attrib == {}
+    assert p.text == "Hello world!"
+    assert p.tail is None
+    assert len(p) == 0
+
+
+def test_obj_priority():
+    class Repr:
+        def _repr_javascript_(self) -> str:
+            return "alert('Hello World!');"
+
+        def _repr_mimebundle_(self) -> dict[str, Any]:
+            return {
+                "text/plain": "Hello world!",
+                "text/markdown": "# Hello world!",
+            }
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    h1 = tuple(div1)[0]
+    assert isinstance(h1, ET.Element)
+    assert h1.tag == "h1"
+    assert h1.attrib == {}
+    assert h1.text == "Hello world!"
+    assert len(h1) == 0
+
+
+def test_obj_corner_cases():
+    class Repr:
+        def _repr_javascript_(self) -> str | None:
+            return None
+
+        def _repr_markdown_(self) -> tuple[str, Any]:
+            return "# Hello world!", "metadata"
+
+    content = rico._content.Obj(Repr(), class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    h1 = tuple(div1)[0]
+    assert isinstance(h1, ET.Element)
+    assert h1.tag == "h1"
+    assert h1.attrib == {}
+    assert h1.text == "Hello world!"
+    assert len(h1) == 0

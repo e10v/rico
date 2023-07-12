@@ -145,8 +145,8 @@ The default option values are:
 
 **rico** automatically recognizes the following content types:
 * `rico` content classes (subclasses of `rico.ContentBase`).
-* Plots (Altair, Matplotlib Pyplot, Seaborn).
-* Dataframes and other types with `_repr_html_` method.
+* Matplotlib Pyplot Plots.
+* Dataframes and other types with [IPython rich representation methods](https://ipython.readthedocs.io/en/stable/config/integrating.html).
 * Text.
 
 Use specific classes for plots and texts to change the default behavior:
@@ -176,9 +176,11 @@ with rico.config_context(text_mono=True, image_format="png"):
 Use specific classes and methods for other content types:
 * Images: `Image` or `Doc.append_image`.
 * Code: `Code` or `Doc.append_code`.
-* Markdown: `Markdown` or `Doc.append_markdown`.
+* Markdown*: `Markdown` or `Doc.append_markdown`.
 * HTML tag: `Tag` or `Doc.append_tag`.
 * Raw HTML: `HTML` or `Doc.append_html`.
+
+*Install [markdown-it-py](https://github.com/executablebooks/markdown-it-py) or [markdown](https://github.com/Python-Markdown/markdown/), or define a custom Markdown renderer with the `markdown_renderer` global option to use `Markdown` or `Doc.append_markdown`.
 
 For example:
 ```python

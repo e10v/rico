@@ -33,8 +33,7 @@ def _append(
 
     return method
 
-
-class Div(rico._content.ContentBase):
+class Div(rico._content.Obj):
     def __init__(self, *objects: Any, class_: str | None = None):
         """Create a <div> container, create HTML elements and add them to the container.
 
@@ -44,12 +43,7 @@ class Div(rico._content.ContentBase):
             *objects: Objects that are used to create HTML elements.
             class_: The container class attribute.
         """
-        super().__init__(class_=class_)
-        for obj in objects:
-            if isinstance(obj, rico._content.ContentBase):
-                self.container.append(obj.container)
-            else:
-                self.container.append(rico._content.Obj(obj).container)
+        super().__init__(*objects, class_=class_)
 
     append_tag = _append(rico._content.Tag, rico._content.Tag.__init__)
     append_text = _append(rico._content.Text, rico._content.Text.__init__)
