@@ -447,7 +447,7 @@ def _get_repr(obj: Any) -> ET.Element:  # noqa: C901, PLR0911, PLR0912
     if "application/javascript" in data and data["application/javascript"]:
         return Script(_decode(data["application/javascript"])).container
     if "text/html" in data and data["text/html"]:
-        return HTML(_decode(data["text/html"])).container
+        return HTML(_decode(data["text/html"]), strip_dataframe_borders=True).container
     if "text/markdown" in data and data["text/markdown"]:
         return Markdown(_decode(data["text/markdown"])).container
     if "image/svg+xml" in data and data["image/svg+xml"]:
@@ -468,10 +468,12 @@ class Obj(ContentBase):
 
         Automatically determines the content type in the following order:
         1. `rico` content classes (subclasses of `ContentBase`).
-        2. Plots.
-        3. Dataframes and other types with `_repr_html_` method.
-        4. Text.
+        2. Matplotlib Pyplot.
+        3. Dataframes and other types IPython rich replresentation methods.
         All other types are converted to text.
+
+        More about IPython rich representation methods:
+        https://ipython.readthedocs.io/en/stable/config/integrating.html
 
         Args:
             *objects: The objects.
@@ -479,5 +481,10 @@ class Obj(ContentBase):
         """
         super().__init__(class_=class_)
         for obj in objects:
-            self.container.append(
-                obj.container if isinstance(obj, ContentBase) else _get_repr(obj))
+            if isinstance(obj, ContentBase):
+                container = obj.container
+            elif plt is not None and isinstance(obj, plt.Axes | plt.Figure):  # type: ignore  # noqa: E501
+                container = Plot(obj).container
+            else:
+                container = _get_repr(obj)
+            self.container.append(container)

@@ -551,6 +551,54 @@ def test_style_raises():
         rico._content.Style(src="style.css", text="p {color: red;}")
 
 
+def test_obj_content_base():
+    content = rico._content.Obj(
+        rico._content.ContentBase(class_="col"),
+        class_="row",
+    )
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {"class": "col"}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 0
+
+
+def test_obj_pyplot():
+    content = rico._content.Obj(pyplot_axes, class_="row")
+
+    div0 = content.container
+    assert isinstance(div0, ET.Element)
+    assert div0.tag == "div"
+    assert div0.attrib == {"class": "row"}
+    assert div0.text is None
+    assert div0.tail is None
+    assert len(div0) == 1
+
+    div1 = tuple(div0)[0]
+    assert isinstance(div1, ET.Element)
+    assert div1.tag == "div"
+    assert div1.attrib == {}
+    assert div1.text is None
+    assert div1.tail is None
+    assert len(div1) == 1
+
+    img = tuple(div1)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
+    assert len(img) == 0
+
+
 def test_obj_javascript():
     class Repr:
         def _repr_javascript_(self) -> str:
@@ -872,3 +920,10 @@ def test_obj_corner_cases():
     assert div1.text is None
     assert div1.tail is None
     assert len(div1) == 1
+
+    h1 = tuple(div1)[0]
+    assert isinstance(h1, ET.Element)
+    assert h1.tag == "h1"
+    assert h1.attrib == {}
+    assert h1.text == "Hello world!"
+    assert len(h1) == 0
