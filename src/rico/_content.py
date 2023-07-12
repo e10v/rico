@@ -7,6 +7,7 @@ import base64
 import io
 from typing import TYPE_CHECKING
 import urllib.request
+import warnings
 import xml.etree.ElementTree as ET
 
 import rico._config
@@ -251,9 +252,14 @@ class Plot(ContentBase):
         """Create an HTML element from a plot object and wrap it in a <div> container.
 
         The supported plot types are the following:
-        - Altair Chart,
-        - Pyplot Axes and Figure,
-        - Seaborn Plot (seaborn.objects interface).
+        - Matplotlib Pyplot Axes and Figure,
+        - [Deprecated] Altair Chart,
+        - [Deprecated] Seaborn Plot (seaborn.objects interface).
+
+        Deprecated:
+            Support of the Seaborn plots in this class/method is deprecated
+            and will be removed in version 0.4.0.
+            Use the rico.Obj or obj.append indstead.
 
         Args:
             obj: The plot object.
@@ -277,10 +283,24 @@ class Plot(ContentBase):
             obj.savefig(stream, format=format, **kwargs)
             image = stream.getvalue()
         elif so is not None and isinstance(obj, so.Plot):
+            warnings.warn(
+                "Support of the Seaborn plots in this class/method is deprecated "
+                    "and will be removed in version 0.4.0. "
+                    "Use the rico.Obj or obj.append indstead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             stream = io.StringIO() if format == "svg" else io.BytesIO()
             obj.save(stream, format=format, **kwargs)
             image = stream.getvalue()
         elif alt is not None and isinstance(obj, alt.TopLevelMixin):
+            warnings.warn(
+                "Support of the Altair plots in this class/method is deprecated "
+                    "and will be removed in version 0.4.0. "
+                    "Use the rico.Obj or obj.append indstead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             convert = vlc.vegalite_to_svg if format == "svg" else vlc.vegalite_to_png  # type: ignore  # noqa: E501
             image = convert(  # type: ignore
                 obj.to_json(),  # type: ignore

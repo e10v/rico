@@ -22,41 +22,21 @@ More on the topic:
 
 ## Installation
 
-Install the core functionality:
 ```bash
 pip install rico
 ```
 
-The core functionality has no dependencies other than the standard Python packages. Optional additional dependencies are required to support the following content types:
-* Plots. Altair, Matplotlib Pyplot and Seaborn are currently supported.
-
-Install one or several extras to use plots or Markdown in HTML documents.
-
-[Altair](https://altair-viz.github.io/):
-```bash
-pip install rico[altair]
-```
-
-[Matplotlib Pyplot](https://matplotlib.org/):
-```bash
-pip install rico[pyplot]
-```
-
-[Seaborn](https://seaborn.pydata.org/):
-```bash
-pip install rico[seaborn]
-```
-
-Install `rico[seaborn]` extra only to use the [seaborn.objects](https://seaborn.pydata.org/tutorial/objects_interface.html) interface. Otherwise install `rico[pyplot]` as the old Seaborn plotting functions return Matplotlib Pyplot Axes objects.
-
-All extras:
-```bash
-pip install rico[complete]
-```
+**rico** has no dependencies other than the standard Python packages.
 
 ### Deprecated
 
-There is also the `rico[markdown]` extra. But it's no longer needed and will be removed in version 0.4.0.
+Optional additional dependencies were required to support the following content types:
+* Plots (`rico[altair]`, `rico[pyplot]`, `rico[seaborn]`).
+* Markdown (`rico[markdown]`).
+
+The `rico[complete]` extra incudes all the dependencies above.
+
+They are no longer needed and will be removed in version 0.4.0.
 
 ## User guide
 
