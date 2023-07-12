@@ -33,6 +33,7 @@ pip install rico
 Optional additional dependencies were required to support the following content types:
 * Plots (`rico[altair]`, `rico[pyplot]`, `rico[seaborn]`).
 * Markdown (`rico[markdown]`).
+
 The `rico[complete]` extra incudes all the dependencies above.
 
 They are no longer needed and will be removed in version 0.4.0.
