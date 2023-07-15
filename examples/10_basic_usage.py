@@ -15,7 +15,7 @@ if __name__ == "__main__":
     # Declarative API
     doc = rico.Doc("Hello world!", df, plot, title="My doc")
 
-    with open(__file__[0:-3] + "_declarative.html", "w") as f:
+    with open(__file__[:-3] + "_declarative.html", "w") as f:
         f.write(doc.serialize(indent=True))
 
     # Imperative API
@@ -23,5 +23,5 @@ if __name__ == "__main__":
     doc.append("Hello world!")
     doc.append(df, plot)
 
-    with open(__file__[0:-3] + "_imperative.html", "w") as f:
+    with open(__file__[:-3] + "_imperative.html", "w") as f:
         f.write(doc.serialize(indent=True))
