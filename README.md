@@ -354,6 +354,12 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
     )
 ```
 
+Keep in mind that style and script files can contain links to other external resources. **rico** doesn't parse or change them, even if the `inline` parameter or the `inline_styles` and `inline_scripts` global options are set to `True`. As a result:
+* These resurces should be availble when someone opens an HTML document created by **rico**.
+* Links with relative paths to external resources will not work.
+
+For example, [Bootstrap Icons CSS](https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css) contains linkes to fonts with relative paths: `url("./fonts/bootstrap-icons.woff2?1fa40e8900654d2863d011707b9fb6f2")`. Including this CSS file with the `inline` parameter set to `True` will make these links invalid.
+
 ### Global configuration
 
 Use global configuration to:
