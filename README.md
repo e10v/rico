@@ -440,14 +440,10 @@ Check the docstrings for details.
 * Use [Quarto](https://quarto.org/) if you prefer R Markdown style notebooks and a variety of output formats.
 * Use [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html), [lxml](https://lxml.de/), [Yattag](https://www.yattag.org/), or [Airium](https://gitlab.com/kamichal/airium) if you need low-level control.
 
-More on the topic:
-* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
-* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
-
 ## Roadmap
 
-* Support most of IPython rich representation [methods](https://ipython.readthedocs.io/en/stable/config/integrating.html#rich-display).
+* Create examples with resulting HTML files.
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 * Create short quick start.
-* Create examples with resulting HTML files.
-* Support math with [KaTeX](https://katex.org/).
+* Support math equations with [MathJax](https://www.mathjax.org/) and/or [KaTeX](https://katex.org/).
+* Support PDF content.
