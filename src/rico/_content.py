@@ -337,6 +337,13 @@ class Script(ContentBase):
 
         Either `text` or `src` should be used.
 
+        Keep in mind that script files can contain links to other external resources.
+        **rico** doesn't parse or change them, even if the `inline` parameter is set
+        to `True`.
+        As a result:
+        * These resurces should be availble when someone opens an HTML document.
+        * Links with relative paths to external resources will not work.
+
         Args:
             text: The script text.
             src: The script source link.
@@ -389,6 +396,13 @@ class Style(ContentBase):
         """Create an HTML style element.
 
         Either `text` or `src` should be used.
+
+        Keep in mind that style files can contain links to other external resources.
+        **rico** doesn't parse or change them, even if the `inline` parameter is set
+        to `True`.
+        As a result:
+        * These resurces should be availble when someone opens an HTML document.
+        * Links with relative paths to external resources will not work.
 
         Args:
             text: The stylesheet text.

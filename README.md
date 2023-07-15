@@ -354,6 +354,12 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
     )
 ```
 
+Keep in mind that style and script files can contain links to other external resources. **rico** doesn't parse or change them, even if the `inline` parameter or the `inline_styles` and `inline_scripts` global options are set to `True`. As a result:
+* These resurces should be availble when someone opens an HTML document created by **rico**.
+* Links with relative paths to external resources will not work.
+
+For example, [Bootstrap Icons CSS](https://cdn.jsdelivr.net/npm/bootstrap-icons@1/font/bootstrap-icons.css) contains linkes to fonts with relative paths: `url("./fonts/bootstrap-icons.woff2?1fa40e8900654d2863d011707b9fb6f2")`. Including this CSS file with the `inline` parameter set to `True` will make these links invalid.
+
 ### Global configuration
 
 Use global configuration to:
@@ -440,14 +446,10 @@ Check the docstrings for details.
 * Use [Quarto](https://quarto.org/) if you prefer R Markdown style notebooks and a variety of output formats.
 * Use [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html), [lxml](https://lxml.de/), [Yattag](https://www.yattag.org/), or [Airium](https://gitlab.com/kamichal/airium) if you need low-level control.
 
-More on the topic:
-* "I Don’t Like Notebooks": [video](https://www.youtube.com/watch?v=7jiPeIFXb6U), [slides](https://docs.google.com/presentation/d/1n2RlMdmv1p25Xy5thJUhkKGvjtV-dkAIsUXP-AL4ffI/edit#slide=id.g362da58057_0_1).
-* [The First Notebook War](https://yihui.org/en/2018/09/notebook-war/).
-
 ## Roadmap
 
-* Support most of IPython rich representation [methods](https://ipython.readthedocs.io/en/stable/config/integrating.html#rich-display).
+* Create examples with resulting HTML files.
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 * Create short quick start.
-* Create examples with resulting HTML files.
-* Support math with [KaTeX](https://katex.org/).
+* Support math equations with [MathJax](https://www.mathjax.org/) and/or [KaTeX](https://katex.org/).
+* Support PDF content.
