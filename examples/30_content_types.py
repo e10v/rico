@@ -16,7 +16,7 @@ if __name__ == "__main__":
         rico.Text("Hello world!", mono=True),  # The default value is False.
         df,
         rico.Plot(plot, format="png"),  # The default value is "svg".
-        title="My doc",
+        title="Content types",
     )
 
     with open(__file__[:-3] + "1.html", "w") as f:
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         plot,
         rico.HTML("<h2>Code</h2>"),  # Another way to add a header.
         rico.Code("print('Hello world!')"),
-        title="My doc",
+        title="Content types",
     )
 
     with open(__file__[:-3] + "2.html", "w") as f:
