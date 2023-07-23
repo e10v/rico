@@ -33,16 +33,6 @@ For Markdown support:
 * or install [Python Markdown](https://github.com/Python-Markdown/),
 * or set your own Markdown renderer using `rico.set_config`.
 
-### Deprecated
-
-Optional additional dependencies were required to support the following content types:
-* Plots (`rico[altair]`, `rico[pyplot]`, `rico[seaborn]`).
-* Markdown (`rico[markdown]`).
-
-The `rico[complete]` extra incudes all the dependencies above.
-
-They are no longer needed and will be removed in version 0.4.0.
-
 ## User guide
 
 To get started with **rico**, take a look at the self-explanatory [examples](https://github.com/e10v/rico/tree/main/examples) with resulting HTML documents. The user guide contains a slightly more detailed explanation.
