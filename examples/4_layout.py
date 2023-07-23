@@ -60,14 +60,14 @@ if __name__ == "__main__":
     div1 = rico.Div(class_="row row-cols-auto")
     doc.append(div1)
     for name, data in df.groupby(df.index):
-        div1.append(rico.Tag("h3", name), data, class_="col")
+        div1.append(rico.Tag("h3", name), data, class_="col")  # type: ignore
 
     doc.append_tag("h2", "Plots")
     div2 = rico.Div(class_="row row-cols-auto")
     doc.append(div2)
     for name, data in df.groupby(df.index):
         div2.append(
-            rico.Tag("h3", name),
+            rico.Tag("h3", name),  # type: ignore
             alt.Chart(data).mark_point().encode(x="x", y="y"),
             class_="col",
         )
