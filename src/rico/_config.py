@@ -24,9 +24,9 @@ except ImportError:
         md_renderer = None
 
 
-BOOTSTRAP_VER = "5"
-BOOTSTRAP_CSS= f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/css/bootstrap.min.css"
-BOOTSTRAP_JS = f"https://cdn.jsdelivr.net/npm/bootstrap@{BOOTSTRAP_VER}/dist/js/bootstrap.min.js"
+BOOTSTRAP_BASE = "https://cdn.jsdelivr.net/npm/bootstrap@5/dist/"
+BOOTSTRAP_CSS = BOOTSTRAP_BASE + "css/bootstrap.min.css"
+BOOTSTRAP_JS = BOOTSTRAP_BASE + "js/bootstrap.min.js"
 
 DATAFRAME_STYLE = textwrap.dedent("""\
     .dataframe table {

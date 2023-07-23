@@ -13,7 +13,7 @@ import rico._content
 
 def test_div_init():
     content = rico._container.Div(
-        "Hello world",
+        "Hello, World",
         rico._content.Tag("h1", "Header", class_="col"),
         class_="row",
     )
@@ -38,7 +38,7 @@ def test_div_init():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world"
+    assert p.text == "Hello, World"
     assert p.tail is None
     assert len(p) == 0
 
@@ -65,32 +65,32 @@ def div_container() -> rico._container.Div:
 
 
 def test_div_append_tag(div_container: rico._container.Div):
-    div_container.append_tag("h1", "Hello world")
-    content = rico._content.Tag("h1", "Hello world")
+    div_container.append_tag("h1", "Hello, World")
+    content = rico._content.Tag("h1", "Hello, World")
     assert str(div_container) == f"<div>{content}</div>"
 
 
 def test_div_append_text(div_container: rico._container.Div):
-    div_container.append_text("Hello world")
-    content = rico._content.Text("Hello world")
+    div_container.append_text("Hello, World")
+    content = rico._content.Text("Hello, World")
     assert str(div_container) == f"<div>{content}</div>"
 
 
 def test_div_append_code(div_container: rico._container.Div):
-    div_container.append_code("Hello world")
-    content = rico._content.Code("Hello world")
+    div_container.append_code("Hello, World")
+    content = rico._content.Code("Hello, World")
     assert str(div_container) == f"<div>{content}</div>"
 
 
 def test_div_append_html(div_container: rico._container.Div):
-    div_container.append_html("<p>Hello world</p>")
-    content = rico._content.HTML("<p>Hello world</p>")
+    div_container.append_html("<p>Hello, World</p>")
+    content = rico._content.HTML("<p>Hello, World</p>")
     assert str(div_container) == f"<div>{content}</div>"
 
 
 def test_div_append_markdown(div_container: rico._container.Div):
-    div_container.append_markdown("# Hello world")
-    content = rico._content.Markdown("# Hello world")
+    div_container.append_markdown("# Hello, World")
+    content = rico._content.Markdown("# Hello, World")
     assert str(div_container) == f"<div>{content}</div>"
 
 
@@ -125,13 +125,13 @@ def test_div_append_plot(div_container: rico._container.Div):
 
 
 def test_div_append(div_container: rico._container.Div):
-    div_container.append("Hello world")
-    content = rico._content.Obj("Hello world")
+    div_container.append("Hello, World")
+    content = rico._content.Obj("Hello, World")
     assert str(div_container) == f"<div>{content}</div>"
 
 
 def test_doc_init_default():  # noqa: PLR0915
-    doc = rico._container.Doc("Hello world")
+    doc = rico._container.Doc("Hello, World")
 
     html = doc.html
     assert isinstance(html, ET.Element)
@@ -218,14 +218,14 @@ def test_doc_init_default():  # noqa: PLR0915
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world"
+    assert p.text == "Hello, World"
     assert p.tail is None
     assert len(p) == 0
 
 
 def test_doc_init_nondefault():  # noqa: PLR0915
     extra_style = rico._content.Style(src="style.css")
-    extra_script = rico._content.Script(text="alert('Hello World!');")
+    extra_script = rico._content.Script(text="alert('Hello, World!');")
     extra_script.footer = True
 
     with rico._config.config_context(
@@ -234,7 +234,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
         dataframe_style="",
     ):
         doc = rico._container.Doc(
-            "Hello world",
+            "Hello, World",
             title="Title",
             bootstrap="full",
             extra_styles=(extra_style,),
@@ -325,7 +325,7 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world"
+    assert p.text == "Hello, World"
     assert p.tail is None
     assert len(p) == 0
 
@@ -334,17 +334,18 @@ def test_doc_init_nondefault():  # noqa: PLR0915
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == {}
-    assert script.text  == "alert('Hello World!');"
+    assert script.text  == "alert('Hello, World!');"
     assert script.tail is None
     assert len(script) == 0
 
 
 def test_doc_serialize():
     with rico._config.config_context(dataframe_style=""):
-        doc = rico._container.Doc("Hello world", bootstrap="none")
+        doc = rico._container.Doc("Hello, World", bootstrap="none")
 
     assert doc.serialize() == (
         '<!doctype html>\n<html><head><meta charset="utf-8"/>'
         '<meta name="viewport" content="width=device-width, initial-scale=1"/></head>'
-        '<body><div class="container"><div><p>Hello world</p></div></div></body></html>'
+        '<body><div class="container"><div><p>Hello, World</p></div></div></body>'
+        '</html>'
     )

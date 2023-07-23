@@ -16,14 +16,14 @@ if __name__ == "__main__":
     plot = df.plot.scatter(x="x", y="y")  # type: ignore
 
     # Declarative API
-    doc = rico.Doc("Hello world!", df, plot, title="Basic usage")
+    doc = rico.Doc("Hello, World!", df, plot, title="Basic usage")
 
     with open(__file__[:-3] + "_decl.html", "w") as f:
         f.write(doc.serialize(indent=True))
 
     # Imperative API
     doc = rico.Doc(title="Basic usage")
-    doc.append("Hello world!")
+    doc.append("Hello, World!")
     doc.append(df, plot)
 
     with open(__file__[:-3] + "_imp.html", "w") as f:

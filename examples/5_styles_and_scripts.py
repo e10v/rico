@@ -17,7 +17,7 @@ if __name__ == "__main__":
         extra_scripts=(
             rico.Script(src=jquery),
             rico.Script(
-                "$('p').on('click', function() {alert('Hello world!');})",
+                "$('p').on('click', function() {alert('Hello, World!');})",
                 defer=True,
             ),
         ),
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         extra_scripts=(
             rico.Script(src=jquery, inline=True),
             rico.Script(
-                "$('p').on('click', function() {alert('Hello world!');})",
+                "$('p').on('click', function() {alert('Hello, World!');})",
                 defer=True,
             ),
         ),
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             extra_scripts=(
                 rico.Script(src=jquery),
                 rico.Script(
-                    "$('p').on('click', function() {alert('Hello world!');})",
+                    "$('p').on('click', function() {alert('Hello, World!');})",
                     defer=True,
                 ),
             ),
