@@ -60,15 +60,16 @@ if __name__ == "__main__":
     div1 = rico.Div(class_="row row-cols-auto")
     doc.append(div1)
     for name, data in df.groupby(df.index):
-        div1.append(rico.Tag("h3", name), data)  # type: ignore
+        div1.append(rico.Tag("h3", name), data, class_="col")
 
     doc.append_tag("h2", "Plots")
     div2 = rico.Div(class_="row row-cols-auto")
     doc.append(div2)
     for name, data in df.groupby(df.index):
         div2.append(
-            rico.Tag("h3", name),  # type: ignore
+            rico.Tag("h3", name),
             alt.Chart(data).mark_point().encode(x="x", y="y"),
+            class_="col",
         )
 
     with open(__file__[:-3] + "_grid_imp.html", "w") as f:
