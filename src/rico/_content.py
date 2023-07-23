@@ -165,7 +165,7 @@ class HTML(ContentBase):
     def __init__(
         self,
         text: str,
-        strip_dataframe_borders: bool = False,
+        strip_dataframe_borders: bool = True,
         class_: str | None = None,
     ):
         """Create HTML elements from raw HTML and wrap them in a <div> container.
