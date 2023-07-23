@@ -16,5 +16,5 @@ if __name__ == "__main__":
             os.remove(os.path.join(EXAMPLES_DIR, file))
 
     for file in os.listdir(EXAMPLES_DIR):
-        if file.endswith(".py") and not file.startswith("00"):
+        if file.endswith(".py") and not file.startswith("0_"):
             subprocess.run(["python", os.path.join(EXAMPLES_DIR, file)])
