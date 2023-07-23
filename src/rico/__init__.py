@@ -11,7 +11,6 @@ as well as low-level access for better control.
 from rico._config import config_context, get_config, set_config
 from rico._container import Div, Doc
 from rico._content import (
-    Chart,
     Code,
     ContentBase,
     HTML,

@@ -9,10 +9,8 @@ from typing import TYPE_CHECKING
 import unittest.mock
 import xml.etree.ElementTree as ET
 
-import altair as alt
 import matplotlib.pyplot as plt
 import pytest
-import seaborn.objects as so
 
 import rico._config
 import rico._content
@@ -23,21 +21,9 @@ if TYPE_CHECKING:
 
 
 def test_import_error():
-    with unittest.mock.patch.dict("sys.modules", {"altair": None}):
-        importlib.reload(rico._content)
-        assert rico._content.alt is None
-
-    with unittest.mock.patch.dict("sys.modules", {"vl_convert": None}):
-        importlib.reload(rico._content)
-        assert rico._content.alt is None
-
     with unittest.mock.patch.dict("sys.modules", {"matplotlib.pyplot": None}):
         importlib.reload(rico._content)
         assert rico._content.plt is None
-
-    with unittest.mock.patch.dict("sys.modules", {"seaborn.objects": None}):
-        importlib.reload(rico._content)
-        assert rico._content.so is None
 
     importlib.reload(rico._content)
 
@@ -363,25 +349,13 @@ def test_image_png(data: str | bytes):
     assert len(img) == 0
 
 
-altair_chart = alt.Chart(
-    alt.Data(values=[
-        {"x": "A", "y": 5},
-        {"x": "B", "y": 3},
-        {"x": "C", "y": 6},
-        {"x": "D", "y": 7},
-        {"x": "E", "y": 2},
-    ]),
-).mark_bar().encode(x="x:N", y="y:Q")
-
 pyplot_figure, pyplot_axes = plt.subplots()  # type: ignore
 pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])  # type: ignore
 
-seaborn_plot = so.Plot({"x": [1, 2, 3, 4], "y": [1, 4, 2, 3]})  # type: ignore
-
 @pytest.mark.parametrize(
     "plot",
-    [altair_chart, pyplot_axes, pyplot_figure, seaborn_plot],
-    ids=["altair", "pyplot_axes", "pyplot_figure", "seaborn_plot"],
+    [pyplot_axes, pyplot_figure],
+    ids=["pyplot_axes", "pyplot_figure"],
 )
 @pytest.mark.parametrize("format", [None, "png"], ids=["svg", "png"])
 def test_plot_complete(plot: Any, format: Literal["svg", "png"] | None):  # noqa: A002
@@ -400,23 +374,17 @@ def test_plot_complete(plot: Any, format: Literal["svg", "png"] | None):  # noqa
     assert img.tag == "img"
 
 
-@pytest.mark.parametrize(
-    ("module", "err_plot", "plot"),
-    [
-        ("alt", altair_chart, seaborn_plot),
-        ("plt", pyplot_axes, altair_chart),
-        ("so", seaborn_plot, pyplot_axes),
-    ],
-    ids=["alt", "plt", "so"],
-)
-def test_plot_error(module: str, err_plot: Any, plot: Any):
-    with unittest.mock.patch.object(rico._content, module, None):
-        with pytest.raises(TypeError):
-            rico._content.Plot(err_plot)
+def test_plot_import_error():
+    with (
+        unittest.mock.patch.object(rico._content, "plt", None),
+        pytest.raises(ImportError),
+    ):
+            rico._content.Plot(pyplot_axes)
 
-        content = rico._content.Plot(plot, class_="row")
-        div = content.container
-        assert isinstance(div, ET.Element)
+
+def test_plot_type_error():
+    with pytest.raises(TypeError):
+        rico._content.Plot("text")
 
 
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])

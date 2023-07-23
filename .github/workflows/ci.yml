@@ -25,7 +25,7 @@ jobs:
           enable-pep582: false
           cache: true
       - name: Install dependencies
-        run: pdm sync -G complete -G test
+        run: pdm sync -G test
       - name: Test
         run: pdm run test
       - name: Convert coverage report

@@ -35,13 +35,6 @@ classifiers = [
 source = "https://github.com/e10v/rico"
 "release notes" = "https://github.com/e10v/rico/releases"
 
-[project.optional-dependencies]
-altair = ["altair>=4.2", "vl-convert-python>=0.8"]
-markdown = ["markdown>=3.3"]
-pyplot = ["matplotlib>=3.5"]
-seaborn = ["seaborn>=0.12"]
-complete = ["rico[altair,markdown,pyplot,seaborn]"]
-
 
 [build-system]
 requires = ["pdm-backend"]
@@ -51,7 +44,8 @@ build-backend = "pdm.backend"
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 lint = ["ruff", "pyright"]
-test = ["pytest", "coverage[toml]", "markdown-it-py", "markdown"]
+test = ["pytest", "coverage[toml]", "markdown-it-py", "markdown", "matplotlib"]
+examples = ["pandas", "altair"]
 
 [tool.pdm.scripts]
 test = "coverage run -m pytest"
@@ -89,7 +83,7 @@ select = [
 ]
 ignore = [
     "ANN101", "ANN102", "ANN204", "ANN401", "B006", "N817", "PGH003", "PT001",
-    "PT011", "SLF001", "TRY003",
+    "PT011", "RUF015", "SLF001", "TRY003",
 ]
 
 [tool.ruff.per-file-ignores]

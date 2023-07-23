@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import xml.etree.ElementTree as ET
 
-import altair as alt
+import matplotlib.pyplot as plt
 import pytest
 
 import rico._config
@@ -108,20 +108,23 @@ def test_div_append_image(div_container: rico._container.Div):
     assert str(div_container) == f"<div>{content}</div>"
 
 
-altair_chart = alt.Chart(
-    alt.Data(values=[
-        {"x": "A", "y": 5},
-        {"x": "B", "y": 3},
-        {"x": "C", "y": 6},
-        {"x": "D", "y": 7},
-        {"x": "E", "y": 2},
-    ]),
-).mark_bar().encode(x="x:N", y="y:Q")
+pyplot_figure, pyplot_axes = plt.subplots()  # type: ignore
+pyplot_axes.plot([1, 2, 3, 4], [1, 4, 2, 3])  # type: ignore
 
 def test_div_append_plot(div_container: rico._container.Div):
-    div_container.append_plot(altair_chart)
-    content = rico._content.Plot(altair_chart)
-    assert str(div_container) == f"<div>{content}</div>"
+    div_container.append_plot(pyplot_figure)
+
+    div = div_container.container[0]
+    assert isinstance(div, ET.Element)
+    assert div.tag == "div"
+    assert div.attrib == {}
+    assert div.text is None
+    assert div.tail is None
+    assert len(div) == 1
+
+    img = tuple(div)[0]
+    assert isinstance(img, ET.Element)
+    assert img.tag == "img"
 
 
 def test_div_append(div_container: rico._container.Div):

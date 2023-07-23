@@ -28,6 +28,11 @@ pip install rico
 
 **rico** has no dependencies other than the standard Python packages.
 
+For Markdown support:
+* install [markdown-it-py](https://github.com/executablebooks/markdown-it-py),
+* or install [Python Markdown](https://github.com/Python-Markdown/),
+* or set your own Markdown renderer using `rico.set_config`.
+
 ### Deprecated
 
 Optional additional dependencies were required to support the following content types:
