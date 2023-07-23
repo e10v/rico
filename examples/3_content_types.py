@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     # Change the default behavior
     doc = rico.Doc(
-        rico.Text("Hello world!", mono=True),
+        rico.Text("Hello, World!", mono=True),
         df,
         rico.Plot(plot, format="png", bbox_inches="tight"),
         title="Content classes parameters",
@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     # Change the default behavior
     doc = rico.Doc(title="Content methods parameters")
-    doc.append_text("Hello world!", mono=True)
+    doc.append_text("Hello, World!", mono=True)
     doc.append(df)
     doc.append_plot(plot, format="png", bbox_inches="tight")
 
@@ -42,7 +42,7 @@ if __name__ == "__main__":
         rico.Tag("h2", "Plot"),  # An alternative way to add a header.
         plot,
         rico.HTML("<h2>Code</h2>"),  # Another way to add a header.
-        rico.Code("print('Hello world!')"),
+        rico.Code("print('Hello, World!')"),
         title="Content types",
     )
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     doc.append_tag("h2", "Plot")
     doc.append(plot)
     doc.append_html("<h2>Code</h2>")
-    doc.append_code("print('Hello world!')")
+    doc.append_code("print('Hello, World!')")
 
     with open(__file__[:-3] + "_specific_methods.html", "w") as f:
         f.write(doc.serialize(indent=True))

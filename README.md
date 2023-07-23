@@ -60,26 +60,26 @@ df = pd.DataFrame(
 )
 plot = df.plot.scatter(x="x", y="y")
 
-doc = rico.Doc("Hello world!", df, plot, title="My doc")
+doc = rico.Doc("Hello, World!", df, plot, title="My doc")
 ```
 
 Imperative style:
 ```python
 doc = rico.Doc(title="My doc")
-doc.append("Hello world!", df, plot)
+doc.append("Hello, World!", df, plot)
 ```
 
 Also imperative style:
 ```python
 doc = rico.Doc(title="My doc")
-doc.append("Hello world!")
+doc.append("Hello, World!")
 doc.append(df)
 doc.append(plot)
 ```
 
 Mix-and-match:
 ```python
-doc = rico.Doc("Hello world!", df, title="My doc")
+doc = rico.Doc("Hello, World!", df, title="My doc")
 doc.append(plot)
 ```
 
@@ -137,7 +137,7 @@ The default option values are:
 Use specific classes for plots and texts to change the default behavior:
 ```python
 doc = rico.Doc(
-    rico.Text("Hello world!", mono=True),  # The default value is False.
+    rico.Text("Hello, World!", mono=True),  # The default value is False.
     df,
     rico.Plot(plot, format="png", bbox_inches="tight"),  # The default value is "svg".
     title="My doc",
@@ -147,7 +147,7 @@ doc = rico.Doc(
 The following code gives the same result as the code above:
 ```python
 doc = rico.Doc(title="My doc")
-doc.append_text("Hello world!", mono=True)
+doc.append_text("Hello, World!", mono=True)
 doc.append(df)
 doc.append_plot(plot, format="png", bbox_inches="tight")
 ```
@@ -155,7 +155,7 @@ doc.append_plot(plot, format="png", bbox_inches="tight")
 Some options can be set in the global configuration:
 ```python
 with rico.config_context(text_mono=True, image_format="png"):
-    doc = rico.Doc("Hello world!", df, plot, title="My doc")
+    doc = rico.Doc("Hello, World!", df, plot, title="My doc")
 ```
 
 Use specific classes and methods for other content types:
@@ -175,7 +175,7 @@ doc = rico.Doc(
     rico.Tag("h2", "Plot"),  # An alternative way to add a header.
     plot,
     rico.HTML("<h2>Code</h2>"),  # Another way to add a header.
-    rico.Code("print('Hello world!')"),
+    rico.Code("print('Hello, World!')"),
     title="My doc",
 )
 ```
@@ -188,21 +188,21 @@ doc.append(df)
 doc.append_tag("h2", "Plot")
 doc.append(plot)
 doc.append_html("<h2>Code</h2>")
-doc.append_code("print('Hello world!')")
+doc.append_code("print('Hello, World!')")
 ```
 
 Check the docstrings for details.
 
 Serialize content to HTML using `str(object)` or `object.serialize()`:
 ```python
-obj = rico.Tag("p", "Hello world!")
+obj = rico.Tag("p", "Hello, World!")
 
 print(obj)
-# <div><p>Hello world!</p></div>
+# <div><p>Hello, World!</p></div>
 
 print(obj.serialize(indent=True, space="    "))
 # <div>
-#     <p>Hello world!</p>
+#     <p>Hello, World!</p>
 # </div>
 ```
 
@@ -210,7 +210,7 @@ print(obj.serialize(indent=True, space="    "))
 
 By default, [Bootstrap](https://getbootstrap.com/) styles are included in the document. Change the default behavior using the `bootstrap` parameter:
 ```python
-doc = rico.Doc("Hello world!", bootstrap="full")
+doc = rico.Doc("Hello, World!", bootstrap="full")
 ```
 
 * Set `bootstrap` to `"css"` (default) to include only CSS.
@@ -223,13 +223,13 @@ doc = rico.Doc("Hello world!", bootstrap="full")
 
 Each content element is wrapped in a `<div>` container. Specify the element's container class using the `class_` parameter:
 ```python
-print(rico.Tag("p", "Hello world!", class_="col"))
-# <div class="col"><p>Hello world!</p></div>
+print(rico.Tag("p", "Hello, World!", class_="col"))
+# <div class="col"><p>Hello, World!</p></div>
 ```
 
 All elements' containers in the document are also wrapped in a `<div>` container. Specify the document's container class using the `class_` parameter:
 ```python
-doc = rico.Doc("Hello world!", class_="container-fluid")
+doc = rico.Doc("Hello, World!", class_="container-fluid")
 ```
 
 Define the document layout using Bootstrap and `Div` class:
@@ -331,7 +331,7 @@ doc = rico.Doc(
     extra_scripts=(
         rico.Script(src=jquery),
         rico.Script(
-            "$('p').on('click', function() {alert('Hello world!');})",
+            "$('p').on('click', function() {alert('Hello, World!');})",
             defer=True,
         ),
     ),
@@ -351,7 +351,7 @@ doc = rico.Doc(
     extra_scripts=(
         rico.Script(src=jquery, inline=True),
         rico.Script(
-            "$('p').on('click', function() {alert('Hello world!');})",
+            "$('p').on('click', function() {alert('Hello, World!');})",
             defer=True,
         ),
     ),
@@ -370,7 +370,7 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
         extra_scripts=(
             rico.Script(src=jquery),
             rico.Script(
-                "$('p').on('click', function() {alert('Hello world!');})",
+                "$('p').on('click', function() {alert('Hello, World!');})",
                 defer=True,
             ),
         ),

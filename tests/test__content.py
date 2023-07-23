@@ -70,28 +70,28 @@ def content_base_subclass_sample():
         def __init__(self, class_: str | None = None):
             super().__init__(class_)
             p = ET.Element("p")
-            p.text = "Hello world"
+            p.text = "Hello, World"
             self.container.append(p)
 
     return ContentBaseSubclass("row")
 
 
 def test_content_base_str(content_base_subclass_sample: rico._content.ContentBase):
-    expectation = '<div class="row"><p>Hello world</p></div>'
+    expectation = '<div class="row"><p>Hello, World</p></div>'
     assert str(content_base_subclass_sample) == expectation
 
 
 def test_content_base_indent(content_base_subclass_sample: rico._content.ContentBase):
     expectation = textwrap.dedent("""\
         <div class="row">
-            <p>Hello world</p>
+            <p>Hello, World</p>
         </div>""")
     assert content_base_subclass_sample.serialize(
         indent=True, space="    ") == expectation
 
 
 def test_content_base_strip(content_base_subclass_sample: rico._content.ContentBase):
-    expectation = '<div class="row"><p>Hello world</p></div>'
+    expectation = '<div class="row"><p>Hello, World</p></div>'
     assert content_base_subclass_sample.serialize(strip=True) == expectation
 
 
@@ -100,8 +100,8 @@ def test_tag():
         "p",
         attrib={"class": "col"},
         id="42",
-        text="Hello",
-        tail="world",
+        text="Hello,",
+        tail="World",
         class_="row",
     )
 
@@ -117,13 +117,13 @@ def test_tag():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {"class": "col", "id": "42"}
-    assert p.text == "Hello"
-    assert p.tail == "world"
+    assert p.text == "Hello,"
+    assert p.tail == "World"
     assert len(p) == 0
 
 
 def test_text_simple():
-    content = rico._content.Text("Hello world", class_="row")
+    content = rico._content.Text("Hello, World", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -137,20 +137,20 @@ def test_text_simple():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world"
+    assert p.text == "Hello, World"
     assert p.tail is None
     assert len(p) == 0
 
 
 def test_text_pre_mono():
-    content = rico._content.Text("Hello\nworld", mono=True)
+    content = rico._content.Text("Hello,\nWorld", mono=True)
     div = content.container
 
     pre = tuple(div)[0]
     assert isinstance(pre, ET.Element)
     assert pre.tag == "pre"
     assert pre.attrib == {"class": "font-monospace"}
-    assert pre.text == "Hello\nworld"
+    assert pre.text == "Hello,\nWorld"
     assert pre.tail is None
     assert len(pre) == 0
 
@@ -169,7 +169,7 @@ def test_text_int_mono_wrap():
 
 
 def test_code():
-    content = rico._content.Code("Hello world", class_="row")
+    content = rico._content.Code("Hello, World", class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -191,13 +191,13 @@ def test_code():
     assert isinstance(code, ET.Element)
     assert code.tag == "code"
     assert code.attrib == {}
-    assert code.text == "Hello world"
+    assert code.text == "Hello, World"
     assert code.tail is None
     assert len(code) == 0
 
 
 def test_html_simple():
-    content = rico._content.HTML('<p border="1">Hello world</p>', True, class_="row")
+    content = rico._content.HTML('<p border="1">Hello, World</p>', True, class_="row")
 
     div = content.container
     assert isinstance(div, ET.Element)
@@ -211,7 +211,7 @@ def test_html_simple():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {"border": "1"}
-    assert p.text == "Hello world"
+    assert p.text == "Hello, World"
     assert p.tail is None
     assert len(p) == 0
 
@@ -257,7 +257,7 @@ def test_markdown():
         textwrap.dedent("""\
             # Header 1
             ## Header 2
-            Hello world"""),
+            Hello, World"""),
         class_="row",
     )
 
@@ -289,7 +289,7 @@ def test_markdown():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world"
+    assert p.text == "Hello, World"
     assert len(p) == 0
 
 
@@ -300,7 +300,7 @@ def test_markdown_error():
     ):
         importlib.reload(rico._config)
         with pytest.raises(RuntimeError):
-            rico._content.Markdown("Hello world")
+            rico._content.Markdown("Hello, World")
 
     importlib.reload(rico._config)
 
@@ -421,7 +421,7 @@ def test_plot_error(module: str, err_plot: Any, plot: Any):
 
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])
 def test_script_text(defer: bool):
-    text = "alert('Hello World!');"
+    text = "alert('Hello, World!');"
     attrib = {"async": True}
     content = rico._content.Script(text=text, defer=defer, attrib=attrib)
 
@@ -461,7 +461,7 @@ def test_script_src(defer: bool):
 
 @pytest.mark.parametrize("defer", [True, False], ids=["defer", "not defer"])
 def test_script_inline(defer: bool):
-    text = "alert('Hello World!');"
+    text = "alert('Hello, World!');"
     src = "javascript.js"
     attrib = {"async": True}
 
@@ -486,7 +486,7 @@ def test_script_raises():
     with pytest.raises(ValueError):
         rico._content.Script()
     with pytest.raises(ValueError):
-        rico._content.Script(src="javascript.js", text="alert('Hello World!');")
+        rico._content.Script(src="javascript.js", text="alert('Hello, World!');")
 
 
 def test_style_text():
@@ -602,7 +602,7 @@ def test_obj_pyplot():
 def test_obj_javascript():
     class Repr:
         def _repr_javascript_(self) -> str:
-            return "alert('Hello World!');"
+            return "alert('Hello, World!');"
 
     content = rico._content.Obj(Repr(), class_="row")
 
@@ -618,7 +618,7 @@ def test_obj_javascript():
     assert isinstance(script, ET.Element)
     assert script.tag == "script"
     assert script.attrib == {}
-    assert script.text == "alert('Hello World!');"
+    assert script.text == "alert('Hello, World!');"
     assert script.tail is None
     assert len(script) == 0
 
@@ -626,7 +626,7 @@ def test_obj_javascript():
 def test_obj_html():
     class Repr:
         def _repr_html_(self) -> str:
-            return "<p>Hello world!</p>"
+            return "<p>Hello, World!</p>"
 
     content = rico._content.Obj(Repr(), class_="row")
 
@@ -650,7 +650,7 @@ def test_obj_html():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world!"
+    assert p.text == "Hello, World!"
     assert p.tail is None
     assert len(p) == 0
 
@@ -658,7 +658,7 @@ def test_obj_html():
 def test_obj_markdown():
     class Repr:
         def _repr_markdown_(self) -> str:
-            return "# Hello world!"
+            return "# Hello, World!"
 
     content = rico._content.Obj(Repr(), class_="row")
 
@@ -682,7 +682,7 @@ def test_obj_markdown():
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
-    assert h1.text == "Hello world!"
+    assert h1.text == "Hello, World!"
     assert len(h1) == 0
 
 
@@ -829,7 +829,7 @@ def test_obj_gif():
 def test_obj_text():
     class Repr:
         def _repr_mimebundle_(self) -> dict[str, Any]:
-            return {"text/plain": "Hello world!"}
+            return {"text/plain": "Hello, World!"}
 
     content = rico._content.Obj(Repr(), class_="row")
 
@@ -853,7 +853,7 @@ def test_obj_text():
     assert isinstance(p, ET.Element)
     assert p.tag == "p"
     assert p.attrib == {}
-    assert p.text == "Hello world!"
+    assert p.text == "Hello, World!"
     assert p.tail is None
     assert len(p) == 0
 
@@ -861,12 +861,12 @@ def test_obj_text():
 def test_obj_priority():
     class Repr:
         def _repr_javascript_(self) -> str:
-            return "alert('Hello World!');"
+            return "alert('Hello, World!');"
 
         def _repr_mimebundle_(self) -> dict[str, Any]:
             return {
-                "text/plain": "Hello world!",
-                "text/markdown": "# Hello world!",
+                "text/plain": "Hello, World!",
+                "text/markdown": "# Hello, World!",
             }
 
     content = rico._content.Obj(Repr(), class_="row")
@@ -891,7 +891,7 @@ def test_obj_priority():
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
-    assert h1.text == "Hello world!"
+    assert h1.text == "Hello, World!"
     assert len(h1) == 0
 
 
@@ -901,7 +901,7 @@ def test_obj_corner_cases():
             return None
 
         def _repr_markdown_(self) -> tuple[str, Any]:
-            return "# Hello world!", "metadata"
+            return "# Hello, World!", "metadata"
 
     content = rico._content.Obj(Repr(), class_="row")
 
@@ -925,5 +925,5 @@ def test_obj_corner_cases():
     assert isinstance(h1, ET.Element)
     assert h1.tag == "h1"
     assert h1.attrib == {}
-    assert h1.text == "Hello world!"
+    assert h1.text == "Hello, World!"
     assert len(h1) == 0

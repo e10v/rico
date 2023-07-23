@@ -15,7 +15,7 @@ if __name__ == "__main__":
     )
     plot = df.plot.scatter(x="x", y="y")  # type: ignore
 
-    doc = rico.Doc("Hello world!", df, plot, title="Serialization")
+    doc = rico.Doc("Hello, World!", df, plot, title="Serialization")
 
     # Default
     with open(__file__[:-3] + "_default.html", "w") as f:
