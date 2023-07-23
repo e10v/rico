@@ -1,4 +1,4 @@
-"""Basic usage examples."""
+"""Basic usage."""
 
 import pandas as pd
 

@@ -1,4 +1,4 @@
-"""Serialization examples."""
+"""Serialization."""
 
 import pandas as pd
 

@@ -1,4 +1,4 @@
-"""Examplse of different rich content types."""
+"""Rich content types."""
 
 import pandas as pd
 
