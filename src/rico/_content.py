@@ -463,8 +463,9 @@ def _call_repr(
 def _decode(data: str | bytes) -> str:
     return data.decode() if isinstance(data, bytes) else data
 
-def _get_repr(obj: Any) -> ET.Element:  # noqa: C901, PLR0911, PLR0912
-    data = _call_repr(obj, "_repr_mimebundle_")
+def _get_repr(obj: Any) -> ContentBase:  # noqa: C901, PLR0911, PLR0912
+    data = {k.lower(): v for k, v in _call_repr(obj, "_repr_mimebundle_").items()}
+
     if data == {}:
         data = _call_repr(obj, "_repr_javascript_", "application/javascript")
     if data == {}:
@@ -479,22 +480,22 @@ def _get_repr(obj: Any) -> ET.Element:  # noqa: C901, PLR0911, PLR0912
         data = _call_repr(obj, "_repr_jpeg_", "image/jpeg")
 
     if "application/javascript" in data and data["application/javascript"]:
-        return Script(_decode(data["application/javascript"])).container
+        return Script(_decode(data["application/javascript"]))
     if "text/html" in data and data["text/html"]:
-        return HTML(_decode(data["text/html"]), strip_dataframe_borders=True).container
+        return HTML(_decode(data["text/html"]), strip_dataframe_borders=True)
     if "text/markdown" in data and data["text/markdown"]:
-        return Markdown(_decode(data["text/markdown"])).container
+        return Markdown(_decode(data["text/markdown"]))
     if "image/svg+xml" in data and data["image/svg+xml"]:
-        return Image(data["image/svg+xml"], "svg+xml").container
+        return Image(data["image/svg+xml"], "svg+xml")
     if "image/png" in data and data["image/png"]:
-        return Image(data["image/png"], "png").container
+        return Image(data["image/png"], "png")
     if "image/jpeg" in data and data["image/jpeg"]:
-        return Image(data["image/jpeg"], "jpeg").container
+        return Image(data["image/jpeg"], "jpeg")
     if "image/gif" in data and data["image/gif"]:
-        return Image(data["image/gif"], "gif").container
+        return Image(data["image/gif"], "gif")
     if "text/plain" in data and data["text/plain"]:
-        return Text(data["text/plain"]).container
-    return Text(str(obj)).container
+        return Text(data["text/plain"])
+    return Text(str(obj))
 
 class Obj(ContentBase):
     def __init__(self, *objects: Any, class_: str | None = None):
@@ -516,9 +517,9 @@ class Obj(ContentBase):
         super().__init__(class_=class_)
         for obj in objects:
             if isinstance(obj, ContentBase):
-                container = obj.container
+                content = obj
             elif plt is not None and isinstance(obj, plt.Axes | plt.Figure):  # type: ignore  # noqa: E501
-                container = Plot(obj).container
+                content = Plot(obj)
             else:
-                container = _get_repr(obj)
-            self.container.append(container)
+                content = _get_repr(obj)
+            self.container.append(content.container)
