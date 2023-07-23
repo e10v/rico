@@ -40,6 +40,8 @@ They are no longer needed and will be removed in version 0.4.0.
 
 ## User guide
 
+To get started with **rico**, you can explore self-explanatory [examples](https://github.com/e10v/rico/tree/main/examples) with resultig HTML documents. The user guide contains a slightly more detailed explanation.
+
 ### Basic usage
 
 **rico** provides both declarative and imperative style interfaces.
