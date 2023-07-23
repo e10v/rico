@@ -1,0 +1,414 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Grid system</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+      .dataframe table {
+          border: none;
+          border-collapse: collapse;
+          border-spacing: 0;
+          margin-bottom: 1em;
+          margin-left: 0;
+          margin-right: 0;
+      }
+
+      .dataframe thead {
+          border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+          vertical-align: bottom;
+      }
+
+      .dataframe td,
+      .dataframe th,
+      .dataframe tr {
+          border: none;
+          line-height: var(--bs-body-line-height);
+          max-width: none;
+          padding: .25rem .5rem;
+          text-align: right;
+          vertical-align: middle;
+          white-space: normal;
+      }
+
+      .dataframe th {
+          font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h2>Dataframes</h2>
+      </div>
+      <div class="row row-cols-auto">
+        <div class="col">
+          <div>
+            <h3>A</h3>
+          </div>
+          <div>
+            <div>
+              <style scoped>
+                .dataframe tbody tr th:only-of-type {
+                    vertical-align: middle;
+                }
+
+                .dataframe tbody tr th {
+                    vertical-align: top;
+                }
+
+                .dataframe thead th {
+                    text-align: right;
+                }
+              </style>
+              <table class="dataframe">
+                <thead>
+                  <tr style="text-align: right;">
+                    <th></th>
+                    <th>x</th>
+                    <th>y</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>A</th>
+                    <td>2</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
+                    <th>A</th>
+                    <td>7</td>
+                    <td>9</td>
+                  </tr>
+                  <tr>
+                    <th>A</th>
+                    <td>4</td>
+                    <td>2</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <h3>B</h3>
+          </div>
+          <div>
+            <div>
+              <style scoped>
+                .dataframe tbody tr th:only-of-type {
+                    vertical-align: middle;
+                }
+
+                .dataframe tbody tr th {
+                    vertical-align: top;
+                }
+
+                .dataframe thead th {
+                    text-align: right;
+                }
+              </style>
+              <table class="dataframe">
+                <thead>
+                  <tr style="text-align: right;">
+                    <th></th>
+                    <th>x</th>
+                    <th>y</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>B</th>
+                    <td>1</td>
+                    <td>8</td>
+                  </tr>
+                  <tr>
+                    <th>B</th>
+                    <td>2</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <th>B</th>
+                    <td>6</td>
+                    <td>7</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <h3>C</h3>
+          </div>
+          <div>
+            <div>
+              <style scoped>
+                .dataframe tbody tr th:only-of-type {
+                    vertical-align: middle;
+                }
+
+                .dataframe tbody tr th {
+                    vertical-align: top;
+                }
+
+                .dataframe thead th {
+                    text-align: right;
+                }
+              </style>
+              <table class="dataframe">
+                <thead>
+                  <tr style="text-align: right;">
+                    <th></th>
+                    <th>x</th>
+                    <th>y</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>C</th>
+                    <td>8</td>
+                    <td>4</td>
+                  </tr>
+                  <tr>
+                    <th>C</th>
+                    <td>4</td>
+                    <td>6</td>
+                  </tr>
+                  <tr>
+                    <th>C</th>
+                    <td>7</td>
+                    <td>5</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2>Plots</h2>
+      </div>
+      <div class="row row-cols-auto">
+        <div class="col">
+          <div>
+            <h3>A</h3>
+          </div>
+          <div>
+            <style>
+              #altair-viz-3bf4a76b39444047ac0fbeaaa355c970.vega-embed {
+                width: 100%;
+                display: flex;
+              }
+
+              #altair-viz-3bf4a76b39444047ac0fbeaaa355c970.vega-embed details,
+              #altair-viz-3bf4a76b39444047ac0fbeaaa355c970.vega-embed details summary {
+                position: relative;
+              }
+            </style>
+            <div id="altair-viz-3bf4a76b39444047ac0fbeaaa355c970"></div>
+            <script type="text/javascript">
+              var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+              (function(spec, embedOpt){
+                let outputDiv = document.currentScript.previousElementSibling;
+                if (outputDiv.id !== "altair-viz-3bf4a76b39444047ac0fbeaaa355c970") {
+                  outputDiv = document.getElementById("altair-viz-3bf4a76b39444047ac0fbeaaa355c970");
+                }
+                const paths = {
+                  "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+                  "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+                  "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.8.0?noext",
+                  "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+                };
+
+                function maybeLoadScript(lib, version) {
+                  var key = `${lib.replace("-", "")}_version`;
+                  return (VEGA_DEBUG[key] == version) ?
+                    Promise.resolve(paths[lib]) :
+                    new Promise(function(resolve, reject) {
+                      var s = document.createElement('script');
+                      document.getElementsByTagName("head")[0].appendChild(s);
+                      s.async = true;
+                      s.onload = () => {
+                        VEGA_DEBUG[key] = version;
+                        return resolve(paths[lib]);
+                      };
+                      s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+                      s.src = paths[lib];
+                    });
+                }
+
+                function showError(err) {
+                  outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+                  throw err;
+                }
+
+                function displayChart(vegaEmbed) {
+                  vegaEmbed(outputDiv, spec, embedOpt)
+                    .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+                }
+
+                if(typeof define === "function" && define.amd) {
+                  requirejs.config({paths});
+                  require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+                } else {
+                  maybeLoadScript("vega", "5")
+                    .then(() => maybeLoadScript("vega-lite", "5.8.0"))
+                    .then(() => maybeLoadScript("vega-embed", "6"))
+                    .catch(showError)
+                    .then(() => displayChart(vegaEmbed));
+                }
+              })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-74298497f925a4480e220b2689810133"}, "mark": {"type": "point"}, "encoding": {"x": {"field": "x", "type": "quantitative"}, "y": {"field": "y", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v5.8.0.json", "datasets": {"data-74298497f925a4480e220b2689810133": [{"x": 2, "y": 1}, {"x": 7, "y": 9}, {"x": 4, "y": 2}]}}, {"mode": "vega-lite"});
+            </script>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <h3>B</h3>
+          </div>
+          <div>
+            <style>
+              #altair-viz-b4a3604a1ec340789ee9a5a67535640f.vega-embed {
+                width: 100%;
+                display: flex;
+              }
+
+              #altair-viz-b4a3604a1ec340789ee9a5a67535640f.vega-embed details,
+              #altair-viz-b4a3604a1ec340789ee9a5a67535640f.vega-embed details summary {
+                position: relative;
+              }
+            </style>
+            <div id="altair-viz-b4a3604a1ec340789ee9a5a67535640f"></div>
+            <script type="text/javascript">
+              var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+              (function(spec, embedOpt){
+                let outputDiv = document.currentScript.previousElementSibling;
+                if (outputDiv.id !== "altair-viz-b4a3604a1ec340789ee9a5a67535640f") {
+                  outputDiv = document.getElementById("altair-viz-b4a3604a1ec340789ee9a5a67535640f");
+                }
+                const paths = {
+                  "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+                  "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+                  "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.8.0?noext",
+                  "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+                };
+
+                function maybeLoadScript(lib, version) {
+                  var key = `${lib.replace("-", "")}_version`;
+                  return (VEGA_DEBUG[key] == version) ?
+                    Promise.resolve(paths[lib]) :
+                    new Promise(function(resolve, reject) {
+                      var s = document.createElement('script');
+                      document.getElementsByTagName("head")[0].appendChild(s);
+                      s.async = true;
+                      s.onload = () => {
+                        VEGA_DEBUG[key] = version;
+                        return resolve(paths[lib]);
+                      };
+                      s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+                      s.src = paths[lib];
+                    });
+                }
+
+                function showError(err) {
+                  outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+                  throw err;
+                }
+
+                function displayChart(vegaEmbed) {
+                  vegaEmbed(outputDiv, spec, embedOpt)
+                    .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+                }
+
+                if(typeof define === "function" && define.amd) {
+                  requirejs.config({paths});
+                  require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+                } else {
+                  maybeLoadScript("vega", "5")
+                    .then(() => maybeLoadScript("vega-lite", "5.8.0"))
+                    .then(() => maybeLoadScript("vega-embed", "6"))
+                    .catch(showError)
+                    .then(() => displayChart(vegaEmbed));
+                }
+              })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-090689ef361ce98a31653d6643bcc050"}, "mark": {"type": "point"}, "encoding": {"x": {"field": "x", "type": "quantitative"}, "y": {"field": "y", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v5.8.0.json", "datasets": {"data-090689ef361ce98a31653d6643bcc050": [{"x": 1, "y": 8}, {"x": 2, "y": 3}, {"x": 6, "y": 7}]}}, {"mode": "vega-lite"});
+            </script>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <h3>C</h3>
+          </div>
+          <div>
+            <style>
+              #altair-viz-2c1c415cdf804d24801a6f6f646ca916.vega-embed {
+                width: 100%;
+                display: flex;
+              }
+
+              #altair-viz-2c1c415cdf804d24801a6f6f646ca916.vega-embed details,
+              #altair-viz-2c1c415cdf804d24801a6f6f646ca916.vega-embed details summary {
+                position: relative;
+              }
+            </style>
+            <div id="altair-viz-2c1c415cdf804d24801a6f6f646ca916"></div>
+            <script type="text/javascript">
+              var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+              (function(spec, embedOpt){
+                let outputDiv = document.currentScript.previousElementSibling;
+                if (outputDiv.id !== "altair-viz-2c1c415cdf804d24801a6f6f646ca916") {
+                  outputDiv = document.getElementById("altair-viz-2c1c415cdf804d24801a6f6f646ca916");
+                }
+                const paths = {
+                  "vega": "https://cdn.jsdelivr.net/npm/vega@5?noext",
+                  "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+                  "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@5.8.0?noext",
+                  "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@6?noext",
+                };
+
+                function maybeLoadScript(lib, version) {
+                  var key = `${lib.replace("-", "")}_version`;
+                  return (VEGA_DEBUG[key] == version) ?
+                    Promise.resolve(paths[lib]) :
+                    new Promise(function(resolve, reject) {
+                      var s = document.createElement('script');
+                      document.getElementsByTagName("head")[0].appendChild(s);
+                      s.async = true;
+                      s.onload = () => {
+                        VEGA_DEBUG[key] = version;
+                        return resolve(paths[lib]);
+                      };
+                      s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+                      s.src = paths[lib];
+                    });
+                }
+
+                function showError(err) {
+                  outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+                  throw err;
+                }
+
+                function displayChart(vegaEmbed) {
+                  vegaEmbed(outputDiv, spec, embedOpt)
+                    .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+                }
+
+                if(typeof define === "function" && define.amd) {
+                  requirejs.config({paths});
+                  require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+                } else {
+                  maybeLoadScript("vega", "5")
+                    .then(() => maybeLoadScript("vega-lite", "5.8.0"))
+                    .then(() => maybeLoadScript("vega-embed", "6"))
+                    .catch(showError)
+                    .then(() => displayChart(vegaEmbed));
+                }
+              })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-ab1f1e3cce03c569efaac24eb341f4df"}, "mark": {"type": "point"}, "encoding": {"x": {"field": "x", "type": "quantitative"}, "y": {"field": "y", "type": "quantitative"}}, "$schema": "https://vega.github.io/schema/vega-lite/v5.8.0.json", "datasets": {"data-ab1f1e3cce03c569efaac24eb341f4df": [{"x": 8, "y": 4}, {"x": 4, "y": 6}, {"x": 7, "y": 5}]}}, {"mode": "vega-lite"});
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

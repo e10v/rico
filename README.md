@@ -40,6 +40,8 @@ They are no longer needed and will be removed in version 0.4.0.
 
 ## User guide
 
+To get started with **rico**, you can explore self-explanatory [examples](https://github.com/e10v/rico/tree/main/examples) with resultig HTML documents. The user guide contains a slightly more detailed explanation.
+
 ### Basic usage
 
 **rico** provides both declarative and imperative style interfaces.
@@ -49,11 +51,14 @@ Declarative style:
 import pandas as pd
 import rico
 
-df = pd.DataFrame({
-    "a": list("CCCDDDEEE"),
-    "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
-})
-plot = df.plot.scatter(x="a", y="b")
+df = pd.DataFrame(
+    {
+        "x": [2, 7, 4, 1, 2, 6, 8, 4, 7],
+        "y": [1, 9, 2, 8, 3, 7, 4, 6, 5],
+    },
+    index=pd.Index(list("AAABBBCCC")),
+)
+plot = df.plot.scatter(x="x", y="y")
 
 doc = rico.Doc("Hello world!", df, plot, title="My doc")
 ```
@@ -134,7 +139,7 @@ Use specific classes for plots and texts to change the default behavior:
 doc = rico.Doc(
     rico.Text("Hello world!", mono=True),  # The default value is False.
     df,
-    rico.Plot(plot, format="png"),  # The default value is "svg".
+    rico.Plot(plot, format="png", bbox_inches="tight"),  # The default value is "svg".
     title="My doc",
 )
 ```
@@ -144,7 +149,7 @@ The following code gives the same result as the code above:
 doc = rico.Doc(title="My doc")
 doc.append_text("Hello world!", mono=True)
 doc.append(df)
-doc.append_plot(plot, format="png")
+doc.append_plot(plot, format="png", bbox_inches="tight")
 ```
 
 Some options can be set in the global configuration:
@@ -240,41 +245,59 @@ The code above creates a document with two columns, one with a dataframe and ano
 
 Another example:
 ```python
+import altair as alt
+
 doc = rico.Doc(
-    rico.Tag("h1", "My doc"),
-    rico.Tag("h2", "Description"),
-    "This is an example of custom document layout using Bootstrap classes.",
-    rico.Tag("h2", "Data"),
+    rico.Tag("h2", "Dataframes"),
     rico.Div(
-        rico.Obj("Dataframe", df, class_="col"),
-        rico.Obj("Plot", plot, class_="col"),
+        rico.Obj(rico.Tag("h3", "A"), df.loc["A", :], class_="col"),
+        rico.Obj(rico.Tag("h3", "B"), df.loc["B", :], class_="col"),
+        rico.Obj(rico.Tag("h3", "C"), df.loc["C", :], class_="col"),
         class_="row row-cols-auto",
     ),
-    title="My doc",
+    rico.Tag("h2", "Plots"),
+    rico.Div(
+        rico.Obj(
+            rico.Tag("h3", "A"),
+            alt.Chart(df.loc["A", :]).mark_point().encode(x="x", y="y"),
+            class_="col",
+        ),
+        rico.Obj(
+            rico.Tag("h3", "B"),
+            alt.Chart(df.loc["B", :]).mark_point().encode(x="x", y="y"),
+            class_="col",
+        ),
+        rico.Obj(
+            rico.Tag("h3", "C"),
+            alt.Chart(df.loc["C", :]).mark_point().encode(x="x", y="y"),
+            class_="col",
+        ),
+        class_="row row-cols-auto",
+    ),
+    title="Grid system",
 )
 ```
 
 The following code gives the same result as the code above:
 ```python
-doc = rico.Doc(title="My doc")
-doc.append_tag("h1", "My doc")
-doc.append_tag("h2", "Description")
-doc.append("This is an example of custom document layout using Bootstrap classes.")
-doc.append_tag("h2", "Data")
-div = rico.Div(class_="row row-cols-auto")
-doc.append(div)
-div.append("Dataframe", df, class_="col")
-div.append("Plot", plot, class_="col")
-```
+doc = rico.Doc(title="Grid system")
 
-Keep in mind that `obj.append(x, y)` works differently than
-```python
-obj.append(x)
-obj.append(y)
-```
-The first one wraps both elements in a single `<div>` container. The second one creates a separate `<div>` container for each element.
+doc.append_tag("h2", "Dataframes")
+div1 = rico.Div(class_="row row-cols-auto")
+doc.append(div1)
+for name, data in df.groupby(df.index):
+    div1.append(rico.Tag("h3", name), data, class_="col")
 
-`Obj(x, y, class_="z")` wraps both `x` and `y` elements in a single `<div>` container with `class` attribute set to `"z"`.
+doc.append_tag("h2", "Plots")
+div2 = rico.Div(class_="row row-cols-auto")
+doc.append(div2)
+for name, data in df.groupby(df.index):
+    div2.append(
+        rico.Tag("h3", name),
+        alt.Chart(data).mark_point().encode(x="x", y="y"),
+        class_="col",
+    )
+```
 
 More on Bootstrap layout and grid system:
 * [Breakpoints](https://getbootstrap.com/docs/5.3/layout/breakpoints/)
@@ -303,7 +326,7 @@ doc = rico.Doc(
     rico.Text("Click me", class_="click"),
     extra_styles=(
         rico.Style(src=dark_theme),
-        rico.Style(".click {color: red;}"),
+        rico.Style(".click {color: yellow;}"),
     ),
     extra_scripts=(
         rico.Script(src=jquery),
@@ -323,7 +346,7 @@ doc = rico.Doc(
     rico.Text("Click me", class_="click"),
     extra_styles=(
         rico.Style(src=dark_theme, inline=True),
-        rico.Style(".click {color: red;}"),
+        rico.Style(".click {color: yellow;}"),
     ),
     extra_scripts=(
         rico.Script(src=jquery, inline=True),
@@ -342,7 +365,7 @@ with rico.config_context(inline_styles=True, inline_scripts=True):
         rico.Text("Click me", class_="click"),
         extra_styles=(
             rico.Style(src=dark_theme),
-            rico.Style(".click {color: red;}"),
+            rico.Style(".click {color: yellow;}"),
         ),
         extra_scripts=(
             rico.Script(src=jquery),
@@ -448,8 +471,6 @@ Check the docstrings for details.
 
 ## Roadmap
 
-* Create examples with resulting HTML files.
 * Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
-* Create short quick start.
 * Support math equations with [MathJax](https://www.mathjax.org/) and/or [KaTeX](https://katex.org/).
 * Support PDF content.
