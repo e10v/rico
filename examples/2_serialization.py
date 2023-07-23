@@ -6,11 +6,14 @@ import rico
 
 
 if __name__ == "__main__":
-    df = pd.DataFrame({
-        "a": list("CCCDDDEEE"),
-        "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
-    })
-    plot = df.plot.scatter(x="a", y="b")  # type: ignore
+    df = pd.DataFrame(
+        {
+            "x": [2, 7, 4, 1, 2, 6, 8, 4, 7],
+            "y": [1, 9, 2, 8, 3, 7, 4, 6, 5],
+        },
+        index=pd.Index(list("AAABBBCCC")),
+    )
+    plot = df.plot.scatter(x="x", y="y")  # type: ignore
 
     doc = rico.Doc("Hello world!", df, plot, title="Serialization")
 

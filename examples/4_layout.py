@@ -12,7 +12,7 @@ if __name__ == "__main__":
     df = pd.DataFrame({
         "x": [2, 7, 4, 1, 2, 6, 8, 4, 7],
         "y": [1, 9, 2, 8, 3, 7, 4, 6, 5],
-    }, index=pd.Index(list("AAABBBCCC"), name="code"))
+    }, index=pd.Index(list("AAABBBCCC")))
 
     doc = rico.Doc(df, title="Fluid container", class_="container-fluid")
 
@@ -59,15 +59,15 @@ if __name__ == "__main__":
     doc.append_tag("h2", "Dataframes")
     div1 = rico.Div(class_="row row-cols-auto")
     doc.append(div1)
-    for code, data in df.groupby("code"):
-        div1.append(rico.Tag("h3", code), data)  # type: ignore
+    for name, data in df.groupby(df.index):
+        div1.append(rico.Tag("h3", name), data)  # type: ignore
 
     doc.append_tag("h2", "Plots")
     div2 = rico.Div(class_="row row-cols-auto")
     doc.append(div2)
-    for code, data in df.groupby("code"):
+    for name, data in df.groupby(df.index):
         div2.append(
-            rico.Tag("h3", code),  # type: ignore
+            rico.Tag("h3", name),  # type: ignore
             alt.Chart(data).mark_point().encode(x="x", y="y"),
         )
 

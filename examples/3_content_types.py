@@ -6,11 +6,14 @@ import rico
 
 
 if __name__ == "__main__":
-    df = pd.DataFrame({
-        "a": list("CCCDDDEEE"),
-        "b": [2, 7, 4, 1, 2, 6, 8, 4, 7],
-    })
-    plot = df.plot.scatter(x="a", y="b")  # type: ignore
+    df = pd.DataFrame(
+        {
+            "x": [2, 7, 4, 1, 2, 6, 8, 4, 7],
+            "y": [1, 9, 2, 8, 3, 7, 4, 6, 5],
+        },
+        index=pd.Index(list("AAABBBCCC")),
+    )
+    plot = df.plot.scatter(x="x", y="y")  # type: ignore
 
     # Change the default behavior
     doc = rico.Doc(
@@ -46,6 +49,7 @@ if __name__ == "__main__":
     with open(__file__[:-3] + "_specific_classes.html", "w") as f:
         f.write(doc.serialize(indent=True))
 
+    # Content specific methods
     doc = rico.Doc(title="Content types")
     doc.append_markdown("## Dataframe")
     doc.append(df)
