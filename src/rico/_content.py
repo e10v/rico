@@ -7,7 +7,6 @@ import base64
 import io
 from typing import TYPE_CHECKING
 import urllib.request
-import warnings
 import xml.etree.ElementTree as ET
 
 import rico._config
@@ -21,20 +20,9 @@ if TYPE_CHECKING:
 
 
 try:
-    import altair as alt
-    import vl_convert as vlc
-except ImportError:
-    alt = None
-
-try:
     import matplotlib.pyplot as plt
 except ImportError:
     plt = None
-
-try:
-    import seaborn.objects as so
-except ImportError:
-    so = None
 
 
 class ContentBase:
@@ -251,74 +239,36 @@ class Plot(ContentBase):
     ):
         """Create an HTML element from a plot object and wrap it in a <div> container.
 
-        The supported plot types are the following:
-        - Matplotlib Pyplot Axes and Figure,
-        - [Deprecated] Altair Chart,
-        - [Deprecated] Seaborn Plot (seaborn.objects interface).
-
-        Deprecated:
-            Support of the Seaborn plots in this class/method is deprecated
-            and will be removed in version 0.4.0.
-            Use the rico.Obj or obj.append indstead.
-
         Args:
-            obj: The plot object.
+            obj: The Matplotlib Pyplot Axes or Figure object.
             format: Image format.
             class_: The container class attribute.
-            **kwargs: Keyword arguments passed to the function
-                which converts the object to an image.
+            **kwargs: Keyword arguments passed to the `savefig` method.
 
         Raises:
-            TypeError: The plot type is not supported
-                or a required extra package is not installed.
+            ImportError: Matplotlib is not installed.
+            TypeError: The object type should be an instance of plt.Figure or plt.Axes.
         """
+        if plt is None:
+            raise ImportError("Matplotlib is not installed.")
+
+        if not isinstance(obj, plt.Figure | plt.Axes):  # type: ignore
+            raise TypeError(
+                "The object type should be an instance of plt.Figure or plt.Axes.")
+
         if format is None:
             format = rico._config.get_config("image_format")  # noqa: A001
 
-        if plt is not None and isinstance(obj, plt.Axes):
+        if isinstance(obj, plt.Axes):
             obj = obj.figure
 
-        if plt is not None and isinstance(obj, plt.Figure):  # type: ignore
-            stream = io.StringIO() if format == "svg" else io.BytesIO()
-            obj.savefig(stream, format=format, **kwargs)
-            image = stream.getvalue()
-        elif so is not None and isinstance(obj, so.Plot):
-            warnings.warn(
-                "Support of the Seaborn plots in this class/method is deprecated "
-                    "and will be removed in version 0.4.0. "
-                    "Use the rico.Obj or obj.append indstead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            stream = io.StringIO() if format == "svg" else io.BytesIO()
-            obj.save(stream, format=format, **kwargs)
-            image = stream.getvalue()
-        elif alt is not None and isinstance(obj, alt.TopLevelMixin):
-            warnings.warn(
-                "Support of the Altair plots in this class/method is deprecated "
-                    "and will be removed in version 0.4.0. "
-                    "Use the rico.Obj or obj.append indstead.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            convert = vlc.vegalite_to_svg if format == "svg" else vlc.vegalite_to_png  # type: ignore  # noqa: E501
-            image = convert(  # type: ignore
-                obj.to_json(),  # type: ignore
-                vl_version="_".join(alt.SCHEMA_VERSION.split(".")[:2]),
-                **kwargs,
-            )
-        else:
-            error_msg = (
-                f"The plot type {type(obj)} is not supported "
-                "or a required extra package is not installed."
-            )
-            raise TypeError(error_msg)
+        stream = io.StringIO() if format == "svg" else io.BytesIO()
+        obj.savefig(stream, format=format, **kwargs)
+        image = stream.getvalue()
 
-        mime_subtype = "svg+xml" if format == "svg" else format
-        content = Image(data=image, mime_subtype=mime_subtype, class_=class_)  # type: ignore  # noqa: E501
+        mime_subtype = "svg+xml" if format == "svg" else "png"
+        content = Image(data=image, mime_subtype=mime_subtype, class_=class_)
         self.container = content.container
-
-Chart = Plot
 
 
 class Script(ContentBase):
