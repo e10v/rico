@@ -40,7 +40,7 @@ They are no longer needed and will be removed in version 0.4.0.
 
 ## User guide
 
-To get started with **rico**, you can explore self-explanatory [examples](https://github.com/e10v/rico/tree/main/examples) with resultig HTML documents. The user guide contains a slightly more detailed explanation.
+To get started with **rico**, take a look at the self-explanatory [examples](https://github.com/e10v/rico/tree/main/examples) with resulting HTML documents. The user guide contains a slightly more detailed explanation.
 
 ### Basic usage
 
@@ -471,6 +471,6 @@ Check the docstrings for details.
 
 ## Roadmap
 
-* Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 * Support math equations with [MathJax](https://www.mathjax.org/) and/or [KaTeX](https://katex.org/).
 * Support PDF content.
+* Create docs with [MkDocs](https://www.mkdocs.org/) and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
