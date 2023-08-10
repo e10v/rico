@@ -9,9 +9,7 @@ With **rico** you can *avoid*:
 * Loading data into a Jupyter notebook from intermediate files or a database.
 * Using nbconvert or similar tools for creating HTML files.
 
-More on the topic:
-* [Pass pandas dataframe to notebook via nbconvert](https://github.com/jupyter/nbconvert/issues/1070).
-* [Could Papermill pass an in-memory dataframe to a notebook?](https://github.com/nteract/papermill/issues/406)
+Learn more about why **rico** was created with a quick start guide: https://e10v.me/rico-rich-content-to-html-easy/
 
 [![CI](https://github.com/e10v/rico/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/e10v/rico/actions/workflows/ci.yml)
 [![Coverage](https://codecov.io/github/e10v/rico/coverage.svg?branch=main)](https://codecov.io/gh/e10v/rico)
@@ -57,6 +55,13 @@ plot = df.plot.scatter(x="x", y="y")
 
 doc = rico.Doc("Hello, World!", df, plot, title="My doc")
 ```
+
+The result:
+<div align="center">
+    <a href="https://raw.githubusercontent.com/e10v/rico/main/images/basic_usage.png" target="_blank">
+        <img src="https://raw.githubusercontent.com/e10v/rico/main/images/basic_usage.png" width="480px">
+    </a>
+</div>
 
 Imperative style:
 ```python
@@ -175,6 +180,13 @@ doc = rico.Doc(
 )
 ```
 
+The result:
+<div align="center">
+    <a href="https://raw.githubusercontent.com/e10v/rico/main/images/content_types.png" target="_blank">
+        <img src="https://raw.githubusercontent.com/e10v/rico/main/images/content_types.png" width="480px">
+    </a>
+</div>
+
 The following code gives the same result as the code above:
 ```python
 doc = rico.Doc(title="My doc")
@@ -272,6 +284,13 @@ doc = rico.Doc(
     title="Grid system",
 )
 ```
+
+The result:
+<div align="center">
+    <a href="https://raw.githubusercontent.com/e10v/rico/main/images/layout.png" target="_blank">
+        <img src="https://raw.githubusercontent.com/e10v/rico/main/images/layout.png" width="720px">
+    </a>
+</div>
 
 The following code gives the same result as the code above:
 ```python
