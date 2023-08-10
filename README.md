@@ -58,8 +58,8 @@ doc = rico.Doc("Hello, World!", df, plot, title="My doc")
 
 The result:
 <div align="center">
-    <a href="https://raw.githubusercontent.com/e10v/rico/dev/images/basic_usage.png" target="_blank">
-        <img src="https://raw.githubusercontent.com/e10v/rico/dev/images/basic_usage.png" width="480px">
+    <a href="https://raw.githubusercontent.com/e10v/rico/main/images/basic_usage.png" target="_blank">
+        <img src="https://raw.githubusercontent.com/e10v/rico/main/images/basic_usage.png" width="480px">
     </a>
 </div>
 
@@ -182,8 +182,8 @@ doc = rico.Doc(
 
 The result:
 <div align="center">
-    <a href="https://raw.githubusercontent.com/e10v/rico/dev/images/content_types.png" target="_blank">
-        <img src="https://raw.githubusercontent.com/e10v/rico/dev/images/content_types.png" width="480px">
+    <a href="https://raw.githubusercontent.com/e10v/rico/main/images/content_types.png" target="_blank">
+        <img src="https://raw.githubusercontent.com/e10v/rico/main/images/content_types.png" width="480px">
     </a>
 </div>
 
@@ -287,8 +287,8 @@ doc = rico.Doc(
 
 The result:
 <div align="center">
-    <a href="https://raw.githubusercontent.com/e10v/rico/dev/images/layout.png" target="_blank">
-        <img src="https://raw.githubusercontent.com/e10v/rico/dev/images/layout.png" width="720px">
+    <a href="https://raw.githubusercontent.com/e10v/rico/main/images/layout.png" target="_blank">
+        <img src="https://raw.githubusercontent.com/e10v/rico/main/images/layout.png" width="720px">
     </a>
 </div>
 
