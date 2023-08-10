@@ -57,12 +57,11 @@ doc = rico.Doc("Hello, World!", df, plot, title="My doc")
 ```
 
 The result:
-<figure align="center">
+<div align="center">
     <a href="https://raw.githubusercontent.com/e10v/rico/dev/images/basic_usage.png" target="_blank">
         <img src="https://raw.githubusercontent.com/e10v/rico/dev/images/basic_usage.png" style="max-width:480px">
     </a>
-    <figcaption>Click on image to zoom in.</figcaption>
-</figure>
+</div>
 
 Imperative style:
 ```python
@@ -182,12 +181,11 @@ doc = rico.Doc(
 ```
 
 The result:
-<figure align="center">
+<div align="center">
     <a href="https://raw.githubusercontent.com/e10v/rico/dev/images/content_types.png" target="_blank">
         <img src="https://raw.githubusercontent.com/e10v/rico/dev/images/content_types.png" style="max-width:480px">
     </a>
-    <figcaption>Click on image to zoom in.</figcaption>
-</figure>
+</div>
 
 The following code gives the same result as the code above:
 ```python
@@ -288,12 +286,11 @@ doc = rico.Doc(
 ```
 
 The result:
-<figure align="center">
+<div align="center">
     <a href="https://raw.githubusercontent.com/e10v/rico/dev/images/layout.png" target="_blank">
         <img src="https://raw.githubusercontent.com/e10v/rico/dev/images/layout.png" style="max-width:720px">
     </a>
-    <figcaption>Click on image to zoom in.</figcaption>
-</figure>
+</div>
 
 The following code gives the same result as the code above:
 ```python
