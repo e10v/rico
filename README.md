@@ -24,7 +24,7 @@ Learn more about why **rico** was created with a quick start guide: https://e10v
 pip install rico
 ```
 
-**rico** has no dependencies other than the standard Python packages.
+**rico** has no dependencies other than standard Python packages.
 
 For Markdown support:
 * install [markdown-it-py](https://github.com/executablebooks/markdown-it-py),
@@ -134,7 +134,7 @@ The default option values are:
 * Dataframes and other types with [IPython rich representation methods](https://ipython.readthedocs.io/en/stable/config/integrating.html).
 * Text.
 
-Use specific classes for plots and texts to change the default behavior:
+Use specific classes for plots and text to change the default behavior:
 ```python
 doc = rico.Doc(
     rico.Text("Hello, World!", mono=True),  # The default value is False.
@@ -215,7 +215,7 @@ print(obj.serialize(indent=True, space="    "))
 
 ### Bootstrap, HTML classes and document layout
 
-By default, [Bootstrap](https://getbootstrap.com/) styles are included in the document. Change the default behavior using the `bootstrap` parameter:
+By default, [Bootstrap](https://getbootstrap.com/) styles are included in the document. The resulting documents are responsive and mobile-friendly. Change the default behavior using the `bootstrap` parameter:
 ```python
 doc = rico.Doc("Hello, World!", bootstrap="full")
 ```
